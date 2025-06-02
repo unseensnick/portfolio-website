@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -49,6 +50,9 @@ export default function RootLayout({ children }) {
                                 {/* Left sidebar */}
                                 <AppSidebar side="left" />
                             </div>
+
+                            {/* Section Navigation - Fixed positioned */}
+                            <SectionNavigation />
                         </SidebarProvider>
                     </div>
                 </ThemeProvider>

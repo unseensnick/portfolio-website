@@ -13,7 +13,7 @@ export const portfolioData = {
         title: "Full Stack Developer",
         description:
             "Lorem ipsum dolor sit amet consectetur. Eu ipsum odio nisi ultrices aenean. Adipiscing gravida et quam faucibus urna nunc diam nec non.",
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/unseensnick",
         image: "/hero.png", // Add your hero image path
     },
     projects: {

@@ -1,9 +1,17 @@
 import Image from "next/image";
 
-function ListItem({ text }) {
+function TechTag({ text }) {
     return (
-        <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-primary"></div>
+        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-300">
+            {text}
+        </span>
+    );
+}
+
+function InterestItem({ text }) {
+    return (
+        <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
             <span className="text-sm">{text}</span>
         </div>
     );
@@ -11,48 +19,70 @@ function ListItem({ text }) {
 
 export function About({ title, paragraphs, technologies, interests, image }) {
     return (
-        <section id="about" className="max-w-6xl mx-auto px-8 py-24">
-            <h2 className="text-3xl font-semibold mb-16">{title}</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
-                <div className="aspect-square bg-muted rounded-xl w-full relative">
-                    {image && (
-                        <Image
-                            src={image}
-                            alt="About"
-                            fill
-                            className="object-cover rounded-xl"
-                        />
-                    )}
+        <section className="py-24 lg:py-32">
+            <div className="max-w-6xl mx-auto px-8">
+                <div className="text-center mb-16 lg:mb-20">
+                    <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                        {title}
+                    </h2>
                 </div>
-                <div className="space-y-12 max-w-lg">
-                    <div className="space-y-8">
-                        {paragraphs.map((paragraph, index) => (
-                            <p
-                                key={index}
-                                className="text-base text-muted-foreground leading-relaxed"
-                            >
-                                {paragraph}
-                            </p>
-                        ))}
+
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-20">
+                    {/* Image Section */}
+                    <div className="lg:col-span-2">
+                        <div className="aspect-[3/4] bg-gradient-to-br from-muted via-muted to-muted/50 rounded-xl w-full relative overflow-hidden">
+                            {image && (
+                                <Image
+                                    src={image}
+                                    alt="About"
+                                    fill
+                                    className="object-cover rounded-xl"
+                                />
+                            )}
+                            {!image && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
+                                        <div className="w-8 h-8 rounded-lg bg-primary/20"></div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="space-y-12">
-                        <div>
-                            <h3 className="text-lg font-semibold mb-6">
-                                Technologies
+
+                    {/* Content Section */}
+                    <div className="lg:col-span-3 space-y-12">
+                        {/* Story */}
+                        <div className="space-y-6">
+                            {paragraphs.map((paragraph, index) => (
+                                <p
+                                    key={index}
+                                    className="text-lg text-muted-foreground leading-relaxed"
+                                >
+                                    {paragraph}
+                                </p>
+                            ))}
+                        </div>
+
+                        {/* Technologies */}
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-semibold text-foreground">
+                                Technologies & Tools
                             </h3>
-                            <div className="flex flex-wrap gap-y-4 gap-x-12">
-                                {technologies.map((tech) => (
-                                    <ListItem key={tech} text={tech} />
+                            <div className="flex flex-wrap gap-3">
+                                {technologies.map((tech, index) => (
+                                    <TechTag key={index} text={tech} />
                                 ))}
                             </div>
                         </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-6">
-                                Interests
+
+                        {/* Interests */}
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-semibold text-foreground">
+                                When I'm Not Coding
                             </h3>
-                            <div className="flex flex-wrap gap-y-4 gap-x-12">
-                                {interests.map((interest) => (
-                                    <ListItem key={interest} text={interest} />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {interests.map((interest, index) => (
+                                    <InterestItem key={index} text={interest} />
                                 ))}
                             </div>
                         </div>
