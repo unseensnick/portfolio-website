@@ -7,6 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 function MobileProjectItem({ title, description, projectUrl, codeUrl, image }) {
+    // Check if we have any buttons to show
+    const hasButtons = projectUrl || codeUrl;
+
     return (
         <div className="bg-card border border-border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
             {/* Mobile Project Image */}
@@ -39,29 +42,36 @@ function MobileProjectItem({ title, description, projectUrl, codeUrl, image }) {
                     </p>
                 </div>
 
-                <div className="flex flex-col gap-3 pt-2">
-                    <Button
-                        size="lg"
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-base transition-all duration-300"
-                        asChild
-                    >
-                        <Link href={projectUrl} target="_blank">
-                            <ExternalLink className="size-5 mr-2" />
-                            Live Demo
-                        </Link>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="lg"
-                        className="w-full border-2 hover:bg-muted py-4 text-base transition-all duration-300"
-                        asChild
-                    >
-                        <Link href={codeUrl} target="_blank">
-                            <Github className="size-5 mr-2" />
-                            Source Code
-                        </Link>
-                    </Button>
-                </div>
+                {/* Conditionally render buttons */}
+                {hasButtons && (
+                    <div className="flex flex-col gap-3 pt-2">
+                        {projectUrl && (
+                            <Button
+                                size="lg"
+                                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-base transition-all duration-300"
+                                asChild
+                            >
+                                <Link href={projectUrl} target="_blank">
+                                    <ExternalLink className="size-5 mr-2" />
+                                    Live Demo
+                                </Link>
+                            </Button>
+                        )}
+                        {codeUrl && (
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="w-full border-2 hover:bg-muted py-4 text-base transition-all duration-300"
+                                asChild
+                            >
+                                <Link href={codeUrl} target="_blank">
+                                    <Github className="size-5 mr-2" />
+                                    Source Code
+                                </Link>
+                            </Button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -75,6 +85,9 @@ function DesktopProjectItem({
     image,
     reverse = false,
 }) {
+    // Check if we have any buttons to show
+    const hasButtons = projectUrl || codeUrl;
+
     return (
         <div className="relative">
             <div
@@ -118,27 +131,34 @@ function DesktopProjectItem({
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-4">
-                        <Button
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300"
-                            asChild
-                        >
-                            <Link href={projectUrl} target="_blank">
-                                <ExternalLink className="size-4 mr-2" />
-                                Live Demo
-                            </Link>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className="border-2 hover:bg-muted transition-all duration-300"
-                            asChild
-                        >
-                            <Link href={codeUrl} target="_blank">
-                                <Github className="size-4 mr-2" />
-                                Source
-                            </Link>
-                        </Button>
-                    </div>
+                    {/* Conditionally render buttons */}
+                    {hasButtons && (
+                        <div className="flex flex-wrap gap-4">
+                            {projectUrl && (
+                                <Button
+                                    className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300"
+                                    asChild
+                                >
+                                    <Link href={projectUrl} target="_blank">
+                                        <ExternalLink className="size-4 mr-2" />
+                                        Live Demo
+                                    </Link>
+                                </Button>
+                            )}
+                            {codeUrl && (
+                                <Button
+                                    variant="outline"
+                                    className="border-2 hover:bg-muted transition-all duration-300"
+                                    asChild
+                                >
+                                    <Link href={codeUrl} target="_blank">
+                                        <Github className="size-4 mr-2" />
+                                        Source
+                                    </Link>
+                                </Button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -180,33 +200,35 @@ export function Projects({
                     </div>
 
                     {/* Mobile View All Projects */}
-                    <div className="text-center">
-                        <div className="space-y-4">
-                            <p className="text-sm text-muted-foreground px-4">
-                                {viewMoreText}
-                            </p>
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="w-full max-w-sm px-6 py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
-                                asChild
-                            >
-                                <Link href={viewAllLink} target="_blank">
-                                    <Github className="size-5 mr-2" />
-                                    View All on GitHub
-                                    <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
-                                        →
-                                    </span>
-                                </Link>
-                            </Button>
+                    {viewAllLink && (
+                        <div className="text-center">
+                            <div className="space-y-4">
+                                <p className="text-sm text-muted-foreground px-4">
+                                    {viewMoreText}
+                                </p>
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="w-full max-w-sm px-6 py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
+                                    asChild
+                                >
+                                    <Link href={viewAllLink} target="_blank">
+                                        <Github className="size-5 mr-2" />
+                                        View All on GitHub
+                                        <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
+                                            →
+                                        </span>
+                                    </Link>
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </section>
         );
     }
 
-    // Desktop version (unchanged)
+    // Desktop version
     return (
         <section className="py-24 lg:py-32">
             <div className="max-w-7xl mx-auto px-8">
@@ -231,25 +253,29 @@ export function Projects({
                 </div>
 
                 {/* View All Projects */}
-                <div className="text-center mt-20 lg:mt-24">
-                    <div className="inline-flex flex-col items-center gap-4">
-                        <p className="text-muted-foreground">{viewMoreText}</p>
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="px-8 py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
-                            asChild
-                        >
-                            <Link href={viewAllLink} target="_blank">
-                                <Github className="size-5 mr-2" />
-                                View All on GitHub
-                                <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
-                                    →
-                                </span>
-                            </Link>
-                        </Button>
+                {viewAllLink && (
+                    <div className="text-center mt-20 lg:mt-24">
+                        <div className="inline-flex flex-col items-center gap-4">
+                            <p className="text-muted-foreground">
+                                {viewMoreText}
+                            </p>
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="px-8 py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
+                                asChild
+                            >
+                                <Link href={viewAllLink} target="_blank">
+                                    <Github className="size-5 mr-2" />
+                                    View All on GitHub
+                                    <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
+                                        →
+                                    </span>
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </section>
     );
