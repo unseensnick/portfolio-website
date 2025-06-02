@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -59,8 +60,13 @@ export default function RootLayout({ children }) {
                                 />
                             </div>
 
-                            {/* Section Navigation - Fixed positioned */}
+                            {/* Section Navigation - Fixed positioned (desktop) */}
                             <SectionNavigation
+                                navLinks={portfolioData.nav.links}
+                            />
+
+                            {/* Instagram-style Mobile Navigation (mobile only) */}
+                            <InstagramMobileNav
                                 navLinks={portfolioData.nav.links}
                             />
                         </SidebarProvider>

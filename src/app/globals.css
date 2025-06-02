@@ -152,3 +152,22 @@
         transition: none !important;
     }
 }
+
+@supports (padding: env(safe-area-inset-bottom)) {
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .h-safe {
+        height: env(safe-area-inset-bottom);
+    }
+}
+
+/* Fallback for devices without safe area */
+.pb-safe {
+    padding-bottom: 0.5rem; /* 8px fallback */
+}
+
+.h-safe {
+    height: 0; /* No extra height on devices without safe area */
+}
