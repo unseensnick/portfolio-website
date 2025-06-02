@@ -98,7 +98,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
                 const windowHeight = window.innerHeight;
                 elementPosition = documentHeight - windowHeight;
             } else {
-                const extraOffset = 160; // Additional offset to scroll further down
+                const extraOffset = 0; // Additional offset to scroll further down
                 elementPosition =
                     element.offsetTop - headerHeight + extraOffset;
             }
@@ -187,6 +187,9 @@ export function InstagramMobileNav({ navLinks = [] }) {
                 {/* Safe area for iPhone home indicator */}
                 <div className="h-safe bg-background/95 backdrop-blur-xl" />
             </div>
+
+            {/* Bottom padding to prevent content from being hidden */}
+            <div className="h-4 w-full" />
         </>
     );
 }

@@ -3,7 +3,9 @@
 import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
 import { Code } from "lucide-react";
+import { useEffect, useState } from "react";
 
 /**
  * Site header with logo, navigation links and theme toggle
@@ -15,6 +17,30 @@ export function SiteHeader({
     navLinks = [],
 }) {
     const isMobile = useIsMobile();
+    const [activeSection, setActiveSection] = useState(
+        navLinks[0]?.href?.replace("#", "") || "home"
+    );
+
+    // Convert navLinks to sections format for utility functions
+    const sections = navLinks.map((link) => ({
+        id: link.href.replace("#", ""),
+        label: link.label,
+    }));
+
+    // Set up scroll listener for desktop navigation
+    useEffect(() => {
+        if (isMobile) return;
+
+        const cleanup = setupScrollListener(sections, setActiveSection, 100);
+        return cleanup;
+    }, [isMobile, sections]);
+
+    // Handle navigation click
+    const handleNavClick = (e, href) => {
+        e.preventDefault();
+        const sectionId = href.replace("#", "");
+        scrollToSection(sectionId, 100, 0); // decrease this if scrolling too far
+    };
 
     return (
         <>
@@ -41,16 +67,37 @@ export function SiteHeader({
                     <div className="flex items-center gap-8">
                         {!isMobile && (
                             <nav className="flex items-center gap-8">
-                                {navLinks.map((link) => (
-                                    <a
-                                        key={link.href}
-                                        href={link.href}
-                                        className="text-sm font-medium text-foreground/80 hover:text-primary transition-all duration-300 relative group"
-                                    >
-                                        {link.label}
-                                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                                    </a>
-                                ))}
+                                {navLinks.map((link) => {
+                                    const sectionId = link.href.replace(
+                                        "#",
+                                        ""
+                                    );
+                                    const isActive =
+                                        activeSection === sectionId;
+
+                                    return (
+                                        <button
+                                            key={link.href}
+                                            onClick={(e) =>
+                                                handleNavClick(e, link.href)
+                                            }
+                                            className={`text-sm font-medium transition-all duration-300 relative group ${
+                                                isActive
+                                                    ? "text-primary"
+                                                    : "text-foreground/80 hover:text-primary"
+                                            }`}
+                                        >
+                                            {link.label}
+                                            <span
+                                                className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                                                    isActive
+                                                        ? "w-full"
+                                                        : "w-0 group-hover:w-full"
+                                                }`}
+                                            ></span>
+                                        </button>
+                                    );
+                                })}
                             </nav>
                         )}
                         <ThemeToggle />
