@@ -1,9 +1,86 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function Hero({ greeting, title, description, githubUrl, image }) {
+    const isMobile = useIsMobile();
+
+    if (isMobile) {
+        return (
+            <section className="min-h-[85vh] flex items-center pt-8 pb-16">
+                <div className="w-full px-6">
+                    {/* Mobile Image First */}
+                    <div className="relative mb-8 mx-auto max-w-sm">
+                        <div className="aspect-square bg-gradient-to-br from-muted via-muted to-muted/50 rounded-2xl w-full relative overflow-hidden border border-border/50 shadow-xl">
+                            {image && (
+                                <Image
+                                    src={image}
+                                    alt="Hero"
+                                    fill
+                                    className="object-cover rounded-2xl"
+                                    priority
+                                />
+                            )}
+                            {!image && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-primary/20"></div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        {/* Mobile decorative elements */}
+                        <div className="absolute -inset-3 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-2xl -z-10 opacity-50 blur-lg"></div>
+                    </div>
+
+                    {/* Mobile Content */}
+                    <div className="text-center space-y-6">
+                        <div className="space-y-4">
+                            <p className="text-xs text-primary font-medium uppercase tracking-wider">
+                                {greeting}
+                            </p>
+                            <h1 className="text-3xl font-bold leading-tight bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                                {title}
+                            </h1>
+                            <p className="text-base text-muted-foreground leading-relaxed px-4">
+                                {description}
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col gap-3 pt-4 px-4">
+                            <Link
+                                href={githubUrl}
+                                target="_blank"
+                                className="inline-block"
+                            >
+                                <Button
+                                    size="lg"
+                                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
+                                >
+                                    <Github className="size-5" />
+                                    View GitHub
+                                </Button>
+                            </Link>
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="w-full py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300"
+                                asChild
+                            >
+                                <Link href="#projects">View Projects</Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    // Desktop version (unchanged)
     return (
         <section className="min-h-[90vh] flex items-center">
             <div className="max-w-7xl mx-auto px-8 w-full">

@@ -56,7 +56,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
         const element = document.getElementById(sectionId);
         if (element) {
             const headerHeight = 40;
-            const extraOffset = 120; // Additional offset to scroll further down
+            const extraOffset = 160; // Additional offset to scroll further down
             const elementPosition =
                 element.offsetTop - headerHeight + extraOffset;
 

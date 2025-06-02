@@ -47,7 +47,7 @@ export function SectionNavigation({ navLinks = [] }) {
     const scrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
-            const headerHeight = 80; // Account for fixed header
+            const headerHeight = 50; // Account for fixed header
             const elementPosition = element.offsetTop - headerHeight;
 
             window.scrollTo({
