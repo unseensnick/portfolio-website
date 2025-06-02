@@ -6,6 +6,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ExternalLink, Github, Mail } from "lucide-react";
 import Link from "next/link";
 
+/**
+ * Contact card for mobile layout with icon, title and link
+ */
 function MobileContactCard({
     icon: Icon,
     title,
@@ -38,6 +41,9 @@ function MobileContactCard({
     );
 }
 
+/**
+ * Contact card for desktop layout with icon, title and link
+ */
 function DesktopContactCard({
     icon: Icon,
     title,
@@ -72,6 +78,10 @@ function DesktopContactCard({
     );
 }
 
+/**
+ * Contact section with contact cards and call-to-action buttons
+ * Provides different layouts for mobile and desktop
+ */
 export function Contact({
     title,
     description,
@@ -88,7 +98,7 @@ export function Contact({
         return (
             <section className="py-16">
                 <div className="px-6">
-                    {/* Mobile Header */}
+                    {/* Section header */}
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                             {title}
@@ -98,7 +108,7 @@ export function Contact({
                         </p>
                     </div>
 
-                    {/* Mobile Contact Cards */}
+                    {/* Contact method cards */}
                     <div className="space-y-4 mb-12">
                         <MobileContactCard
                             icon={Mail}
@@ -115,7 +125,7 @@ export function Contact({
                         />
                     </div>
 
-                    {/* Mobile Call to Action */}
+                    {/* Contact call-to-action card */}
                     <div>
                         <Card className="p-6 bg-gradient-to-br from-muted/50 via-muted/30 to-transparent border-border">
                             <div className="space-y-4 text-center">
@@ -162,7 +172,7 @@ export function Contact({
         );
     }
 
-    // Desktop version (unchanged)
+    // Desktop version
     return (
         <section className="py-24 lg:py-32">
             <div className="max-w-4xl mx-auto px-8">
@@ -175,7 +185,7 @@ export function Contact({
                     </p>
                 </div>
 
-                {/* Contact Cards */}
+                {/* Contact method cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                     <DesktopContactCard
                         icon={Mail}
@@ -192,7 +202,7 @@ export function Contact({
                     />
                 </div>
 
-                {/* Call to Action */}
+                {/* Contact call-to-action card */}
                 <div className="text-center">
                     <Card className="p-8 lg:p-12 bg-gradient-to-br from-muted/50 via-muted/30 to-transparent border-border">
                         <div className="space-y-6">

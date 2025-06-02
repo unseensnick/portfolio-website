@@ -4,6 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { FolderOpen, Home, Mail, User } from "lucide-react";
 import { useEffect, useState } from "react";
 
+// Icon mapping for navigation items
 const iconMap = {
     Home: Home,
     FolderOpen: FolderOpen,
@@ -11,6 +12,10 @@ const iconMap = {
     Mail: Mail,
 };
 
+/**
+ * Instagram-style mobile navigation bar with animated indicators
+ * Only renders on mobile devices and tracks active section while scrolling
+ */
 export function InstagramMobileNav({ navLinks = [] }) {
     const [activeSection, setActiveSection] = useState(
         navLinks[0]?.href?.replace("#", "") || "home"
@@ -31,7 +36,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
-            // Update active section
+            // Update active section based on scroll position
             const scrollPosition = currentScrollY + 100;
             for (let i = sections.length - 1; i >= 0; i--) {
                 const section = document.getElementById(sections[i].id);
@@ -52,6 +57,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
     // Don't render on desktop
     if (!isMobile) return null;
 
+    // Smooth scroll to target section with offset
     const scrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -69,9 +75,9 @@ export function InstagramMobileNav({ navLinks = [] }) {
 
     return (
         <>
-            {/* Bottom Navigation Bar */}
+            {/* Fixed mobile navigation bar */}
             <div className="fixed bottom-0 left-0 right-0 z-50">
-                {/* Background with blur effect */}
+                {/* Blurred background */}
                 <div className="bg-background/95 backdrop-blur-xl border-t border-border/50">
                     {/* Safe area padding for devices with home indicator */}
                     <div className="pb-safe">
@@ -89,7 +95,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
                                         className="group relative flex flex-col items-center justify-center p-3 min-w-[64px] transition-all duration-300"
                                         aria-label={`Navigate to ${section.label}`}
                                     >
-                                        {/* Icon container with Instagram-style animation */}
+                                        {/* Icon container with animation effects */}
                                         <div className="relative">
                                             {/* Active indicator background */}
                                             <div
@@ -112,7 +118,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
                                             </div>
                                         </div>
 
-                                        {/* Label with fade in/out */}
+                                        {/* Section label with animation */}
                                         <span
                                             className={`text-xs font-medium mt-1 transition-all duration-300 ${
                                                 isActive
@@ -123,7 +129,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
                                             {section.label}
                                         </span>
 
-                                        {/* Active dot indicator (Instagram style) */}
+                                        {/* Active indicator dot */}
                                         <div
                                             className={`absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary transition-all duration-300 ${
                                                 isActive
@@ -132,7 +138,7 @@ export function InstagramMobileNav({ navLinks = [] }) {
                                             }`}
                                         />
 
-                                        {/* Ripple effect on tap */}
+                                        {/* Touch feedback effect */}
                                         <div className="absolute inset-0 rounded-full bg-primary/10 scale-0 group-active:scale-150 group-active:opacity-20 transition-all duration-150" />
                                     </button>
                                 );
@@ -141,11 +147,11 @@ export function InstagramMobileNav({ navLinks = [] }) {
                     </div>
                 </div>
 
-                {/* Home indicator safe area (for newer iPhones) */}
+                {/* Safe area for iPhone home indicator */}
                 <div className="h-safe bg-background/95 backdrop-blur-xl" />
             </div>
 
-            {/* Bottom padding to prevent content from being hidden behind nav */}
+            {/* Bottom padding to prevent content from being hidden */}
             <div className="h-20 w-full" />
         </>
     );

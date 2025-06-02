@@ -27,17 +27,17 @@ export default function RootLayout({ children }) {
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {/* Main layout container with fixed header height */}
+                    {/* Layout container with fixed header */}
                     <div
                         style={{ "--header-height": "5rem" }}
                         className="flex flex-col min-h-screen"
                     >
-                        {/* Sidebar provider for responsive layout */}
+                        {/* Sidebar provider for responsive layout management */}
                         <SidebarProvider
                             defaultOpen={false}
                             className="flex flex-col flex-1"
                         >
-                            {/* Fixed site header */}
+                            {/* Site header with logo, subtitle and navigation */}
                             <SiteHeader
                                 logo={portfolioData.nav.logo}
                                 subtitle={portfolioData.nav.subtitle}
@@ -46,26 +46,26 @@ export default function RootLayout({ children }) {
 
                             {/* Content area with sidebar */}
                             <div className="flex flex-1 bg-background">
-                                {/* Main content area */}
+                                {/* Main content wrapper */}
                                 <SidebarInset>
                                     <main className="flex flex-1 flex-col">
                                         {children}
                                     </main>
                                 </SidebarInset>
 
-                                {/* Left sidebar */}
+                                {/* Left sidebar navigation */}
                                 <AppSidebar
                                     side="left"
                                     navLinks={portfolioData.nav.links}
                                 />
                             </div>
 
-                            {/* Section Navigation - Fixed positioned (desktop) */}
+                            {/* Desktop section navigation */}
                             <SectionNavigation
                                 navLinks={portfolioData.nav.links}
                             />
 
-                            {/* Instagram-style Mobile Navigation (mobile only) */}
+                            {/* Mobile-only navigation bar */}
                             <InstagramMobileNav
                                 navLinks={portfolioData.nav.links}
                             />

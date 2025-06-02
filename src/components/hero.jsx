@@ -13,7 +13,7 @@ export function Hero({ greeting, title, description, githubUrl, image }) {
         return (
             <section className="min-h-[85vh] flex items-center pt-8 pb-16">
                 <div className="w-full px-6">
-                    {/* Mobile Image First */}
+                    {/* Hero image with decorative elements */}
                     <div className="relative mb-8 mx-auto max-w-sm">
                         <div className="aspect-square bg-gradient-to-br from-muted via-muted to-muted/50 rounded-2xl w-full relative overflow-hidden border border-border/50 shadow-xl">
                             {image && (
@@ -33,11 +33,11 @@ export function Hero({ greeting, title, description, githubUrl, image }) {
                                 </div>
                             )}
                         </div>
-                        {/* Mobile decorative elements */}
+                        {/* Decorative blur effect */}
                         <div className="absolute -inset-3 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-2xl -z-10 opacity-50 blur-lg"></div>
                     </div>
 
-                    {/* Mobile Content */}
+                    {/* Hero content and call-to-action buttons */}
                     <div className="text-center space-y-6">
                         <div className="space-y-4">
                             <p className="text-xs text-primary font-medium uppercase tracking-wider">
@@ -80,11 +80,12 @@ export function Hero({ greeting, title, description, githubUrl, image }) {
         );
     }
 
-    // Desktop version (unchanged)
+    // Desktop version
     return (
         <section className="min-h-[90vh] flex items-center">
             <div className="max-w-7xl mx-auto px-8 w-full">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                    {/* Left column: content and call-to-action */}
                     <div className="space-y-8 max-w-xl">
                         <div className="space-y-6">
                             <p className="text-sm text-primary font-medium uppercase tracking-wider">
@@ -123,6 +124,7 @@ export function Hero({ greeting, title, description, githubUrl, image }) {
                         </div>
                     </div>
 
+                    {/* Right column: hero image with effects */}
                     <div className="relative group">
                         <div className="aspect-[4/3] bg-gradient-to-br from-muted via-muted to-muted/50 rounded-2xl w-full relative overflow-hidden border border-border/50 shadow-2xl shadow-black/5">
                             {image && (
@@ -143,7 +145,7 @@ export function Hero({ greeting, title, description, githubUrl, image }) {
                             )}
                         </div>
 
-                        {/* Decorative elements */}
+                        {/* Decorative blur effect */}
                         <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-3xl -z-10 opacity-50 blur-xl"></div>
                     </div>
                 </div>

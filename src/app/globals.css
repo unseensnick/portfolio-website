@@ -1,8 +1,11 @@
+/* Import Tailwind CSS and animations */
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Custom variant for dark mode */
 @custom-variant dark (&:is(.dark *));
 
+/* Theme variable mapping for consistent styling */
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -43,6 +46,7 @@
     --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Light theme color palette using OKLCH for better color perception */
 :root {
     --radius: 0.75rem;
     /* Light mode - Refined with better contrast */
@@ -79,6 +83,7 @@
     --sidebar-ring: oklch(0.5 0.22 285);
 }
 
+/* Dark theme color palette using OKLCH */
 .dark {
     /* Dark mode - Refined Solo Leveling inspired */
     --background: oklch(0.06 0.02 285);
@@ -114,6 +119,7 @@
     --sidebar-ring: oklch(0.65 0.26 285);
 }
 
+/* Base styles and typography */
 @layer base {
     * {
         @apply border-border outline-ring/50;
@@ -126,6 +132,7 @@
         @apply bg-background text-foreground font-sans text-base leading-relaxed;
     }
 
+    /* Typography scale */
     h1,
     h2,
     h3,
@@ -149,12 +156,13 @@
         @apply leading-relaxed;
     }
 
-    /* Disable transitions during page load */
+    /* Disable transitions during page load to prevent flash */
     .preload * {
         transition: none !important;
     }
 }
 
+/* Safe area utilities for mobile devices (iPhone notch/home indicator) */
 @supports (padding: env(safe-area-inset-bottom)) {
     .pb-safe {
         padding-bottom: env(safe-area-inset-bottom);
@@ -165,7 +173,7 @@
     }
 }
 
-/* Fallback for devices without safe area */
+/* Fallback for devices without safe area insets */
 .pb-safe {
     padding-bottom: 0.5rem; /* 8px fallback */
 }

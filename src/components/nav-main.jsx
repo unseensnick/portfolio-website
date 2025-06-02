@@ -19,6 +19,10 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
+/**
+ * Navigation menu component for sidebar
+ * Supports collapsible sub-items and icons
+ */
 export function NavMain({ items, groupLabel = "Platform" }) {
     return (
         <SidebarGroup>
@@ -31,6 +35,7 @@ export function NavMain({ items, groupLabel = "Platform" }) {
                         defaultOpen={item.isActive}
                     >
                         <SidebarMenuItem>
+                            {/* Main navigation item with icon */}
                             <SidebarMenuButton asChild tooltip={item.title}>
                                 <a href={item.url}>
                                     <item.icon />
@@ -39,6 +44,7 @@ export function NavMain({ items, groupLabel = "Platform" }) {
                             </SidebarMenuButton>
                             {item.items?.length ? (
                                 <>
+                                    {/* Collapsible trigger for sub-items */}
                                     <CollapsibleTrigger asChild>
                                         <SidebarMenuAction className="data-[state=open]:rotate-90">
                                             <ChevronRight />
@@ -47,6 +53,7 @@ export function NavMain({ items, groupLabel = "Platform" }) {
                                             </span>
                                         </SidebarMenuAction>
                                     </CollapsibleTrigger>
+                                    {/* Sub-items list */}
                                     <CollapsibleContent>
                                         <SidebarMenuSub>
                                             {item.items?.map((subItem) => (

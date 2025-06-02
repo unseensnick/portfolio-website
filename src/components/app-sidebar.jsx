@@ -7,6 +7,7 @@ import * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 
+// Icon mapping for navigation items
 const iconMap = {
     Home: Home,
     FolderOpen: FolderOpen,
@@ -14,6 +15,10 @@ const iconMap = {
     Mail: Mail,
 };
 
+/**
+ * Left sidebar component for desktop navigation
+ * Renders content based on device type
+ */
 export function AppSidebar({ navLinks = [], ...props }) {
     const isMobile = useIsMobile();
 
@@ -27,7 +32,7 @@ export function AppSidebar({ navLinks = [], ...props }) {
     return (
         <Sidebar className="top-14 h-[calc(100svh-3.5rem)]" {...props}>
             <SidebarContent>
-                {/* Show main navigation on mobile - though now we use the better mobile nav */}
+                {/* Navigation menu for mobile devices */}
                 {isMobile && (
                     <NavMain items={mainNavItems} groupLabel="Navigation" />
                 )}

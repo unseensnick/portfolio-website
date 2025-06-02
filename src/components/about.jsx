@@ -3,6 +3,9 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import Image from "next/image";
 
+/**
+ * Styled tag component for displaying technology keywords
+ */
 function TechTag({ text, isMobile = false }) {
     return (
         <span
@@ -15,6 +18,9 @@ function TechTag({ text, isMobile = false }) {
     );
 }
 
+/**
+ * Styled list item for displaying interest points
+ */
 function InterestItem({ text, isMobile = false }) {
     return (
         <div className="flex items-center gap-2 text-muted-foreground">
@@ -28,6 +34,9 @@ function InterestItem({ text, isMobile = false }) {
     );
 }
 
+/**
+ * About section displaying bio, technologies, and interests
+ */
 export function About({
     title,
     paragraphs,
@@ -43,7 +52,7 @@ export function About({
         return (
             <section className="py-16">
                 <div className="px-6">
-                    {/* Mobile Header */}
+                    {/* Section header */}
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                             {title}
@@ -51,7 +60,7 @@ export function About({
                     </div>
 
                     <div className="space-y-10">
-                        {/* Mobile Image */}
+                        {/* Profile image */}
                         <div className="mx-auto max-w-sm">
                             <div className="aspect-square bg-gradient-to-br from-muted via-muted to-muted/50 rounded-2xl w-full relative overflow-hidden border border-border/50 shadow-xl">
                                 {image && (
@@ -72,9 +81,9 @@ export function About({
                             </div>
                         </div>
 
-                        {/* Mobile Content */}
+                        {/* Bio, technologies and interests */}
                         <div className="space-y-8">
-                            {/* Story */}
+                            {/* Bio paragraphs */}
                             <div className="space-y-4">
                                 {paragraphs.map((paragraph, index) => (
                                     <p
@@ -86,7 +95,7 @@ export function About({
                                 ))}
                             </div>
 
-                            {/* Technologies */}
+                            {/* Technologies list */}
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-foreground">
                                     {technologiesHeading}
@@ -102,7 +111,7 @@ export function About({
                                 </div>
                             </div>
 
-                            {/* Interests */}
+                            {/* Interests list */}
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-foreground">
                                     {interestsHeading}
@@ -124,7 +133,7 @@ export function About({
         );
     }
 
-    // Desktop version (unchanged)
+    // Desktop version
     return (
         <section className="py-24 lg:py-32">
             <div className="max-w-6xl mx-auto px-8">
@@ -135,7 +144,7 @@ export function About({
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-20">
-                    {/* Image Section */}
+                    {/* Profile image column */}
                     <div className="lg:col-span-2">
                         <div className="aspect-[3/4] bg-gradient-to-br from-muted via-muted to-muted/50 rounded-xl w-full relative overflow-hidden">
                             {image && (
@@ -156,9 +165,9 @@ export function About({
                         </div>
                     </div>
 
-                    {/* Content Section */}
+                    {/* Bio, technologies and interests column */}
                     <div className="lg:col-span-3 space-y-12">
-                        {/* Story */}
+                        {/* Bio paragraphs */}
                         <div className="space-y-6">
                             {paragraphs.map((paragraph, index) => (
                                 <p
@@ -170,7 +179,7 @@ export function About({
                             ))}
                         </div>
 
-                        {/* Technologies */}
+                        {/* Technologies list */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-semibold text-foreground">
                                 {technologiesHeading}
@@ -182,7 +191,7 @@ export function About({
                             </div>
                         </div>
 
-                        {/* Interests */}
+                        {/* Interests list */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-semibold text-foreground">
                                 {interestsHeading}

@@ -3,6 +3,10 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 
+/**
+ * Desktop-only section navigation with animated tooltips
+ * Provides visual indicators for the current active section
+ */
 export function SectionNavigation({ navLinks = [] }) {
     const [activeSection, setActiveSection] = useState(
         navLinks[0]?.href?.replace("#", "") || "home"
@@ -44,6 +48,7 @@ export function SectionNavigation({ navLinks = [] }) {
     // Don't render on mobile - moved after all hooks
     if (isMobile) return null;
 
+    // Smooth scroll to target section with header offset
     const scrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -70,7 +75,7 @@ export function SectionNavigation({ navLinks = [] }) {
                             className="group relative flex items-center"
                             aria-label={`Navigate to ${section.label}`}
                         >
-                            {/* Dot indicator */}
+                            {/* Section indicator dot */}
                             <div
                                 className={`size-3 rounded-full transition-all duration-300 ${
                                     isActive
@@ -79,7 +84,7 @@ export function SectionNavigation({ navLinks = [] }) {
                                 }`}
                             />
 
-                            {/* Label tooltip */}
+                            {/* Section label tooltip */}
                             <div
                                 className={`absolute right-6 px-3 py-1.5 bg-card border border-border rounded-lg shadow-lg transition-all duration-300 whitespace-nowrap ${
                                     isActive
@@ -91,7 +96,7 @@ export function SectionNavigation({ navLinks = [] }) {
                                     {section.label}
                                 </span>
 
-                                {/* Arrow */}
+                                {/* Tooltip arrow */}
                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 size-2 bg-card border-l border-b border-border rotate-45" />
                             </div>
                         </button>

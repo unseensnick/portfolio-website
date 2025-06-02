@@ -1,4 +1,9 @@
+/**
+ * Portfolio website content and configuration
+ * Central data store for all website sections
+ */
 export const portfolioData = {
+    // Navigation configuration
     nav: {
         logo: "unseensnick",
         subtitle: "Full Stack Developer",
@@ -25,6 +30,7 @@ export const portfolioData = {
             },
         ],
     },
+    // Hero/introduction section content
     hero: {
         greeting: "Hello There!",
         title: "Full Stack Developer",
@@ -33,6 +39,7 @@ export const portfolioData = {
         githubUrl: "https://github.com/unseensnick",
         image: "/hero.png", // Add your hero image path
     },
+    // Projects section with featured and regular projects
     projects: {
         title: "Projects",
         description:
@@ -66,6 +73,7 @@ export const portfolioData = {
         ],
         viewAllLink: "#",
     },
+    // About/bio section with technologies and interests
     about: {
         title: "About",
         technologiesHeading: "Technologies & Tools",
@@ -78,6 +86,7 @@ export const portfolioData = {
         interests: ["Open Source", "Interest 2", "Interest 3", "Interest 4"],
         image: "/about.png", // Add your image path
     },
+    // Contact section with contact methods and call-to-action
     contact: {
         title: "Contact",
         description:
@@ -90,6 +99,7 @@ export const portfolioData = {
         ctaDescription:
             "Whether you have a specific project in mind or just want to explore possibilities, I'd love to hear from you.",
     },
+    // Footer content
     footer: {
         copyright: "© 2025 UnseenSnick. All rights reserved.",
     },

@@ -7,6 +7,10 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Code, Menu } from "lucide-react";
 import { useState } from "react";
 
+/**
+ * Site header with logo, navigation links and theme toggle
+ * Adapts between mobile and desktop layouts
+ */
 export function SiteHeader({
     logo = "unseensnick",
     subtitle = "Full Stack Developer",
@@ -19,7 +23,7 @@ export function SiteHeader({
         <>
             <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 flex w-full items-center border-b border-border/50">
                 <div className="flex h-20 w-full items-center justify-between px-8">
-                    {/* Left side - Logo/Brand */}
+                    {/* Logo and brand identity */}
                     <div className="flex items-center gap-4">
                         {/*{isMobile && (
                             <Button
@@ -46,7 +50,7 @@ export function SiteHeader({
                         </div>
                     </div>
 
-                    {/* Right side - Navigation + Theme Toggle */}
+                    {/* Navigation links and theme toggle */}
                     <div className="flex items-center gap-8">
                         {!isMobile && (
                             <nav className="flex items-center gap-8">
@@ -74,7 +78,7 @@ export function SiteHeader({
                 navLinks={navLinks}
             />*/}
 
-            {/* Instagram-inspired Mobile Navigation */}
+            {/* Instagram-style mobile navigation bar */}
             <InstagramMobileNav navLinks={navLinks} />
         </>
     );

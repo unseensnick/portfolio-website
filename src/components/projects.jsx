@@ -6,13 +6,16 @@ import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+/**
+ * Mobile project card component with image and action buttons
+ */
 function MobileProjectItem({ title, description, projectUrl, codeUrl, image }) {
     // Check if we have any buttons to show
     const hasButtons = projectUrl || codeUrl;
 
     return (
         <div className="bg-card border border-border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-            {/* Mobile Project Image */}
+            {/* Project thumbnail */}
             <div className="aspect-[16/10] bg-gradient-to-br from-muted via-muted to-muted/50 relative overflow-hidden">
                 {image && (
                     <Image
@@ -31,7 +34,7 @@ function MobileProjectItem({ title, description, projectUrl, codeUrl, image }) {
                 )}
             </div>
 
-            {/* Mobile Project Content */}
+            {/* Project details and action buttons */}
             <div className="p-6 space-y-4">
                 <div className="space-y-3">
                     <h3 className="text-xl font-bold text-foreground">
@@ -42,7 +45,7 @@ function MobileProjectItem({ title, description, projectUrl, codeUrl, image }) {
                     </p>
                 </div>
 
-                {/* Conditionally render buttons */}
+                {/* Render buttons only if URLs are provided */}
                 {hasButtons && (
                     <div className="flex flex-col gap-3 pt-2">
                         {projectUrl && (
@@ -77,6 +80,9 @@ function MobileProjectItem({ title, description, projectUrl, codeUrl, image }) {
     );
 }
 
+/**
+ * Desktop project card with side-by-side layout and action buttons
+ */
 function DesktopProjectItem({
     title,
     description,
@@ -95,7 +101,7 @@ function DesktopProjectItem({
                     reverse ? "lg:grid-flow-col-dense" : ""
                 }`}
             >
-                {/* Image */}
+                {/* Project image/thumbnail */}
                 <div className={`relative ${reverse ? "lg:col-start-2" : ""}`}>
                     <div className="aspect-[16/10] bg-gradient-to-br from-muted via-muted to-muted/50 rounded-xl overflow-hidden border border-border/50 group relative">
                         {image && (
@@ -116,7 +122,7 @@ function DesktopProjectItem({
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Project details and action buttons */}
                 <div
                     className={`space-y-6 ${
                         reverse ? "lg:col-start-1 lg:row-start-1" : ""
@@ -131,7 +137,7 @@ function DesktopProjectItem({
                         </p>
                     </div>
 
-                    {/* Conditionally render buttons */}
+                    {/* Render buttons only if URLs are provided */}
                     {hasButtons && (
                         <div className="flex flex-wrap gap-4">
                             {projectUrl && (
@@ -165,6 +171,9 @@ function DesktopProjectItem({
     );
 }
 
+/**
+ * Projects section displaying featured and regular project items
+ */
 export function Projects({
     title,
     featured,
@@ -182,7 +191,7 @@ export function Projects({
         return (
             <section className="py-16">
                 <div className="px-6">
-                    {/* Mobile Header */}
+                    {/* Section header */}
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                             {title}
@@ -192,14 +201,14 @@ export function Projects({
                         </p>
                     </div>
 
-                    {/* Mobile Projects Grid */}
+                    {/* Project cards list */}
                     <div className="space-y-6 mb-12">
                         {allProjects.map((project, index) => (
                             <MobileProjectItem key={index} {...project} />
                         ))}
                     </div>
 
-                    {/* Mobile View All Projects */}
+                    {/* GitHub repository link */}
                     {viewAllLink && (
                         <div className="text-center">
                             <div className="space-y-4">
@@ -241,7 +250,7 @@ export function Projects({
                     </p>
                 </div>
 
-                {/* Projects List */}
+                {/* Project cards list */}
                 <div className="space-y-24 lg:space-y-32">
                     {allProjects.map((project, index) => (
                         <DesktopProjectItem
@@ -252,17 +261,17 @@ export function Projects({
                     ))}
                 </div>
 
-                {/* View All Projects */}
+                {/* GitHub repository link */}
                 {viewAllLink && (
-                    <div className="text-center mt-20 lg:mt-24">
-                        <div className="inline-flex flex-col items-center gap-4">
+                    <div className="text-center mt-20">
+                        <div className="space-y-5">
                             <p className="text-muted-foreground">
                                 {viewMoreText}
                             </p>
                             <Button
                                 variant="outline"
                                 size="lg"
-                                className="px-8 py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
+                                className="px-8 py-6 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
                                 asChild
                             >
                                 <Link href={viewAllLink} target="_blank">
