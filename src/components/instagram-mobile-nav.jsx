@@ -35,14 +35,39 @@ export function InstagramMobileNav({ navLinks = [] }) {
 
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+
+            // Check if user is at the bottom of the page
+            const isAtBottom =
+                Math.ceil(currentScrollY + windowHeight) >= documentHeight - 10;
+
+            // If at bottom, set the last section as active
+            if (isAtBottom && sections.length > 0) {
+                setActiveSection(sections[sections.length - 1].id);
+                return;
+            }
 
             // Update active section based on scroll position
-            const scrollPosition = currentScrollY + 100;
+            const scrollPosition = currentScrollY + 150; // Increased offset for better detection
+
             for (let i = sections.length - 1; i >= 0; i--) {
                 const section = document.getElementById(sections[i].id);
                 if (section) {
                     const sectionTop = section.offsetTop;
-                    if (scrollPosition >= sectionTop) {
+                    const sectionHeight = section.offsetHeight;
+                    const sectionBottom = sectionTop + sectionHeight;
+
+                    // Check if the scroll position is within this section
+                    if (
+                        scrollPosition >= sectionTop &&
+                        scrollPosition < sectionBottom + 100
+                    ) {
+                        setActiveSection(sections[i].id);
+                        break;
+                    }
+                    // For sections that are partially visible
+                    else if (scrollPosition >= sectionTop) {
                         setActiveSection(sections[i].id);
                         break;
                     }
@@ -51,6 +76,8 @@ export function InstagramMobileNav({ navLinks = [] }) {
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
+        // Call immediately to set initial state
+        handleScroll();
         return () => window.removeEventListener("scroll", handleScroll);
     }, [isMobile, sections]);
 
@@ -62,9 +89,19 @@ export function InstagramMobileNav({ navLinks = [] }) {
         const element = document.getElementById(sectionId);
         if (element) {
             const headerHeight = 40;
-            const extraOffset = 160; // Additional offset to scroll further down
-            const elementPosition =
-                element.offsetTop - headerHeight + extraOffset;
+            let elementPosition;
+
+            // Special handling for the last section (contact)
+            if (sectionId === sections[sections.length - 1]?.id) {
+                // Scroll to bottom for contact section
+                const documentHeight = document.documentElement.scrollHeight;
+                const windowHeight = window.innerHeight;
+                elementPosition = documentHeight - windowHeight;
+            } else {
+                const extraOffset = 160; // Additional offset to scroll further down
+                elementPosition =
+                    element.offsetTop - headerHeight + extraOffset;
+            }
 
             window.scrollTo({
                 top: elementPosition,
@@ -150,9 +187,6 @@ export function InstagramMobileNav({ navLinks = [] }) {
                 {/* Safe area for iPhone home indicator */}
                 <div className="h-safe bg-background/95 backdrop-blur-xl" />
             </div>
-
-            {/* Bottom padding to prevent content from being hidden */}
-            <div className="h-20 w-full" />
         </>
     );
 }

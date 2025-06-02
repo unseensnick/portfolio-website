@@ -2,10 +2,8 @@
 
 import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Code, Menu } from "lucide-react";
-import { useState } from "react";
+import { Code } from "lucide-react";
 
 /**
  * Site header with logo, navigation links and theme toggle
@@ -16,7 +14,6 @@ export function SiteHeader({
     subtitle = "Full Stack Developer",
     navLinks = [],
 }) {
-    // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const isMobile = useIsMobile();
 
     return (
@@ -25,16 +22,6 @@ export function SiteHeader({
                 <div className="flex h-20 w-full items-center justify-between px-8">
                     {/* Logo and brand identity */}
                     <div className="flex items-center gap-4">
-                        {/*{isMobile && (
-                            <Button
-                                className="size-10"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setIsMobileMenuOpen(true)}
-                            >
-                                <Menu className="size-5" />
-                            </Button>
-                        )}*/}
                         <div className="flex items-center gap-3">
                             <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                 <Code className="size-5 text-primary" />
@@ -70,13 +57,6 @@ export function SiteHeader({
                     </div>
                 </div>
             </header>
-
-            {/* Mobile Navigation
-            <MobileNavigation
-                isOpen={isMobileMenuOpen}
-                onClose={() => setIsMobileMenuOpen(false)}
-                navLinks={navLinks}
-            />*/}
 
             {/* Instagram-style mobile navigation bar */}
             <InstagramMobileNav navLinks={navLinks} />

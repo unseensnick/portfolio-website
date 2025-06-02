@@ -11,7 +11,6 @@ import * as React from "react";
 export function ThemeToggle({ className, ...props }) {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = React.useState(false);
-    const [isAnimating, setIsAnimating] = React.useState(false);
 
     React.useEffect(() => {
         setMounted(true);
@@ -30,19 +29,9 @@ export function ThemeToggle({ className, ...props }) {
         return theme;
     }, [theme, mounted]);
 
-    // Toggle between light and dark with animation
+    // Toggle between light and dark
     const handleToggle = () => {
-        setIsAnimating(true);
-
-        // Small delay to show animation before theme change
-        setTimeout(() => {
-            setTheme(resolvedTheme === "light" ? "dark" : "light");
-
-            // Reset animation state
-            setTimeout(() => {
-                setIsAnimating(false);
-            }, 300);
-        }, 150);
+        setTheme(resolvedTheme === "light" ? "dark" : "light");
     };
 
     if (!mounted) {

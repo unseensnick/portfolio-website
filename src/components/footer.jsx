@@ -15,8 +15,8 @@ export function Footer({ copyright }) {
                 <div className="px-6 py-8 text-center text-xs text-muted-foreground">
                     {copyright}
                 </div>
-                {/* Extra padding for mobile navigation bar */}
-                <div className="h-4"></div>
+                {/* Extra padding for mobile navigation bar - increased height */}
+                <div className="h-24 pb-safe"></div>
             </footer>
         );
     }
