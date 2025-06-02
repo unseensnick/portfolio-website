@@ -115,7 +115,11 @@
 @layer base {
     * {
         @apply border-border outline-ring/50;
+        /* Smooth transitions for theme switching */
+        transition: background-color 0.08s ease-out, color 0.08s ease-out,
+            border-color 0.08s ease-out, box-shadow 0.08s ease-out;
     }
+
     body {
         @apply bg-background text-foreground font-sans text-base leading-relaxed;
     }
@@ -141,5 +145,10 @@
 
     p {
         @apply leading-relaxed;
+    }
+
+    /* Disable transitions during page load */
+    .preload * {
+        transition: none !important;
     }
 }

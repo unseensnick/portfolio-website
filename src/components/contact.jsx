@@ -7,8 +7,8 @@ function ContactCard({ icon: Icon, title, subtitle, href, isEmail = false }) {
     return (
         <Card className="group p-8 border-border bg-card hover:bg-muted/50 transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1">
             <div className="text-center space-y-4">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                    <Icon className="w-8 h-8 text-primary" />
+                <div className="size-16 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
+                    <Icon className="size-8 text-primary" />
                 </div>
                 <div className="space-y-2">
                     <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
@@ -24,14 +24,23 @@ function ContactCard({ icon: Icon, title, subtitle, href, isEmail = false }) {
                     className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-all duration-300 group-hover:underline"
                 >
                     {href}
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="size-4" />
                 </Link>
             </div>
         </Card>
     );
 }
 
-export function Contact({ title, description, email, github }) {
+export function Contact({
+    title,
+    description,
+    email,
+    github,
+    emailSubtitle,
+    githubSubtitle,
+    ctaTitle,
+    ctaDescription,
+}) {
     return (
         <section className="py-24 lg:py-32">
             <div className="max-w-4xl mx-auto px-8">
@@ -49,14 +58,14 @@ export function Contact({ title, description, email, github }) {
                     <ContactCard
                         icon={Mail}
                         title="Email"
-                        subtitle="Drop me a line"
+                        subtitle={emailSubtitle}
                         href={email}
                         isEmail={true}
                     />
                     <ContactCard
                         icon={Github}
                         title="GitHub"
-                        subtitle="Check out my code"
+                        subtitle={githubSubtitle}
                         href={github}
                     />
                 </div>
@@ -67,12 +76,10 @@ export function Contact({ title, description, email, github }) {
                         <div className="space-y-6">
                             <div className="space-y-4">
                                 <h3 className="text-2xl lg:text-3xl font-bold text-foreground">
-                                    Ready to start a project?
+                                    {ctaTitle}
                                 </h3>
                                 <p className="text-lg text-muted-foreground max-w-md mx-auto">
-                                    Whether you have a specific project in mind
-                                    or just want to explore possibilities, I'd
-                                    love to hear from you.
+                                    {ctaDescription}
                                 </p>
                             </div>
 
@@ -83,7 +90,7 @@ export function Contact({ title, description, email, github }) {
                                     asChild
                                 >
                                     <Link href={`mailto:${email}`}>
-                                        <Mail className="w-5 h-5 mr-2" />
+                                        <Mail className="size-5 mr-2" />
                                         Send Email
                                     </Link>
                                 </Button>
@@ -97,7 +104,7 @@ export function Contact({ title, description, email, github }) {
                                         href={`https://${github}`}
                                         target="_blank"
                                     >
-                                        <Github className="w-5 h-5 mr-2" />
+                                        <Github className="size-5 mr-2" />
                                         View GitHub
                                     </Link>
                                 </Button>

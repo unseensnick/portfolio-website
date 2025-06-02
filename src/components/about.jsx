@@ -11,13 +11,21 @@ function TechTag({ text }) {
 function InterestItem({ text }) {
     return (
         <div className="flex items-center gap-2 text-muted-foreground">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+            <div className="size-1.5 rounded-full bg-primary"></div>
             <span className="text-sm">{text}</span>
         </div>
     );
 }
 
-export function About({ title, paragraphs, technologies, interests, image }) {
+export function About({
+    title,
+    paragraphs,
+    technologies,
+    interests,
+    image,
+    technologiesHeading,
+    interestsHeading,
+}) {
     return (
         <section className="py-24 lg:py-32">
             <div className="max-w-6xl mx-auto px-8">
@@ -41,8 +49,8 @@ export function About({ title, paragraphs, technologies, interests, image }) {
                             )}
                             {!image && (
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
-                                        <div className="w-8 h-8 rounded-lg bg-primary/20"></div>
+                                    <div className="size-16 rounded-xl bg-primary/10 flex items-center justify-center">
+                                        <div className="size-8 rounded-lg bg-primary/20"></div>
                                     </div>
                                 </div>
                             )}
@@ -66,7 +74,7 @@ export function About({ title, paragraphs, technologies, interests, image }) {
                         {/* Technologies */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-semibold text-foreground">
-                                Technologies & Tools
+                                {technologiesHeading}
                             </h3>
                             <div className="flex flex-wrap gap-3">
                                 {technologies.map((tech, index) => (
@@ -78,7 +86,7 @@ export function About({ title, paragraphs, technologies, interests, image }) {
                         {/* Interests */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-semibold text-foreground">
-                                When I'm Not Coding
+                                {interestsHeading}
                             </h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {interests.map((interest, index) => (

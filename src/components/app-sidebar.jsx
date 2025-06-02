@@ -1,50 +1,33 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Command, FolderOpen, Home, Mail, User } from "lucide-react";
+import { FolderOpen, Home, Mail, User } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 
-// Main navigation items (shown in header on desktop, sidebar on mobile)
-const mainNavItems = [
-    {
-        title: "Home",
-        url: "#",
-        icon: Home,
-    },
-    {
-        title: "Projects",
-        url: "#",
-        icon: FolderOpen,
-    },
-    {
-        title: "About",
-        url: "#",
-        icon: User,
-    },
-    {
-        title: "Contact",
-        url: "#",
-        icon: Mail,
-    },
-];
+const iconMap = {
+    Home: Home,
+    FolderOpen: FolderOpen,
+    User: User,
+    Mail: Mail,
+};
 
-export function AppSidebar({ ...props }) {
+export function AppSidebar({ navLinks = [], ...props }) {
     const isMobile = useIsMobile();
+
+    // Convert navLinks to the format expected by NavMain
+    const mainNavItems = navLinks.map((link) => ({
+        title: link.label,
+        url: link.href,
+        icon: iconMap[link.icon] || Home,
+    }));
 
     return (
         <Sidebar className="top-14 h-[calc(100svh-3.5rem)]" {...props}>
             <SidebarContent>
-                {/* Show main navigation on mobile */}
+                {/* Show main navigation on mobile - though now we use the better mobile nav */}
                 {isMobile && (
                     <NavMain items={mainNavItems} groupLabel="Navigation" />
                 )}

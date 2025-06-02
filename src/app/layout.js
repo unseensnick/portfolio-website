@@ -3,6 +3,7 @@ import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { portfolioData } from "@/data/portfolio";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
@@ -36,7 +37,11 @@ export default function RootLayout({ children }) {
                             className="flex flex-col flex-1"
                         >
                             {/* Fixed site header */}
-                            <SiteHeader />
+                            <SiteHeader
+                                logo={portfolioData.nav.logo}
+                                subtitle={portfolioData.nav.subtitle}
+                                navLinks={portfolioData.nav.links}
+                            />
 
                             {/* Content area with sidebar */}
                             <div className="flex flex-1 bg-background">
@@ -48,11 +53,16 @@ export default function RootLayout({ children }) {
                                 </SidebarInset>
 
                                 {/* Left sidebar */}
-                                <AppSidebar side="left" />
+                                <AppSidebar
+                                    side="left"
+                                    navLinks={portfolioData.nav.links}
+                                />
                             </div>
 
                             {/* Section Navigation - Fixed positioned */}
-                            <SectionNavigation />
+                            <SectionNavigation
+                                navLinks={portfolioData.nav.links}
+                            />
                         </SidebarProvider>
                     </div>
                 </ThemeProvider>

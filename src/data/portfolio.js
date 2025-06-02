@@ -1,11 +1,28 @@
 export const portfolioData = {
     nav: {
         logo: "unseensnick",
+        subtitle: "Full Stack Developer",
         links: [
-            { href: "#home", label: "Home" },
-            { href: "#projects", label: "Projects" },
-            { href: "#about", label: "About" },
-            { href: "#contact", label: "Contact" },
+            {
+                href: "#home",
+                label: "Home",
+                icon: "Home",
+            },
+            {
+                href: "#projects",
+                label: "Projects",
+                icon: "FolderOpen",
+            },
+            {
+                href: "#about",
+                label: "About",
+                icon: "User",
+            },
+            {
+                href: "#contact",
+                label: "Contact",
+                icon: "Mail",
+            },
         ],
     },
     hero: {
@@ -18,6 +35,9 @@ export const portfolioData = {
     },
     projects: {
         title: "Projects",
+        description:
+            "A showcase of projects that demonstrate my approach to solving complex problems through clean, efficient code.",
+        viewMoreText: "Want to see more of my work?",
         featured: {
             title: "Featured Project",
             description:
@@ -48,6 +68,8 @@ export const portfolioData = {
     },
     about: {
         title: "About",
+        technologiesHeading: "Technologies & Tools",
+        interestsHeading: "When I'm Not Coding",
         paragraphs: [
             "Lorem ipsum dolor sit amet consectetur. Vitae volutpat nisi pulvinar est tellus cursus gravida ut nunc. Eger adipiscing pulvinar nisi sed sed. Vestibulum in vitae porta nunc. Sapien ullamcorper ipsum pellentesque.",
             "Lorem ipsum dolor sit amet consectetur. Eget volutpat nisi pulvinar est tellus cursus gravida ut nunc. Pages, adipiscing pulvinar nisi sed sed. Vestibulum in vitae porta nunc. Sapien ullamcorper ipsum pellentesque.",
@@ -61,7 +83,12 @@ export const portfolioData = {
         description:
             "Lorem ipsum dolor sit amet consectetur. Est etiam magna nisi libero rhoncus massa lacus nunc.",
         email: "your.email@example.com",
+        emailSubtitle: "Drop me a line",
         github: "github.com/yourusername",
+        githubSubtitle: "Check out my code",
+        ctaTitle: "Ready to start a project?",
+        ctaDescription:
+            "Whether you have a specific project in mind or just want to explore possibilities, I'd love to hear from you.",
     },
     footer: {
         copyright: "© 2025 UnseenSnick. All rights reserved.",

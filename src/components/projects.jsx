@@ -31,8 +31,8 @@ function ProjectItem({
                         )}
                         {!image && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
-                                    <div className="w-8 h-8 rounded-lg bg-primary/20"></div>
+                                <div className="size-16 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <div className="size-8 rounded-lg bg-primary/20"></div>
                                 </div>
                             </div>
                         )}
@@ -60,7 +60,7 @@ function ProjectItem({
                             asChild
                         >
                             <Link href={projectUrl} target="_blank">
-                                <ExternalLink className="w-4 h-4 mr-2" />
+                                <ExternalLink className="size-4 mr-2" />
                                 Live Demo
                             </Link>
                         </Button>
@@ -70,7 +70,7 @@ function ProjectItem({
                             asChild
                         >
                             <Link href={codeUrl} target="_blank">
-                                <Github className="w-4 h-4 mr-2" />
+                                <Github className="size-4 mr-2" />
                                 Source
                             </Link>
                         </Button>
@@ -81,7 +81,14 @@ function ProjectItem({
     );
 }
 
-export function Projects({ title, featured, items, viewAllLink }) {
+export function Projects({
+    title,
+    featured,
+    items,
+    viewAllLink,
+    description,
+    viewMoreText,
+}) {
     // Combine featured project with other projects for uniform display
     const allProjects = [featured, ...items];
 
@@ -93,8 +100,7 @@ export function Projects({ title, featured, items, viewAllLink }) {
                         {title}
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        A showcase of projects that demonstrate my approach to
-                        solving complex problems through clean, efficient code.
+                        {description}
                     </p>
                 </div>
 
@@ -112,9 +118,7 @@ export function Projects({ title, featured, items, viewAllLink }) {
                 {/* View All Projects */}
                 <div className="text-center mt-20 lg:mt-24">
                     <div className="inline-flex flex-col items-center gap-4">
-                        <p className="text-muted-foreground">
-                            Want to see more of my work?
-                        </p>
+                        <p className="text-muted-foreground">{viewMoreText}</p>
                         <Button
                             variant="outline"
                             size="lg"
@@ -122,7 +126,7 @@ export function Projects({ title, featured, items, viewAllLink }) {
                             asChild
                         >
                             <Link href={viewAllLink} target="_blank">
-                                <Github className="w-5 h-5 mr-2" />
+                                <Github className="size-5 mr-2" />
                                 View All on GitHub
                                 <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
                                     →

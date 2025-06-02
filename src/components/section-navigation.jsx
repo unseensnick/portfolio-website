@@ -3,16 +3,17 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 
-const sections = [
-    { id: "home", label: "Home" },
-    { id: "projects", label: "Projects" },
-    { id: "about", label: "About" },
-    { id: "contact", label: "Contact" },
-];
-
-export function SectionNavigation() {
-    const [activeSection, setActiveSection] = useState("home");
+export function SectionNavigation({ navLinks = [] }) {
+    const [activeSection, setActiveSection] = useState(
+        navLinks[0]?.href?.replace("#", "") || "home"
+    );
     const isMobile = useIsMobile();
+
+    // Convert navLinks to sections format
+    const sections = navLinks.map((link) => ({
+        id: link.href.replace("#", ""),
+        label: link.label,
+    }));
 
     useEffect(() => {
         // Don't set up scroll listener on mobile
@@ -38,7 +39,7 @@ export function SectionNavigation() {
         handleScroll(); // Check initial position
 
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [isMobile]);
+    }, [isMobile, sections]);
 
     // Don't render on mobile - moved after all hooks
     if (isMobile) return null;
@@ -71,7 +72,7 @@ export function SectionNavigation() {
                         >
                             {/* Dot indicator */}
                             <div
-                                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                                className={`size-3 rounded-full transition-all duration-300 ${
                                     isActive
                                         ? "bg-primary scale-125"
                                         : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:scale-110"
@@ -91,7 +92,7 @@ export function SectionNavigation() {
                                 </span>
 
                                 {/* Arrow */}
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-card border-l border-b border-border rotate-45" />
+                                <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 size-2 bg-card border-l border-b border-border rotate-45" />
                             </div>
                         </button>
                     );

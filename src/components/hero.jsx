@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,8 +29,9 @@ export function Hero({ greeting, title, description, githubUrl, image }) {
                             >
                                 <Button
                                     size="lg"
-                                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+                                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex items-center gap-2"
                                 >
+                                    <Github className="size-6" />
                                     View GitHub
                                 </Button>
                             </Link>
