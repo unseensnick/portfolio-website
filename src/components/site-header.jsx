@@ -19,22 +19,22 @@ export function SiteHeader() {
     const isMobile = useIsMobile();
 
     return (
-        <header className="bg-background sticky top-0 z-50 flex w-full items-center border-b">
-            <div className="flex h-14 w-full items-center justify-between px-4">
+        <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-50 flex w-full items-center border-b">
+            <div className="flex h-20 w-full items-center justify-between px-8">
                 {/* Left side - Logo/Brand */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     {isMobile && (
                         <Button
-                            className="h-8 w-8"
+                            className="h-10 w-10"
                             variant="ghost"
                             size="icon"
                             onClick={toggleSidebar}
                         >
-                            <SidebarIcon className="h-4 w-4" />
+                            <SidebarIcon className="h-5 w-5" />
                         </Button>
                     )}
-                    <div className="flex items-center gap-2">
-                        <span className="text-lg font-semibold text-foreground">
+                    <div className="flex items-center gap-3">
+                        <span className="text-xl font-bold text-foreground">
                             unseensnick
                         </span>
                         <span className="text-sm text-muted-foreground">
@@ -44,9 +44,9 @@ export function SiteHeader() {
                 </div>
 
                 {/* Right side - Navigation + Theme Toggle */}
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-8">
                     {!isMobile && (
-                        <nav className="flex items-center gap-6">
+                        <nav className="flex items-center gap-8">
                             {navigationItems.map((item) => (
                                 <a
                                     key={item.title}
