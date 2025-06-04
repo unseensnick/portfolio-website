@@ -1,42 +1,20 @@
-# Portfolio Website
-
-A modern, responsive portfolio website built with Next.js, featuring a clean design and responsive layout for showcasing work and skills.
-
-## Features
-
--   **Responsive Design** - Optimized for desktop and mobile with dedicated layouts
--   **Dark/Light Mode** - Theme switching with system preference detection
--   **Modern UI** - Clean, accessible interface with smooth animations
--   **Component-Based** - Modular architecture for easy customization
--   **Section Navigation** - Easy scrolling between portfolio sections
--   **Dynamic Content** - Data-driven content management from `src/data/portfolio.js`
-
-## Project Structure
-
-```
-src/
-├── app/               # Next.js app router files
-├── components/        # Reusable UI components
-│   ├── ui/            # Base UI components
-│   └── ...            # Feature components (hero, projects, etc.)
-├── data/              # Portfolio content and configuration
-├── hooks/             # Custom React hooks
-└── lib/               # Utility functions and helpers
-```
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-First, install the dependencies:
+### Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
 
 ```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
+PAYLOAD_SECRET=your-secret-key-change-me
+DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
+NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
 ```
 
-Then, run the development server:
+### Next.js Development Server
+
+Run the Next.js development server:
 
 ```bash
 npm run dev
@@ -44,31 +22,64 @@ npm run dev
 yarn dev
 # or
 pnpm dev
+# or
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Customization
+### PayloadCMS Development Server
 
-To customize the portfolio content, edit the data files in `src/data/` directory. The main configuration is in `portfolio.js`.
+To run the PayloadCMS development server:
 
-### Styling
+```bash
+npm run payload:dev
+```
 
-The project uses Tailwind CSS for styling. Customize the theme in `components.json` and `global.css`.
+Open [http://localhost:3000/admin](http://localhost:3000/admin) to access the PayloadCMS admin panel.
 
-## Technology Stack
+### Editing Portfolio Content
 
--   [Next.js](https://nextjs.org/) - React framework
--   [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
--   [Lucide Icons](https://lucide.dev/) - SVG icon library
--   [Radix UI](https://www.radix-ui.com/) - Headless UI components
+You can edit all sections of your portfolio through the PayloadCMS admin panel:
 
-## Deployment
+1. **Hero Section**: Edit the greeting, title, description, GitHub URL, and hero image
+2. **Projects Section**: Edit the featured project, add/remove projects, and update project details
+3. **About Section**: Edit your bio paragraphs, technologies, interests, and about image
+4. **Contact Section**: Edit contact information, email, GitHub, and call-to-action text
+5. **Site Header**: Edit the logo, subtitle, and navigation links
+6. **Footer**: Edit the copyright text
 
-The site can be easily deployed on Vercel:
+After making changes in the admin panel, they will automatically appear on your website.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fportfolio-website)
+### Generate Types
 
-## License
+To generate TypeScript types from your PayloadCMS collections:
 
-MIT
+```bash
+npm run payload:generate:types
+```
+
+## Project Structure
+
+- `src/app`: Next.js application
+- `src/components`: React components
+- `src/collections`: PayloadCMS collections
+- `src/data`: Default data for the portfolio (used as fallback)
+- `src/lib`: Utility functions
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+For PayloadCMS:
+
+- [PayloadCMS Documentation](https://payloadcms.com/docs) - learn about PayloadCMS features and API.
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
