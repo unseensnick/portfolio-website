@@ -7,16 +7,30 @@ import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
 import { Code } from "lucide-react";
 import { useEffect, useState } from "react";
 
+/**
+ * Navigation link data structure
+ * @property href - URL or anchor for the link (e.g. "#about")
+ * @property label - Display text for the link
+ */
 interface NavLink {
     href: string;
     label: string;
 }
 
+/**
+ * Section data for scroll utilities
+ */
 interface Section {
     id: string;
     label: string;
 }
 
+/**
+ * Props for the SiteHeader component
+ * @property logo - Text to display as the site logo
+ * @property subtitle - Small text below the logo
+ * @property navLinks - Array of navigation links
+ */
 interface SiteHeaderProps {
     logo?: string;
     subtitle?: string;
@@ -24,8 +38,13 @@ interface SiteHeaderProps {
 }
 
 /**
- * Site header with logo, navigation links and theme toggle
- * Adapts between mobile and desktop layouts
+ * Responsive site header with navigation and theme toggle
+ *
+ * Features:
+ * - Adapts between mobile and desktop layouts
+ * - Highlights active section based on scroll position
+ * - Smooth scrolling to sections on click
+ * - Fixed positioning with subtle background blur
  */
 export function SiteHeader({
     logo = "unseensnick",
@@ -43,19 +62,20 @@ export function SiteHeader({
         label: link.label,
     }));
 
-    // Set up scroll listener for desktop navigation
+    // Set up scroll listener to track active section (desktop only)
     useEffect(() => {
         if (isMobile) return;
 
+        // setupScrollListener returns a cleanup function
         const cleanup = setupScrollListener(sections, setActiveSection, 100);
         return cleanup;
     }, [isMobile, sections]);
 
-    // Handle navigation click
+    // Handle navigation link click with smooth scroll
     const handleNavClick = (e: React.MouseEvent, href: string) => {
         e.preventDefault();
         const sectionId = href.replace("#", "");
-        scrollToSection(sectionId, 100, 0); // decrease this if scrolling too far
+        scrollToSection(sectionId, 100, 0);
     };
 
     return (
@@ -104,6 +124,7 @@ export function SiteHeader({
                                             }`}
                                         >
                                             {link.label}
+                                            {/* Animated underline indicator */}
                                             <span
                                                 className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
                                                     isActive
@@ -121,7 +142,7 @@ export function SiteHeader({
                 </div>
             </header>
 
-            {/* Instagram-style mobile navigation bar */}
+            {/* Mobile navigation shown at bottom of screen on small devices */}
             <InstagramMobileNav navLinks={navLinks} />
         </>
     );

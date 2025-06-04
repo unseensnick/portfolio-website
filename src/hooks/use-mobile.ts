@@ -3,30 +3,40 @@
 import { useEffect, useState } from "react";
 
 /**
- * Hook to detect mobile devices based on screen width
- * @returns {boolean} True if the device is mobile
+ * Custom hook that detects if the current viewport is mobile-sized
+ *
+ * @param breakpoint - Width in pixels below which is considered mobile (default: 768px)
+ * @returns boolean - True when viewport width is less than the breakpoint
+ *
+ * Example:
+ * ```
+ * const isMobile = useIsMobile();
+ * // or with custom breakpoint
+ * const isSmallScreen = useIsMobile(480);
+ * ```
  */
-export function useIsMobile(): boolean {
+export function useIsMobile(breakpoint: number = 768): boolean {
+    // State to track if viewport is mobile width
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
     useEffect(() => {
-        // Check if window is defined (client-side)
+        // Skip effect during server-side rendering
         if (typeof window === "undefined") return;
 
-        // Initial check
+        // Function to check viewport width
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
+            setIsMobile(window.innerWidth < breakpoint);
         };
 
-        // Run on mount
+        // Run initial check
         checkMobile();
 
-        // Add resize listener
+        // Update on window resize
         window.addEventListener("resize", checkMobile);
 
-        // Clean up
+        // Clean up event listener on component unmount
         return () => window.removeEventListener("resize", checkMobile);
-    }, []);
+    }, [breakpoint]);
 
     return isMobile;
 }

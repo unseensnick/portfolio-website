@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * Represents a navigation section in the website
+ * @property id - HTML element ID for the section (without #)
+ * @property label - Display text for navigation links
+ * @property icon - Optional icon identifier for the section
+ */
 export interface Section {
     id: string;
     label: string;
@@ -7,11 +13,18 @@ export interface Section {
 }
 
 /**
- * Scroll to a specific section with configurable options
- * @param sectionId - The ID of the section to scroll to
- * @param offset - Offset from the top in pixels
- * @param delay - Delay before scrolling in milliseconds
- * @param isMobile - Whether the current view is mobile
+ * Scrolls to a specific section of the page with smooth animation
+ *
+ * Features:
+ * - Supports different behavior for mobile and desktop
+ * - Adds configurable offset to account for fixed headers
+ * - Special handling for last section on mobile (scrolls to bottom)
+ * - Allows delayed scrolling with setTimeout
+ *
+ * @param sectionId - HTML element ID to scroll to (without #)
+ * @param offset - Pixels to offset from the top (for fixed headers)
+ * @param delay - Milliseconds to wait before scrolling
+ * @param isMobile - Whether to use mobile-specific scrolling behavior
  */
 export function scrollToSection(
     sectionId: string,
@@ -57,8 +70,13 @@ export function scrollToSection(
 }
 
 /**
- * Check if a section is the last one in the document
- * @param sectionId - The ID of the section to check
+ * Determines if a section is the last visible section in the document
+ *
+ * This is used to handle special scrolling behavior for the last section,
+ * such as scrolling to bottom of page on mobile.
+ *
+ * @param sectionId - HTML element ID to check (without #)
+ * @returns true if the section is the last visible section
  */
 function isLastSection(sectionId: string): boolean {
     const section = document.getElementById(sectionId);
@@ -83,12 +101,19 @@ function isLastSection(sectionId: string): boolean {
 }
 
 /**
- * Set up a scroll listener to update active section
- * @param sections - Array of sections with id and label
- * @param setActiveSection - State setter for active section
- * @param offset - Offset from the top in pixels
- * @param isMobile - Whether the current view is mobile
- * @returns Cleanup function
+ * Sets up a scroll listener to highlight the active section in navigation
+ *
+ * Features:
+ * - Automatically updates active section based on scroll position
+ * - Special handling for bottom of page (activates last section)
+ * - Different detection logic for mobile and desktop
+ * - Returns cleanup function to remove event listener
+ *
+ * @param sections - Array of section objects with id and label
+ * @param setActiveSection - State setter function to update active section
+ * @param offset - Pixels to offset detection point from the top
+ * @param isMobile - Whether to use mobile-specific detection logic
+ * @returns Cleanup function to remove scroll listener
  */
 export function setupScrollListener(
     sections: Section[],
@@ -113,7 +138,7 @@ export function setupScrollListener(
         // Get current scroll position with offset
         const scrollPosition = currentScrollY + (isMobile ? 150 : offset + 100);
 
-        // Find the current section
+        // Find the current section by checking positions from bottom to top
         for (let i = sections.length - 1; i >= 0; i--) {
             const section = document.getElementById(sections[i].id);
 

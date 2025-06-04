@@ -4,54 +4,36 @@ import { ButtonGroup } from "@/components/shared/button-group";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
 import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
-import { Badge } from "@/components/ui/badge";
+import { TechBadgeGroup } from "@/components/ui/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Github } from "lucide-react";
 
+/**
+ * Represents a technology used in a project
+ */
 interface Technology {
     name: string;
 }
 
 /**
- * Displays technology tags used in a project with the same style as About section
+ * Props for ProjectItem components
  */
-function TechnologyTags({ technologies }: { technologies?: Technology[] }) {
-    if (!technologies || technologies.length === 0) return null;
-
-    // Group technologies in chunks of 4 for better visual arrangement
-    const chunkSize = 4;
-    const techGroups = [];
-
-    for (let i = 0; i < technologies.length; i += chunkSize) {
-        techGroups.push(technologies.slice(i, i + chunkSize));
-    }
-
-    return (
-        <div className="space-y-2.5">
-            {techGroups.map((group, groupIndex) => (
-                <div key={groupIndex} className="flex flex-wrap gap-2.5">
-                    {group.map((tech, index) => (
-                        <Badge
-                            key={index}
-                            variant="secondary"
-                            className={cn(
-                                "rounded-full font-medium bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-300",
-                                "px-2.5 py-1 text-[0.8125rem]"
-                            )}
-                        >
-                            {tech.name}
-                        </Badge>
-                    ))}
-                </div>
-            ))}
-        </div>
-    );
+interface ProjectItemProps {
+    title: string;
+    description: string;
+    projectUrl?: string;
+    codeUrl?: string;
+    technologies?: Technology[];
+    image?: string;
 }
 
 /**
- * Mobile project card component with image and action buttons
+ * Mobile-optimized project card with stacked layout
+ *
+ * Displays project image at top, with title, description,
+ * technologies, and action buttons below in a card format
  */
 function MobileProjectItem({
     title,
@@ -60,14 +42,8 @@ function MobileProjectItem({
     codeUrl,
     technologies,
     image,
-}: {
-    title: string;
-    description: string;
-    projectUrl?: string;
-    codeUrl?: string;
-    technologies?: Technology[];
-    image?: string;
-}) {
+}: ProjectItemProps) {
+    // Create buttons array based on available URLs
     const buttons = [];
 
     if (projectUrl) {
@@ -111,7 +87,9 @@ function MobileProjectItem({
                     </p>
 
                     {/* Technology tags */}
-                    <TechnologyTags technologies={technologies} />
+                    {technologies && technologies.length > 0 && (
+                        <TechBadgeGroup technologies={technologies} size="sm" />
+                    )}
                 </div>
 
                 {buttons.length > 0 && (
@@ -127,7 +105,12 @@ function MobileProjectItem({
 }
 
 /**
- * Desktop project card with side-by-side layout and action buttons
+ * Desktop-optimized project card with side-by-side layout
+ *
+ * Features:
+ * - Two-column layout with image and content
+ * - Alternating image position (left/right) based on 'reverse' prop
+ * - Larger typography and spacing compared to mobile version
  */
 function DesktopProjectItem({
     title,
@@ -137,15 +120,8 @@ function DesktopProjectItem({
     technologies,
     image,
     reverse = false,
-}: {
-    title: string;
-    description: string;
-    projectUrl?: string;
-    codeUrl?: string;
-    technologies?: Technology[];
-    image?: string;
-    reverse?: boolean;
-}) {
+}: ProjectItemProps & { reverse?: boolean }) {
+    // Create buttons array based on available URLs
     const buttons = [];
 
     if (projectUrl) {
@@ -170,13 +146,17 @@ function DesktopProjectItem({
     return (
         <div className="relative">
             <div
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center ${
-                    reverse ? "lg:grid-flow-col-dense" : ""
-                }`}
+                className={cn(
+                    "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center",
+                    reverse && "lg:grid-flow-col-dense"
+                )}
             >
                 {/* Project image/thumbnail */}
                 <div
-                    className={`relative group ${reverse ? "lg:col-start-2" : ""}`}
+                    className={cn(
+                        "relative group",
+                        reverse && "lg:col-start-2"
+                    )}
                 >
                     <ResponsiveImage
                         src={image}
@@ -187,9 +167,10 @@ function DesktopProjectItem({
 
                 {/* Project details and action buttons */}
                 <div
-                    className={`space-y-6 ${
-                        reverse ? "lg:col-start-1 lg:row-start-1" : ""
-                    }`}
+                    className={cn(
+                        "space-y-6",
+                        reverse && "lg:col-start-1 lg:row-start-1"
+                    )}
                 >
                     <div className="space-y-4">
                         <h3 className="text-2xl lg:text-3xl font-bold text-foreground">
@@ -200,7 +181,12 @@ function DesktopProjectItem({
                         </p>
 
                         {/* Technology tags */}
-                        <TechnologyTags technologies={technologies} />
+                        {technologies && technologies.length > 0 && (
+                            <TechBadgeGroup
+                                technologies={technologies}
+                                size="md"
+                            />
+                        )}
                     </div>
 
                     {buttons.length > 0 && (
@@ -215,6 +201,9 @@ function DesktopProjectItem({
     );
 }
 
+/**
+ * Project data structure for a single project
+ */
 interface ProjectItem {
     title: string;
     description: string;
@@ -224,6 +213,15 @@ interface ProjectItem {
     image?: string;
 }
 
+/**
+ * Props for the Projects component
+ * @property title - Section heading
+ * @property featured - Optional featured project (displayed first/prominently)
+ * @property items - Array of regular projects to display
+ * @property viewAllLink - Optional link to view more projects (e.g., GitHub profile)
+ * @property description - Section subheading/description
+ * @property viewMoreText - Text shown above "View All" button
+ */
 interface ProjectsProps {
     title?: string;
     featured?: ProjectItem;
@@ -234,7 +232,13 @@ interface ProjectsProps {
 }
 
 /**
- * Projects section displaying featured and regular project items
+ * Projects section showcasing portfolio projects
+ *
+ * Features:
+ * - Different layouts for mobile and desktop views
+ * - Special handling for featured project (desktop only)
+ * - Technology tags for each project
+ * - "View All" link to external portfolio
  */
 export function Projects({
     title = "Projects",
@@ -272,8 +276,11 @@ export function Projects({
           ]
         : [];
 
+    /**
+     * Renders the project cards with different layouts for mobile/desktop
+     */
     const renderProjects = () => (
-        <div className={isMobile ? "space-y-6 mb-12" : "space-y-32"}>
+        <div className={cn(isMobile ? "space-y-6 mb-12" : "space-y-32")}>
             {/* Featured project (first item) on desktop only */}
             {!isMobile && featured && <DesktopProjectItem {...featured} />}
 
@@ -292,23 +299,29 @@ export function Projects({
         </div>
     );
 
+    /**
+     * Renders the "View All" section if a link is provided
+     */
     const renderViewAllLink = () => {
         if (!viewAllLink) return null;
 
         return (
-            <div className={`text-center ${isMobile ? "" : "mt-24"}`}>
+            <div className={cn("text-center", isMobile ? "" : "mt-24")}>
                 <div className="space-y-4 sm:space-y-6">
                     <p
-                        className={`${isMobile ? "text-sm px-4" : "text-lg"} text-muted-foreground`}
+                        className={cn(
+                            "text-muted-foreground",
+                            isMobile ? "text-sm px-4" : "text-lg"
+                        )}
                     >
                         {viewMoreText}
                     </p>
                     <ButtonGroup
                         buttons={githubButton}
                         fullWidthMobile={isMobile}
-                        className={
+                        className={cn(
                             isMobile ? "max-w-sm mx-auto" : "justify-center"
-                        }
+                        )}
                     />
                 </div>
             </div>

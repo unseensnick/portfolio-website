@@ -2,29 +2,14 @@
 
 import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
-import { Badge } from "@/components/ui/badge";
+import { TechBadgeGroup } from "@/components/ui/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
 /**
- * Styled tag component for displaying technology keywords
- */
-function TechTag({ text }: { text: string }) {
-    return (
-        <Badge
-            variant="secondary"
-            className={cn(
-                "rounded-full font-medium bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-300",
-                "px-3 py-1.5 text-sm"
-            )}
-        >
-            {text}
-        </Badge>
-    );
-}
-
-/**
- * Styled list item for displaying interest points
+ * Simple component to display an interest item with a bullet point
+ *
+ * @param text - The interest text to display
  */
 function InterestItem({ text }: { text: string }) {
     return (
@@ -35,6 +20,16 @@ function InterestItem({ text }: { text: string }) {
     );
 }
 
+/**
+ * Props for the About component
+ * @property title - Section heading
+ * @property paragraphs - Array of bio paragraphs to display
+ * @property technologies - Array of technology names to display as badges
+ * @property interests - Array of interests to display as bullet points
+ * @property image - URL for profile image
+ * @property technologiesHeading - Custom heading for technologies section
+ * @property interestsHeading - Custom heading for interests section
+ */
 interface AboutProps {
     title?: string;
     paragraphs?: string[];
@@ -46,7 +41,14 @@ interface AboutProps {
 }
 
 /**
- * About section displaying bio, technologies, and interests
+ * About section component displaying profile, bio, technologies, and interests
+ *
+ * Features:
+ * - Responsive layout with different designs for mobile and desktop
+ * - Profile image display with appropriate aspect ratio
+ * - Bio paragraphs with proper typography and spacing
+ * - Technology badges showcasing skills
+ * - Interests displayed as bullet points
  */
 export function About({
     title = "About Me",
@@ -61,8 +63,12 @@ export function About({
 }: AboutProps) {
     const isMobile = useIsMobile();
 
+    /**
+     * Renders appropriate layout based on viewport size
+     */
     const renderContent = () => {
         if (isMobile) {
+            // Mobile layout: stacked with image at top
             return (
                 <div className="space-y-10">
                     {/* Profile image */}
@@ -93,11 +99,10 @@ export function About({
                             <h3 className="text-lg font-semibold text-foreground">
                                 {technologiesHeading}
                             </h3>
-                            <div className="flex flex-wrap gap-2">
-                                {technologies.map((tech, index) => (
-                                    <TechTag key={index} text={tech} />
-                                ))}
-                            </div>
+                            <TechBadgeGroup
+                                technologies={technologies}
+                                size="sm"
+                            />
                         </div>
 
                         {/* Interests list */}
@@ -116,7 +121,7 @@ export function About({
             );
         }
 
-        // Desktop version
+        // Desktop layout: two columns with image on left
         return (
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-20">
                 {/* Profile image column */}
@@ -147,11 +152,7 @@ export function About({
                         <h3 className="text-xl font-semibold text-foreground">
                             {technologiesHeading}
                         </h3>
-                        <div className="flex flex-wrap gap-3">
-                            {technologies.map((tech, index) => (
-                                <TechTag key={index} text={tech} />
-                            ))}
-                        </div>
+                        <TechBadgeGroup technologies={technologies} size="lg" />
                     </div>
 
                     {/* Interests list */}

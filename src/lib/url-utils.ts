@@ -1,7 +1,21 @@
 /**
- * Ensures external URLs are properly formatted with https:// prefix
- * @param url The URL to format
- * @returns Properly formatted URL with https:// prefix or # for empty URLs
+ * Ensures URLs are properly formatted with the appropriate protocol
+ *
+ * @param url - URL string to format
+ * @returns Properly formatted URL string
+ *
+ * Handles these cases:
+ * - Empty/undefined URLs: Returns "#" (empty anchor)
+ * - Email links (mailto:): Preserves as-is
+ * - Anchor links (#): Preserves as-is
+ * - URLs with protocol (http://, https://): Preserves as-is
+ * - Plain domains: Adds "https://" prefix
+ *
+ * Example:
+ * ```
+ * formatExternalUrl("example.com") // returns "https://example.com"
+ * formatExternalUrl("mailto:name@example.com") // returns "mailto:name@example.com"
+ * ```
  */
 export function formatExternalUrl(url?: string): string {
     if (!url) return "#";

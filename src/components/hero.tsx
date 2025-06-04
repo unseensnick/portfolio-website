@@ -5,8 +5,21 @@ import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
+import { cn } from "@/lib/utils";
 import { Github } from "lucide-react";
 
+/**
+ * Props for the Hero component
+ * @property greeting - Small text displayed above the title
+ * @property title - Main heading (usually your name or role)
+ * @property description - Brief description or tagline
+ * @property githubUrl - GitHub profile URL
+ * @property image - Hero image URL
+ * @property ctaText - Primary button text
+ * @property ctaLink - Primary button link (falls back to githubUrl)
+ * @property secondaryCtaText - Secondary button text
+ * @property secondaryCtaLink - Secondary button link (defaults to projects section)
+ */
 interface HeroProps {
     greeting?: string;
     title?: string;
@@ -19,6 +32,15 @@ interface HeroProps {
     secondaryCtaLink?: string;
 }
 
+/**
+ * Hero section component for the landing page
+ *
+ * Features:
+ * - Completely different layouts for mobile and desktop
+ * - Animated image with decorative effects
+ * - Primary and secondary call-to-action buttons
+ * - Gradient text styling for visual interest
+ */
 export function Hero({
     greeting = "Welcome",
     title = "Full Stack Developer",
@@ -32,6 +54,7 @@ export function Hero({
 }: HeroProps) {
     const isMobile = useIsMobile();
 
+    // Configure call-to-action buttons
     const buttons = [
         {
             text: ctaText,
@@ -125,11 +148,11 @@ export function Hero({
     return (
         <SectionWrapper
             id="home"
-            className={
+            className={cn(
                 isMobile
                     ? "min-h-[85vh] flex items-center pt-8 pb-16"
                     : "min-h-[90vh] flex items-center"
-            }
+            )}
         >
             {renderContent()}
         </SectionWrapper>

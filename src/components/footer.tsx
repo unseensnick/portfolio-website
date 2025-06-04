@@ -2,13 +2,24 @@
 
 import { useIsMobile } from "@/hooks/use-mobile";
 
+/**
+ * Props for the Footer component
+ * @property copyright - The copyright text to display (defaults to current year)
+ */
 interface FooterProps {
     copyright?: string;
 }
 
 /**
- * Simple footer component with copyright text
- * Adapts layout and adds padding for mobile navigation on small screens
+ * Responsive footer component that displays copyright information
+ *
+ * Features:
+ * - Automatically adapts layout for mobile and desktop viewports
+ * - Adds extra padding on mobile to accommodate the bottom navigation bar
+ * - Uses backdrop blur effect on mobile for a modern glass-like appearance
+ * - Maintains consistent theming with border colors matching site design
+ *
+ * @param copyright - The copyright text to display
  */
 export function Footer({
     copyright = "© 2024 All rights reserved.",

@@ -1,6 +1,10 @@
 import type { PortfolioData } from "@/types/portfolio";
 
-// Define a fallback data structure for when PayloadCMS data is not available
+/**
+ * Fallback portfolio data used when PayloadCMS data is unavailable
+ * This provides a complete set of placeholder content for all website sections
+ * to ensure the site can still render properly even without a CMS connection
+ */
 const fallbackData = {
     nav: {
         logo: "Portfolio",
@@ -78,7 +82,17 @@ const fallbackData = {
 };
 
 /**
- * Adapts the portfolio data from PayloadCMS to the format expected by components
+ * Adapts the raw portfolio data from PayloadCMS to the format expected by components
+ *
+ * Features:
+ * - Validates that all required sections exist in the data
+ * - Falls back to defaults for missing properties
+ * - Handles different image formats (direct paths or PayloadCMS media objects)
+ * - Transforms nested data structures into the expected component props format
+ * - Ensures type compatibility with component interfaces
+ *
+ * @param data - Raw data from PayloadCMS API response
+ * @returns Properly formatted portfolio data ready for component consumption
  */
 export function adaptPortfolioData(data: any) {
     // If data is not available or missing required sections, return fallback data
@@ -167,7 +181,16 @@ export function adaptPortfolioData(data: any) {
 }
 
 /**
- * Fetch portfolio data from PayloadCMS
+ * Fetches portfolio data from PayloadCMS API and formats it for the application
+ *
+ * Features:
+ * - Connects to PayloadCMS API using environment variables or defaults
+ * - Includes proper caching and revalidation strategy
+ * - Handles API errors gracefully with fallback data
+ * - Processes API response to match component data requirements
+ * - Logs helpful error messages when API issues occur
+ *
+ * @returns Promise resolving to formatted portfolio data
  */
 export async function getPortfolioData() {
     try {

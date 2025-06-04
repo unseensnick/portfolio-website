@@ -1,10 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Modern Portfolio Website
+
+A sleek, responsive portfolio website built with Next.js and PayloadCMS for developers to showcase their skills and projects.
+
+## Features
+
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop
+- **Dark/Light Mode**: Built-in theme switching with user preference detection
+- **CMS Integration**: Edit all content through PayloadCMS admin panel
+- **TypeScript**: Type-safe codebase with enhanced developer experience
+- **Modular Components**: Reusable UI components with Tailwind CSS
+- **Animation Effects**: Subtle animations and transitions for modern UX
+
+## Technology Stack
+
+- [Next.js](https://nextjs.org) - React framework with App Router
+- [PayloadCMS](https://payloadcms.com) - Headless CMS for content management
+- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com) - Component library for styled components
+- [TypeScript](https://www.typescriptlang.org) - Static type checking
+- [PostgreSQL](https://www.postgresql.org) - Database for CMS content
 
 ## Getting Started
 
 ### Environment Setup
 
-Create a `.env` file in the root directory with the following variables:
+Create a `.env` file in the root directory:
 
 ```bash
 PAYLOAD_SECRET=your-secret-key-change-me
@@ -12,74 +32,129 @@ DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
 NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
 ```
 
-### Next.js Development Server
+### Development
 
-Run the Next.js development server:
+1. Install dependencies:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+    ```bash
+    npm install
+    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Start the development server:
 
-### PayloadCMS Development Server
+    ```bash
+    npm run dev
+    ```
 
-To run the PayloadCMS development server:
+3. Open [http://localhost:3000](http://localhost:3000) to view the website
+4. Access the CMS at [http://localhost:3000/admin](http://localhost:3000/admin)
 
-```bash
-npm run payload:dev
-```
+### Content Management
 
-Open [http://localhost:3000/admin](http://localhost:3000/admin) to access the PayloadCMS admin panel.
+Edit all website sections through the PayloadCMS admin panel:
 
-### Editing Portfolio Content
-
-You can edit all sections of your portfolio through the PayloadCMS admin panel:
-
-1. **Hero Section**: Edit the greeting, title, description, GitHub URL, and hero image
-2. **Projects Section**: Edit the featured project, add/remove projects, and update project details
-3. **About Section**: Edit your bio paragraphs, technologies, interests, and about image
-4. **Contact Section**: Edit contact information, email, GitHub, and call-to-action text
-5. **Site Header**: Edit the logo, subtitle, and navigation links
-6. **Footer**: Edit the copyright text
-
-After making changes in the admin panel, they will automatically appear on your website.
-
-### Generate Types
-
-To generate TypeScript types from your PayloadCMS collections:
-
-```bash
-npm run payload:generate:types
-```
+- **Navigation**: Logo, subtitle, and navigation links
+- **Hero**: Greeting, title, description, and main image
+- **Projects**: Featured project, project grid, and technologies
+- **About**: Bio paragraphs, skills, interests, and profile image
+- **Contact**: Email, GitHub, and call-to-action text
+- **Footer**: Copyright information
 
 ## Project Structure
 
-- `src/app`: Next.js application
-- `src/components`: React components
-- `src/collections`: PayloadCMS collections
-- `src/data`: Default data for the portfolio (used as fallback)
-- `src/lib`: Utility functions
+```
+src/
+├── app/          # Next.js app router pages and API routes
+├── components/   # Reusable React components
+│   ├── shared/   # Common components used across sections
+│   └── ui/       # Base UI components (buttons, cards, etc.)
+├── collections/  # PayloadCMS collection definitions
+├── hooks/        # Custom React hooks
+├── lib/          # Utility functions and helpers
+├── payload/      # PayloadCMS configuration
+└── types/        # TypeScript type definitions
+```
 
-## Learn More
+## Customization
 
-To learn more about Next.js, take a look at the following resources:
+- **Theme**: Modify colors in `src/app/(frontend)/styles.css`
+- **Layout**: Adjust responsive breakpoints in the useIsMobile hook
+- **Components**: Extend or modify components in the components directory
+- **Content Model**: Update PayloadCMS collections to add new fields
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-For PayloadCMS:
+### Vercel Deployment
 
-- [PayloadCMS Documentation](https://payloadcms.com/docs) - learn about PayloadCMS features and API.
+1. **Connect your repository**:
 
-## Deploy on Vercel
+    - Create a [Vercel account](https://vercel.com/signup) if you don't have one
+    - Go to the [Vercel dashboard](https://vercel.com/dashboard)
+    - Click "Add New" → "Project"
+    - Import your GitHub/GitLab/Bitbucket repository
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Configure project settings**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    - Set the Framework Preset to "Next.js"
+    - Add environment variables from your `.env` file
+    - Configure the build settings:
+        - Build Command: `npm run build`
+        - Output Directory: `.next`
+
+3. **Deploy**:
+
+    - Click "Deploy"
+    - Vercel will build and deploy your project automatically
+    - Once deployed, you'll get a production URL
+
+4. **Connect custom domain** (optional):
+    - From your project dashboard, go to "Settings" → "Domains"
+    - Add your custom domain and follow verification steps
+
+### Coolify Deployment
+
+1. **Setup Coolify server**:
+
+    - Set up a [Coolify instance](https://coolify.io/) on your server
+    - Login to your Coolify dashboard
+
+2. **Create a new service**:
+
+    - Click "Project" → "Add" → Name your project
+    - Click "Production" → "Add New Resource"
+    - Choose between "Public Repository", "Private Repository (with Github App)" or "Private Repository (with Deploy Key)"
+    - If you choose Private Repository (with Github App) then select your github app
+    - Then choose your repository and click "Load Repository"
+    - Enter the branch you want to deploy and the port number (default is 3000) but you can change it if needed
+    - Click "Continue"
+    - Fill the "Domain" field with your domain name (e.g., `portfolio.example.com`)
+    - Fill the "Ports Exposed" and "Ports Mappings" field with the same port number you entered earlier (default is 3000)
+    - Optionally, you can set a custom name for the service under "Name"
+    - Optionally, if you have environment variables, you can add them under "Environment Variables" by clicking "Add" and entering the key-value pairs
+    - Click "Deploy" and the service will be created
+
+3. **Configure environment variables**:
+
+    - Add all variables from your `.env` file
+    - Make sure to set `NODE_ENV=production`
+    - Configure the database connection string to your production database
+
+4. **Configure build settings**:
+
+    - Build Command: `npm run build`
+    - Start Command: `npm start`
+    - Port: 3000
+
+5. **Deploy**:
+
+    - Click "Save & Deploy"
+    - Coolify will build and deploy your application
+    - Monitor the build logs for any issues
+
+6. **Set up reverse proxy**:
+    - Configure your domain to point to your Coolify server
+    - Set up SSL certificates using Coolify's built-in tools
+
+## License
+
+MIT
