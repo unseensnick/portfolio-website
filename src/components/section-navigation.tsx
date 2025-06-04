@@ -1,16 +1,15 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
+import {
+    Section,
+    scrollToSection,
+    setupScrollListener,
+} from "@/lib/navigation-utils";
 import { useEffect, useState } from "react";
 
 interface NavLink {
     href: string;
-    label: string;
-}
-
-interface Section {
-    id: string;
     label: string;
 }
 
@@ -38,7 +37,12 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
         // Don't set up scroll listener on mobile
         if (isMobile) return;
 
-        const cleanup = setupScrollListener(sections, setActiveSection, 100);
+        const cleanup = setupScrollListener(
+            sections,
+            setActiveSection,
+            100,
+            false
+        );
         return cleanup;
     }, [isMobile, sections]);
 
@@ -47,7 +51,7 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
 
     // Handle navigation click using utility function
     const handleSectionClick = (sectionId: string) => {
-        scrollToSection(sectionId, 100, 0); // decrease if scrolling too far
+        scrollToSection(sectionId, 100, 0, false);
     };
 
     return (

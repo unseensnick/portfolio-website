@@ -41,6 +41,11 @@ const fallbackData = {
             projectUrl: "#",
             codeUrl: "#",
             image: "/placeholder-image.svg",
+            technologies: [
+                { name: "React" },
+                { name: "TypeScript" },
+                { name: "Tailwind CSS" },
+            ],
         },
         items: [
             {
@@ -50,6 +55,7 @@ const fallbackData = {
                 projectUrl: "#",
                 codeUrl: "#",
                 image: "/placeholder-image.svg",
+                technologies: [{ name: "Next.js" }, { name: "JavaScript" }],
             },
         ],
         description: "Here are some of my recent projects",
@@ -129,6 +135,7 @@ export function adaptPortfolioData(data: any) {
                 image:
                     data.projects.featured?.image?.url ||
                     data.projects.featured?.image,
+                technologies: data.projects.featured?.technologies || [],
             },
             items: (data.projects.items || []).map((project: any) => ({
                 title: project.title,
@@ -136,6 +143,7 @@ export function adaptPortfolioData(data: any) {
                 projectUrl: project.projectUrl,
                 codeUrl: project.codeUrl,
                 image: project.image?.url || project.image,
+                technologies: project.technologies || [],
             })),
             description: data.projects.description,
             viewMoreText:

@@ -31,12 +31,17 @@ export interface About {
     interestsHeading: string;
 }
 
+export interface Technology {
+    name: string;
+}
+
 export interface ProjectItem {
     title: string;
     description: string;
-    projectUrl: string;
-    codeUrl: string;
-    image: string;
+    projectUrl?: string;
+    codeUrl?: string;
+    image?: string;
+    technologies?: Technology[];
 }
 
 export interface Projects {

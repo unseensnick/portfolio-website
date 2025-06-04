@@ -1,10 +1,54 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/shared/button-group";
+import { ResponsiveCard } from "@/components/shared/responsive-card";
+import { ResponsiveImage } from "@/components/shared/responsive-image";
+import { SectionWrapper } from "@/components/shared/section-wrapper";
+import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { formatExternalUrl } from "@/lib/url-utils";
+import { cn } from "@/lib/utils";
 import { ExternalLink, Github } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+
+interface Technology {
+    name: string;
+}
+
+/**
+ * Displays technology tags used in a project with the same style as About section
+ */
+function TechnologyTags({ technologies }: { technologies?: Technology[] }) {
+    if (!technologies || technologies.length === 0) return null;
+
+    // Group technologies in chunks of 4 for better visual arrangement
+    const chunkSize = 4;
+    const techGroups = [];
+
+    for (let i = 0; i < technologies.length; i += chunkSize) {
+        techGroups.push(technologies.slice(i, i + chunkSize));
+    }
+
+    return (
+        <div className="space-y-2.5">
+            {techGroups.map((group, groupIndex) => (
+                <div key={groupIndex} className="flex flex-wrap gap-2.5">
+                    {group.map((tech, index) => (
+                        <Badge
+                            key={index}
+                            variant="secondary"
+                            className={cn(
+                                "rounded-full font-medium bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-300",
+                                "px-2.5 py-1 text-[0.8125rem]"
+                            )}
+                        >
+                            {tech.name}
+                        </Badge>
+                    ))}
+                </div>
+            ))}
+        </div>
+    );
+}
 
 /**
  * Mobile project card component with image and action buttons
@@ -14,36 +58,46 @@ function MobileProjectItem({
     description,
     projectUrl,
     codeUrl,
+    technologies,
     image,
 }: {
     title: string;
     description: string;
     projectUrl?: string;
     codeUrl?: string;
+    technologies?: Technology[];
     image?: string;
 }) {
-    // Check if we have any buttons to show
-    const hasButtons = projectUrl || codeUrl;
+    const buttons = [];
+
+    if (projectUrl) {
+        buttons.push({
+            text: "Live Demo",
+            href: formatExternalUrl(projectUrl),
+            icon: ExternalLink,
+            external: true,
+        });
+    }
+
+    if (codeUrl) {
+        buttons.push({
+            text: "Source Code",
+            href: formatExternalUrl(codeUrl),
+            icon: Github,
+            external: true,
+            variant: "outline" as const,
+        });
+    }
 
     return (
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+        <ResponsiveCard className="overflow-hidden p-0">
             {/* Project thumbnail */}
-            <div className="aspect-[16/10] bg-gradient-to-br from-muted via-muted to-muted/50 relative overflow-hidden">
-                {image && (
-                    <Image
-                        src={image}
-                        alt={title}
-                        fill
-                        className="object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                )}
-                {!image && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <div className="size-6 rounded bg-primary/20"></div>
-                        </div>
-                    </div>
-                )}
+            <div>
+                <ResponsiveImage
+                    src={image}
+                    alt={title}
+                    aspectRatio="landscape"
+                />
             </div>
 
             {/* Project details and action buttons */}
@@ -55,40 +109,20 @@ function MobileProjectItem({
                     <p className="text-sm text-muted-foreground leading-relaxed">
                         {description}
                     </p>
+
+                    {/* Technology tags */}
+                    <TechnologyTags technologies={technologies} />
                 </div>
 
-                {/* Render buttons only if URLs are provided */}
-                {hasButtons && (
-                    <div className="flex flex-col gap-3 pt-2">
-                        {projectUrl && (
-                            <Button
-                                size="lg"
-                                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-base transition-all duration-300"
-                                asChild
-                            >
-                                <Link href={projectUrl} target="_blank">
-                                    <ExternalLink className="size-5 mr-2" />
-                                    Live Demo
-                                </Link>
-                            </Button>
-                        )}
-                        {codeUrl && (
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="w-full border-2 hover:bg-muted py-4 text-base transition-all duration-300"
-                                asChild
-                            >
-                                <Link href={codeUrl} target="_blank">
-                                    <Github className="size-5 mr-2" />
-                                    Source Code
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
+                {buttons.length > 0 && (
+                    <ButtonGroup
+                        buttons={buttons}
+                        fullWidthMobile={true}
+                        className="pt-2"
+                    />
                 )}
             </div>
-        </div>
+        </ResponsiveCard>
     );
 }
 
@@ -100,6 +134,7 @@ function DesktopProjectItem({
     description,
     projectUrl,
     codeUrl,
+    technologies,
     image,
     reverse = false,
 }: {
@@ -107,11 +142,30 @@ function DesktopProjectItem({
     description: string;
     projectUrl?: string;
     codeUrl?: string;
+    technologies?: Technology[];
     image?: string;
     reverse?: boolean;
 }) {
-    // Check if we have any buttons to show
-    const hasButtons = projectUrl || codeUrl;
+    const buttons = [];
+
+    if (projectUrl) {
+        buttons.push({
+            text: "Live Demo",
+            href: formatExternalUrl(projectUrl),
+            icon: ExternalLink,
+            external: true,
+        });
+    }
+
+    if (codeUrl) {
+        buttons.push({
+            text: "Source",
+            href: formatExternalUrl(codeUrl),
+            icon: Github,
+            external: true,
+            variant: "outline" as const,
+        });
+    }
 
     return (
         <div className="relative">
@@ -121,24 +175,14 @@ function DesktopProjectItem({
                 }`}
             >
                 {/* Project image/thumbnail */}
-                <div className={`relative ${reverse ? "lg:col-start-2" : ""}`}>
-                    <div className="aspect-[16/10] bg-gradient-to-br from-muted via-muted to-muted/50 rounded-xl overflow-hidden border border-border/50 group relative">
-                        {image && (
-                            <Image
-                                src={image}
-                                alt={title}
-                                fill
-                                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                        )}
-                        {!image && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="size-16 rounded-xl bg-primary/10 flex items-center justify-center">
-                                    <div className="size-8 rounded-lg bg-primary/20"></div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                <div
+                    className={`relative group ${reverse ? "lg:col-start-2" : ""}`}
+                >
+                    <ResponsiveImage
+                        src={image}
+                        alt={title}
+                        aspectRatio="landscape"
+                    />
                 </div>
 
                 {/* Project details and action buttons */}
@@ -154,35 +198,16 @@ function DesktopProjectItem({
                         <p className="text-lg text-muted-foreground leading-relaxed">
                             {description}
                         </p>
+
+                        {/* Technology tags */}
+                        <TechnologyTags technologies={technologies} />
                     </div>
 
-                    {/* Render buttons only if URLs are provided */}
-                    {hasButtons && (
-                        <div className="flex flex-wrap gap-4">
-                            {projectUrl && (
-                                <Button
-                                    className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300"
-                                    asChild
-                                >
-                                    <Link href={projectUrl} target="_blank">
-                                        <ExternalLink className="size-4 mr-2" />
-                                        Live Demo
-                                    </Link>
-                                </Button>
-                            )}
-                            {codeUrl && (
-                                <Button
-                                    variant="outline"
-                                    className="border-2 hover:bg-muted transition-all duration-300"
-                                    asChild
-                                >
-                                    <Link href={codeUrl} target="_blank">
-                                        <Github className="size-4 mr-2" />
-                                        Source
-                                    </Link>
-                                </Button>
-                            )}
-                        </div>
+                    {buttons.length > 0 && (
+                        <ButtonGroup
+                            buttons={buttons}
+                            fullWidthMobile={false}
+                        />
                     )}
                 </div>
             </div>
@@ -195,6 +220,7 @@ interface ProjectItem {
     description: string;
     projectUrl?: string;
     codeUrl?: string;
+    technologies?: Technology[];
     image?: string;
 }
 
@@ -225,111 +251,74 @@ export function Projects({
 }: ProjectsProps) {
     const isMobile = useIsMobile();
 
-    // Combine featured project with other projects for uniform display
+    // Combine featured project with other projects for uniform display on mobile
     const allProjects = featured ? [featured, ...items] : [...items];
 
-    if (isMobile) {
+    // Format viewAllLink for safety
+    const formattedViewAllLink = viewAllLink
+        ? formatExternalUrl(viewAllLink)
+        : "";
+
+    // Create GitHub view all button
+    const githubButton = formattedViewAllLink
+        ? [
+              {
+                  text: "View All on GitHub",
+                  href: formattedViewAllLink,
+                  icon: Github,
+                  external: true,
+                  variant: "outline" as const,
+              },
+          ]
+        : [];
+
+    const renderProjects = () => (
+        <div className={isMobile ? "space-y-6 mb-12" : "space-y-32"}>
+            {/* Featured project (first item) on desktop only */}
+            {!isMobile && featured && <DesktopProjectItem {...featured} />}
+
+            {/* Projects list - all on mobile, non-featured on desktop */}
+            {isMobile
+                ? allProjects.map((project, index) => (
+                      <MobileProjectItem key={index} {...project} />
+                  ))
+                : items.map((project, index) => (
+                      <DesktopProjectItem
+                          key={index}
+                          {...project}
+                          reverse={index % 2 === 0}
+                      />
+                  ))}
+        </div>
+    );
+
+    const renderViewAllLink = () => {
+        if (!viewAllLink) return null;
+
         return (
-            <section className="py-16">
-                <div className="px-6">
-                    {/* Section header */}
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-                            {title}
-                        </h2>
-                        <p className="text-sm text-muted-foreground px-4">
-                            {description}
-                        </p>
-                    </div>
-
-                    {/* Project cards list */}
-                    <div className="space-y-6 mb-12">
-                        {allProjects.map((project, index) => (
-                            <MobileProjectItem key={index} {...project} />
-                        ))}
-                    </div>
-
-                    {/* GitHub repository link */}
-                    {viewAllLink && (
-                        <div className="text-center">
-                            <div className="space-y-4">
-                                <p className="text-sm text-muted-foreground px-4">
-                                    {viewMoreText}
-                                </p>
-                                <Button
-                                    variant="outline"
-                                    size="lg"
-                                    className="w-full max-w-sm px-6 py-4 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
-                                    asChild
-                                >
-                                    <Link href={viewAllLink} target="_blank">
-                                        <Github className="size-5 mr-2" />
-                                        View All on GitHub
-                                        <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
-                                            →
-                                        </span>
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </section>
-        );
-    }
-
-    // Desktop version
-    return (
-        <section className="py-24 lg:py-32">
-            <div className="max-w-7xl mx-auto px-8">
-                <div className="text-center mb-16 lg:mb-20">
-                    <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-                        {title}
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        {description}
+            <div className={`text-center ${isMobile ? "" : "mt-24"}`}>
+                <div className="space-y-4 sm:space-y-6">
+                    <p
+                        className={`${isMobile ? "text-sm px-4" : "text-lg"} text-muted-foreground`}
+                    >
+                        {viewMoreText}
                     </p>
+                    <ButtonGroup
+                        buttons={githubButton}
+                        fullWidthMobile={isMobile}
+                        className={
+                            isMobile ? "max-w-sm mx-auto" : "justify-center"
+                        }
+                    />
                 </div>
-
-                <div className="space-y-32">
-                    {/* Featured project (first item) */}
-                    {featured && <DesktopProjectItem {...featured} />}
-
-                    {/* Regular projects (alternating layout) */}
-                    {items.map((project, index) => (
-                        <DesktopProjectItem
-                            key={index}
-                            {...project}
-                            reverse={index % 2 === 0}
-                        />
-                    ))}
-                </div>
-
-                {/* GitHub repository link */}
-                {viewAllLink && (
-                    <div className="text-center mt-24">
-                        <div className="space-y-6">
-                            <p className="text-lg text-muted-foreground">
-                                {viewMoreText}
-                            </p>
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="px-8 py-6 text-base font-medium border-2 hover:bg-muted transition-all duration-300 group"
-                                asChild
-                            >
-                                <Link href={viewAllLink} target="_blank">
-                                    <Github className="size-5 mr-2" />
-                                    View All on GitHub
-                                    <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
-                                        →
-                                    </span>
-                                </Link>
-                            </Button>
-                        </div>
-                    </div>
-                )}
             </div>
-        </section>
+        );
+    };
+
+    return (
+        <SectionWrapper id="projects" title={title} description={description}>
+            {renderProjects()}
+            {renderViewAllLink()}
+        </SectionWrapper>
     );
 }

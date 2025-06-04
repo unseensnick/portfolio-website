@@ -1,6 +1,11 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+    Section,
+    scrollToSection,
+    setupScrollListener,
+} from "@/lib/navigation-utils";
 import { FolderOpen, Home, LucideIcon, Mail, User } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -14,12 +19,6 @@ const iconMap: Record<string, LucideIcon> = {
 
 interface NavLink {
     href: string;
-    label: string;
-    icon?: string;
-}
-
-interface Section {
-    id: string;
     label: string;
     icon?: string;
 }
@@ -49,81 +48,21 @@ export function InstagramMobileNav({ navLinks = [] }: InstagramMobileNavProps) {
     useEffect(() => {
         if (!isMobile) return;
 
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const documentHeight = document.documentElement.scrollHeight;
-
-            // Check if user is at the bottom of the page
-            const isAtBottom =
-                Math.ceil(currentScrollY + windowHeight) >= documentHeight - 10;
-
-            // If at bottom, set the last section as active
-            if (isAtBottom && sections.length > 0) {
-                setActiveSection(sections[sections.length - 1].id);
-                return;
-            }
-
-            // Update active section based on scroll position
-            const scrollPosition = currentScrollY + 150; // Increased offset for better detection
-
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const section = document.getElementById(sections[i].id);
-                if (section) {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.offsetHeight;
-                    const sectionBottom = sectionTop + sectionHeight;
-
-                    // Check if the scroll position is within this section
-                    if (
-                        scrollPosition >= sectionTop &&
-                        scrollPosition < sectionBottom + 100
-                    ) {
-                        setActiveSection(sections[i].id);
-                        break;
-                    }
-                    // For sections that are partially visible
-                    else if (scrollPosition >= sectionTop) {
-                        setActiveSection(sections[i].id);
-                        break;
-                    }
-                }
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        // Call immediately to set initial state
-        handleScroll();
-        return () => window.removeEventListener("scroll", handleScroll);
+        const cleanup = setupScrollListener(
+            sections,
+            setActiveSection,
+            0,
+            true
+        );
+        return cleanup;
     }, [isMobile, sections]);
 
     // Don't render on desktop
     if (!isMobile) return null;
 
-    // Smooth scroll to target section with offset
-    const scrollToSection = (sectionId: string) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            const headerHeight = 40;
-            let elementPosition: number;
-
-            // Special handling for the last section (contact)
-            if (sectionId === sections[sections.length - 1]?.id) {
-                // Scroll to bottom for contact section
-                const documentHeight = document.documentElement.scrollHeight;
-                const windowHeight = window.innerHeight;
-                elementPosition = documentHeight - windowHeight;
-            } else {
-                const extraOffset = 0; // Additional offset to scroll further down
-                elementPosition =
-                    element.offsetTop - headerHeight + extraOffset;
-            }
-
-            window.scrollTo({
-                top: elementPosition,
-                behavior: "smooth",
-            });
-        }
+    // Handle navigation click with our utility function
+    const handleNavigationClick = (sectionId: string) => {
+        scrollToSection(sectionId, 0, 0, true);
     };
 
     return (
@@ -145,7 +84,7 @@ export function InstagramMobileNav({ navLinks = [] }: InstagramMobileNavProps) {
                                     <button
                                         key={section.id}
                                         onClick={() =>
-                                            scrollToSection(section.id)
+                                            handleNavigationClick(section.id)
                                         }
                                         className="group relative flex flex-col items-center justify-center p-3 min-w-[64px] transition-all duration-300"
                                         aria-label={`Navigate to ${section.label}`}

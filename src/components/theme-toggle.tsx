@@ -53,7 +53,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
             className={cn(
                 "group relative size-8 rounded-full bg-muted/50 hover:bg-muted transition-all duration-300 flex items-center justify-center",
                 "hover:shadow-lg hover:shadow-black/5 hover:scale-105",
-                "focus:outline-none focus:ring-1 focus:ring-primary/30 focus:ring-offset-1",
+                "focus:outline-none focus:ring-0 focus:ring-primary/30 focus:ring-offset-0",
                 className
             )}
             aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
