@@ -29,8 +29,9 @@ Create a `.env` file in the root directory:
 
 ```bash
 PAYLOAD_SECRET=your-secret-key-change-me
-DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
-NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
+DATABASE_URI=postgres://postgres:postgres@localhost/portfolio # Change to your PostgreSQL connection string
+NEXT_PUBLIC_PAYLOAD_URL=your-website-url # e.g., https://yourportfolio.com
+LOCAL_DEV_URL=your-local-dev-url  # e.g., http://localhost:3000
 
 # Email Configuration (for password resets and notifications)
 EMAIL_FROM=noreply@yourportfolio.com
