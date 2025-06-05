@@ -157,84 +157,267 @@ export interface Media {
  */
 export interface Portfolio {
   id: number;
+  /**
+   * The main title of your portfolio website
+   */
   title: string;
+  /**
+   * Configure the top navigation bar of your website
+   */
   nav: {
+    /**
+     * Text to display as your logo in the navigation bar
+     */
     logo: string;
+    /**
+     * Subtitle displayed next to your logo in the navigation bar
+     */
     subtitle: string;
+    /**
+     * Links to display in the navigation menu
+     */
     links?:
       | {
+          /**
+           * URL or anchor link (e.g., #about) for this navigation item
+           */
           href: string;
+          /**
+           * Text to display for this navigation link
+           */
           label: string;
+          /**
+           * Optional icon name (from Lucide icons library)
+           */
           icon?: string | null;
           id?: string | null;
         }[]
       | null;
   };
+  /**
+   * Configure the main hero section at the top of your website
+   */
   hero: {
+    /**
+     * Small greeting text displayed above the main title
+     */
     greeting: string;
+    /**
+     * Main title/headline of your hero section
+     */
     title: string;
+    /**
+     * Brief description about yourself or your services
+     */
     description: string;
+    /**
+     * Your GitHub profile URL (with or without https://)
+     */
     githubUrl: string;
+    /**
+     * Featured image for the hero section
+     */
     image?: (number | null) | Media;
   };
+  /**
+   * Configure your portfolio projects section
+   */
   projects: {
+    /**
+     * Title for the projects section
+     */
     title: string;
+    /**
+     * Brief introduction to your projects section
+     */
     description: string;
+    /**
+     * Text displayed above the 'View All on GitHub' button
+     */
     viewMoreText?: string | null;
+    /**
+     * Configure your main featured project (displayed prominently)
+     */
     featured: {
+      /**
+       * Title of your featured project
+       */
       title: string;
+      /**
+       * Detailed description of your featured project
+       */
       description: string;
+      /**
+       * URL to the live demo of your project (with or without https://)
+       */
       projectUrl?: string | null;
+      /**
+       * URL to the source code repository (with or without https://)
+       */
       codeUrl?: string | null;
+      /**
+       * List of technologies used in this project
+       */
+      technologies?:
+        | {
+            /**
+             * Name of a technology or tool (e.g., React, Node.js, Tailwind CSS)
+             */
+            name: string;
+            id?: string | null;
+          }[]
+        | null;
+      /**
+       * Screenshot or thumbnail of your featured project
+       */
       image?: (number | null) | Media;
     };
+    /**
+     * Additional projects to display in your portfolio
+     */
     items?:
       | {
+          /**
+           * Title of this project
+           */
           title: string;
+          /**
+           * Detailed description of this project
+           */
           description: string;
+          /**
+           * URL to the live demo of this project (with or without https://)
+           */
           projectUrl?: string | null;
+          /**
+           * URL to the source code repository (with or without https://)
+           */
           codeUrl?: string | null;
+          /**
+           * List of technologies used in this project
+           */
+          technologies?:
+            | {
+                /**
+                 * Name of a technology or tool (e.g., React, Node.js, Tailwind CSS)
+                 */
+                name: string;
+                id?: string | null;
+              }[]
+            | null;
+          /**
+           * Screenshot or thumbnail of this project
+           */
           image?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
+    /**
+     * URL to view all your projects (typically your GitHub profile)
+     */
     viewAllLink?: string | null;
   };
+  /**
+   * Configure the about section of your portfolio
+   */
   about: {
+    /**
+     * Title for the about section
+     */
     title: string;
+    /**
+     * Heading for the technologies/skills subsection
+     */
     technologiesHeading: string;
+    /**
+     * Heading for the interests/hobbies subsection
+     */
     interestsHeading: string;
+    /**
+     * Text paragraphs describing yourself and your background
+     */
     paragraphs?:
       | {
+          /**
+           * Content for this paragraph
+           */
           text: string;
           id?: string | null;
         }[]
       | null;
+    /**
+     * List of technologies, languages, and tools you're proficient with
+     */
     technologies?:
       | {
+          /**
+           * Name of a technology or skill (e.g., React, JavaScript, UI Design)
+           */
           name: string;
           id?: string | null;
         }[]
       | null;
+    /**
+     * List of your interests and hobbies outside of work
+     */
     interests?:
       | {
+          /**
+           * Name of an interest or hobby (e.g., Photography, Hiking, Reading)
+           */
           name: string;
           id?: string | null;
         }[]
       | null;
+    /**
+     * Image to display in the about section (e.g., your photo)
+     */
     image?: (number | null) | Media;
   };
+  /**
+   * Configure the contact section of your portfolio
+   */
   contact: {
+    /**
+     * Title for the contact section
+     */
     title: string;
+    /**
+     * Brief introduction to your contact section
+     */
     description: string;
+    /**
+     * Your contact email address
+     */
     email: string;
+    /**
+     * Subtitle text displayed on the email contact card
+     */
     emailSubtitle: string;
+    /**
+     * Your GitHub username or full URL
+     */
     github: string;
+    /**
+     * Subtitle text displayed on the GitHub contact card
+     */
     githubSubtitle: string;
+    /**
+     * Title for the call-to-action card
+     */
     ctaTitle: string;
+    /**
+     * Description text for the call-to-action card
+     */
     ctaDescription: string;
   };
+  /**
+   * Configure the footer section of your portfolio
+   */
   footer: {
+    /**
+     * Copyright notice displayed in the footer
+     */
     copyright: string;
   };
   updatedAt: string;
@@ -376,6 +559,12 @@ export interface PortfolioSelect<T extends boolean = true> {
               description?: T;
               projectUrl?: T;
               codeUrl?: T;
+              technologies?:
+                | T
+                | {
+                    name?: T;
+                    id?: T;
+                  };
               image?: T;
             };
         items?:
@@ -385,6 +574,12 @@ export interface PortfolioSelect<T extends boolean = true> {
               description?: T;
               projectUrl?: T;
               codeUrl?: T;
+              technologies?:
+                | T
+                | {
+                    name?: T;
+                    id?: T;
+                  };
               image?: T;
               id?: T;
             };

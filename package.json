@@ -2,12 +2,13 @@
     "name": "portfolio-website",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "payload:generate:types": "PAYLOAD_CONFIG_PATH=src/payload.config.mjs payload generate:types"
+        "payload:generate:types": "PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types"
     },
     "dependencies": {
         "@payloadcms/db-postgres": "^3.40.0",

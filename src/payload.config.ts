@@ -7,7 +7,6 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 import { fileURLToPath } from "url";
 
-// Import collections directly
 import { Media } from "./collections/Media";
 import { Portfolio } from "./collections/Portfolio";
 import { Users } from "./collections/Users";
