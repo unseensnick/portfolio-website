@@ -9,7 +9,10 @@ export const RefreshRouteOnSave: React.FC = () => {
 
     return (
         <PayloadLivePreview
-            refresh={() => router.refresh()}
+            refresh={() => {
+                console.log("[Live Preview] Refreshing route...");
+                router.refresh();
+            }}
             serverURL={
                 process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000"
             }

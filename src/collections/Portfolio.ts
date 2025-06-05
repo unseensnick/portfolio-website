@@ -5,21 +5,28 @@ export const Portfolio: CollectionConfig = {
     admin: {
         useAsTitle: "title",
         defaultColumns: ["title", "updatedAt"],
-        // Enable live preview
+        // Enable live preview with proper URL configuration
         livePreview: {
             url: ({ data, locale }) => {
-                // Return the URL where your frontend is running
                 const baseUrl =
                     process.env.NEXT_PUBLIC_PAYLOAD_URL ||
                     "http://localhost:3000";
-                return `${baseUrl}`;
+
+                // Include draft=true parameter for live preview
+                return `${baseUrl}?draft=true&locale=${locale || "en"}`;
             },
         },
     },
     access: {
         read: ({ req }) => {
-            // If there is a user logged in, let them retrieve all documents
+            // If there is a user logged in, let them retrieve all documents including drafts
             if (req.user) return true;
+
+            // For live preview: allow draft access when draft=true parameter is present
+            // This enables live preview functionality without requiring authentication
+            if (req.query && req.query.draft === "true") {
+                return true;
+            }
 
             // If there is no user, restrict to only published documents
             return {

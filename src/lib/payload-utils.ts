@@ -181,44 +181,69 @@ export function adaptPortfolioData(data: any) {
 }
 
 /**
- * Fetches portfolio data from PayloadCMS API and formats it for the application
+ * Fetches portfolio data from PayloadCMS API with improved draft handling
  *
  * Features:
  * - Connects to PayloadCMS API using environment variables or defaults
  * - Supports draft content for live preview functionality
- * - Includes proper caching and revalidation strategy
+ * - Includes proper caching and revalidation strategy for draft vs published
  * - Handles API errors gracefully with fallback data
  * - Processes API response to match component data requirements
  * - Logs helpful error messages when API issues occur
+ * - Automatic fallback from draft to published content on failure
  *
  * @param draft - Whether to fetch draft content (for live preview)
  * @returns Promise resolving to formatted portfolio data
  */
-export async function getPortfolioData(draft: boolean = false) {
+export async function getPortfolioData(
+    draft: boolean = false
+): Promise<PortfolioData> {
     try {
         const baseUrl =
             process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
 
-        // Build API URL - simplified to match debug page that works
-        const apiUrl = `${baseUrl}/api/portfolio?limit=1&depth=2${draft ? "&draft=true" : ""}`;
+        // Build API URL with proper draft handling
+        const params = new URLSearchParams({
+            limit: "1",
+            depth: "2",
+        });
+
+        if (draft) {
+            params.append("draft", "true");
+        }
+
+        const apiUrl = `${baseUrl}/api/portfolio?${params.toString()}`;
 
         console.log(`[Portfolio API] Fetching from: ${apiUrl}`);
         console.log(`[Portfolio API] Draft mode: ${draft}`);
 
-        // Fetch the portfolio data from PayloadCMS - simplified approach
+        // Prepare headers
+        const headers: HeadersInit = {
+            "Content-Type": "application/json",
+        };
+
+        // Fetch the portfolio data from PayloadCMS
         const response = await fetch(apiUrl, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            // Use simpler caching strategy
-            next: { revalidate: draft ? 0 : 60 },
+            headers,
+            // Different caching strategy for draft vs published
+            cache: draft ? "no-store" : "force-cache",
+            next: draft ? { revalidate: 0 } : { revalidate: 60 },
         });
 
         if (!response.ok) {
             console.error(
                 `[Portfolio API] HTTP Error: ${response.status} ${response.statusText}`
             );
+
+            // If draft request fails and we're not already trying published, try published
+            if (draft) {
+                console.log(
+                    "[Portfolio API] Draft request failed, trying published content..."
+                );
+                return getPortfolioData(false);
+            }
+
             return fallbackData;
         }
 
@@ -228,6 +253,7 @@ export async function getPortfolioData(draft: boolean = false) {
             hasNextPage: result.hasNextPage,
             docs: result.docs?.length || 0,
             firstDocId: result.docs?.[0]?.id || "none",
+            firstDocStatus: result.docs?.[0]?._status || "unknown",
         });
 
         // Get the first portfolio document
@@ -237,21 +263,19 @@ export async function getPortfolioData(draft: boolean = false) {
             console.error(
                 `[Portfolio API] No portfolio documents found. Total docs: ${result.totalDocs}`
             );
-            console.error(
-                `[Portfolio API] Full response:`,
-                JSON.stringify(result, null, 2)
-            );
 
             // If we're not in draft mode and no published docs found, try draft mode
             if (!draft && result.totalDocs === 0) {
-                console.log(`[Portfolio API] Trying draft mode...`);
+                console.log(
+                    `[Portfolio API] No published docs, trying draft mode...`
+                );
                 return getPortfolioData(true);
             }
 
             return fallbackData;
         }
 
-        console.log(`[Portfolio API] Found document:`, {
+        console.log(`[Portfolio API] Using document:`, {
             id: portfolioDoc.id,
             title: portfolioDoc.title,
             status: portfolioDoc._status || "published",
@@ -261,7 +285,15 @@ export async function getPortfolioData(draft: boolean = false) {
         return adaptPortfolioData(portfolioDoc);
     } catch (error) {
         console.error("[Portfolio API] Error fetching portfolio data:", error);
-        // Fall back to fallback data if there's an error
+
+        // If draft request fails, try published content
+        if (draft) {
+            console.log(
+                "[Portfolio API] Draft request error, falling back to published..."
+            );
+            return getPortfolioData(false);
+        }
+
         return fallbackData;
     }
 }

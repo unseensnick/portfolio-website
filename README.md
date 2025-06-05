@@ -7,6 +7,7 @@ A sleek, responsive portfolio website built with Next.js and PayloadCMS for deve
 - **Responsive Design**: Fully optimized for mobile, tablet, and desktop
 - **Dark/Light Mode**: Built-in theme switching with user preference detection
 - **CMS Integration**: Edit all content through PayloadCMS admin panel
+- **Live Preview**: Real-time content preview with multiple device breakpoints in the admin panel
 - **TypeScript**: Type-safe codebase with enhanced developer experience
 - **Modular Components**: Reusable UI components with Tailwind CSS
 - **Animation Effects**: Subtle animations and transitions for modern UX
@@ -64,15 +65,18 @@ Edit all website sections through the PayloadCMS admin panel:
 
 ```
 src/
-├── app/          # Next.js app router pages and API routes
-├── components/   # Reusable React components
-│   ├── shared/   # Common components used across sections
-│   └── ui/       # Base UI components (buttons, cards, etc.)
-├── collections/  # PayloadCMS collection definitions
-├── hooks/        # Custom React hooks
-├── lib/          # Utility functions and helpers
-├── payload/      # PayloadCMS configuration
-└── types/        # TypeScript type definitions
+├── app/             # Next.js app router pages and API routes
+├── components/      # Reusable React components
+│   ├── shared/      # Common components used across sections
+│   └── ui/          # Base UI components (buttons, cards, etc.)
+├── collections/     # PayloadCMS collection definitions
+│   ├── Media.ts     # Media collection for images and files
+│   ├── Portfolio.ts # Portfolio content collection
+│   └── Users.ts     # User authentication collection
+├── hooks/           # Custom React hooks
+├── lib/             # Utility functions and helpers
+├── payload/         # PayloadCMS configuration
+└── types/           # TypeScript type definitions
 ```
 
 ## Customization

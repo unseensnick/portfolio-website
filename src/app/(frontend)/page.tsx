@@ -5,14 +5,19 @@ import { Hero } from "@/components/hero";
 import { Projects } from "@/components/projects";
 import { RefreshRouteOnSave } from "@/components/RefreshRouteOnSave";
 import { getPortfolioData } from "@/lib/payload-utils";
+import { draftMode } from "next/headers";
 import React from "react";
 
 /**
- * Check if we should show draft content based on search params
+ * Check if we should show draft content based on search params or draft mode
  */
 async function shouldShowDraft(
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 ): Promise<boolean> {
+    // Check if Next.js draft mode is enabled
+    const draft = await draftMode();
+    if (draft.isEnabled) return true;
+
     // Await searchParams in Next.js 15+
     const params = await searchParams;
 
@@ -39,6 +44,13 @@ export default async function Home({
         <div className="min-h-screen bg-background">
             {/* Live Preview Component - only renders in admin context */}
             <RefreshRouteOnSave />
+
+            {/* Show draft indicator when in draft mode */}
+            {isDraft && (
+                <div className="fixed top-20 right-4 z-50 bg-yellow-500 text-black px-3 py-1 rounded text-sm font-medium">
+                    Draft Mode
+                </div>
+            )}
 
             {/* Hero/introduction section */}
             <div id="home" className="relative z-10">
