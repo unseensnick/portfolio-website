@@ -82,6 +82,30 @@ const fallbackData = {
 };
 
 /**
+ * Determines the correct base URL for API calls based on environment
+ *
+ * @returns The appropriate base URL for the current environment
+ */
+function getBaseUrl(): string {
+    // On the client side, we can determine the current domain
+    if (typeof window !== "undefined") {
+        return window.location.origin;
+    }
+
+    // On the server side, check if we're in production
+    if (process.env.NODE_ENV === "production") {
+        // In production, use the public site URL if available
+        return (
+            process.env.NEXT_PUBLIC_SITE_URL ||
+            "https://preview.snickersluring.com"
+        );
+    }
+
+    // In development, use the local dev URL
+    return process.env.LOCAL_DEV_URL || "http://localhost:3000";
+}
+
+/**
  * Adapts the raw portfolio data from PayloadCMS to the format expected by components
  *
  * Features:
@@ -199,11 +223,8 @@ export async function getPortfolioData(
     draft: boolean = false
 ): Promise<PortfolioData> {
     try {
-        // Use production URL in production, local dev URL in development
-        const baseUrl =
-            process.env.NEXT_PUBLIC_SITE_URL ||
-            process.env.LOCAL_DEV_URL ||
-            "http://localhost:3000";
+        // Get the appropriate base URL for the current environment
+        const baseUrl = getBaseUrl();
 
         // Build API URL with proper draft handling
         const params = new URLSearchParams({
@@ -219,6 +240,8 @@ export async function getPortfolioData(
 
         console.log(`[Portfolio API] Fetching from: ${apiUrl}`);
         console.log(`[Portfolio API] Draft mode: ${draft}`);
+        console.log(`[Portfolio API] Base URL: ${baseUrl}`);
+        console.log(`[Portfolio API] Environment: ${process.env.NODE_ENV}`);
 
         // Prepare headers
         const headers: HeadersInit = {
