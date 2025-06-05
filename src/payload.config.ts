@@ -1,5 +1,6 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import path from "path";
@@ -56,6 +57,19 @@ export default buildConfig({
         },
     }),
     sharp,
+    email: nodemailerAdapter({
+        defaultFromAddress:
+            process.env.EMAIL_FROM || "info@portfolio-website.com",
+        defaultFromName: process.env.EMAIL_FROM_NAME || "Portfolio Website",
+        transportOptions: {
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT) || 587,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        },
+    }),
     plugins: [
         payloadCloudPlugin(),
         // storage-adapter-placeholder

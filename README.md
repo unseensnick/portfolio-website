@@ -31,7 +31,17 @@ Create a `.env` file in the root directory:
 PAYLOAD_SECRET=your-secret-key-change-me
 DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
 NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
+
+# Email Configuration (for password resets and notifications)
+EMAIL_FROM=noreply@yourportfolio.com
+EMAIL_FROM_NAME=Portfolio Website
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your_smtp_username
+SMTP_PASS=your_smtp_password
 ```
+
+For detailed email setup instructions, see [Email Configuration](./docs/email-setup.md).
 
 ### Development
 
@@ -124,18 +134,25 @@ src/
 
 2. **Create a new service**:
 
-    - Click "Project" → "Add" → Name your project
-    - Click "Production" → "Add New Resource"
-    - Choose between "Public Repository", "Private Repository (with Github App)" or "Private Repository (with Deploy Key)"
-    - If you choose Private Repository (with Github App) then select your github app
-    - Then choose your repository and click "Load Repository"
-    - Enter the branch you want to deploy and the port number (default is 3000) but you can change it if needed
+    - Navigate to your Coolify dashboard
+    - Click "Project" → "Add" and give your project a name
+    - Select "Production" → "Add New Resource"
+    - Select repository access type:
+        - "Public Repository" (for open source projects)
+        - "Private Repository with Github App" (requires Github App setup)
+        - "Private Repository with Deploy Key" (manual SSH key setup)
+    - For Github App option: select your connected Github App
+    - Select your repository and click "Load Repository"
+    - Configure deployment settings:
+        - Branch: Select the branch to deploy (e.g., "main")
+        - Port: Enter the port number (default: 3000)
     - Click "Continue"
-    - Fill the "Domain" field with your domain name (e.g., `portfolio.example.com`)
-    - Fill the "Ports Exposed" and "Ports Mappings" field with the same port number you entered earlier (default is 3000)
-    - Optionally, you can set a custom name for the service under "Name"
-    - Optionally, if you have environment variables, you can add them under "Environment Variables" by clicking "Add" and entering the key-value pairs
-    - Click "Deploy" and the service will be created
+    - Configure service settings:
+        - Domain: Enter your domain (e.g., `portfolio.example.com`)
+        - Ports: Set both "Exposed" and "Mappings" to match your port (e.g., 3000)
+        - Name: (Optional) Set a custom service name
+        - Environment Variables: (Optional) Add your .env variables
+    - Click "Deploy" to create and deploy your service
 
 3. **Configure environment variables**:
 
