@@ -199,9 +199,8 @@ export async function getPortfolioData(
     draft: boolean = false
 ): Promise<PortfolioData> {
     try {
-        // Use production URL in production, local dev URL in development
         const baseUrl =
-            process.env.NEXT_PUBLIC_SITE_URL || process.env.LOCAL_DEV_URL;
+            process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
 
         // Build API URL with proper draft handling
         const params = new URLSearchParams({

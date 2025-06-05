@@ -8,11 +8,9 @@ export const Portfolio: CollectionConfig = {
         // Enable live preview with proper URL configuration
         livePreview: {
             url: ({ data, locale }) => {
-                // Use production URL in production, local dev URL in development
                 const baseUrl =
-                    process.env.NEXT_PUBLIC_SITE_URL ||
-                    process.env.LOCAL_DEV_URL;
-
+                    process.env.NEXT_PUBLIC_PAYLOAD_URL ||
+                    "http://localhost:3000";
                 // Include draft=true parameter for live preview
                 return `${baseUrl}?draft=true&locale=${locale || "en"}`;
             },
