@@ -279,21 +279,17 @@ function ResetPasswordContent() {
 
 export default function ResetPasswordPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background flex items-center justify-center p-4">
-            <Card className="w-full max-w-md p-6 space-y-6">
-                <Suspense
-                    fallback={
-                        <div className="text-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                            <p className="mt-2 text-muted-foreground">
-                                Loading...
-                            </p>
-                        </div>
-                    }
-                >
-                    <ResetPasswordContent />
-                </Suspense>
-            </Card>
-        </div>
+        <Card className="w-full max-w-md p-6 space-y-6 shadow-xl border-border/50">
+            <Suspense
+                fallback={
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                        <p className="mt-2 text-muted-foreground">Loading...</p>
+                    </div>
+                }
+            >
+                <ResetPasswordContent />
+            </Suspense>
+        </Card>
     );
 }
