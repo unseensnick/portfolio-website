@@ -10,10 +10,10 @@ const fallbackData = {
         logo: "Portfolio",
         subtitle: "Developer",
         links: [
-            { text: "Home", href: "#home" },
-            { text: "Projects", href: "#projects" },
-            { text: "About", href: "#about" },
-            { text: "Contact", href: "#contact" },
+            { label: "Home", href: "#home" },
+            { label: "Projects", href: "#projects" },
+            { label: "About", href: "#about" },
+            { label: "Contact", href: "#contact" },
         ],
     },
     hero: {

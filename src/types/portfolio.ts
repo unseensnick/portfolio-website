@@ -1,6 +1,7 @@
 export interface NavLink {
-    text: string;
+    label: string; // Changed from "text" to "label"
     href: string;
+    icon?: string; // Added optional icon to match PayloadCMS schema
 }
 
 export interface Nav {
