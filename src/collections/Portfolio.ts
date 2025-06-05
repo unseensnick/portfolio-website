@@ -11,8 +11,7 @@ export const Portfolio: CollectionConfig = {
                 // Use production URL in production, local dev URL in development
                 const baseUrl =
                     process.env.NEXT_PUBLIC_SITE_URL ||
-                    process.env.LOCAL_DEV_URL ||
-                    "http://localhost:3000";
+                    process.env.LOCAL_DEV_URL;
 
                 // Include draft=true parameter for live preview
                 return `${baseUrl}?draft=true&locale=${locale || "en"}`;
