@@ -156,25 +156,8 @@ src/
 
 3. **Configure environment variables**:
 
-    - Add all variables from your `.env` file
-    - Make sure to set `NODE_ENV=production`
+    - Add all variables from your `.env` file are added in the "Production Environment Variables"
     - Configure the database connection string to your production database
-
-4. **Configure build settings**:
-
-    - Build Command: `npm run build`
-    - Start Command: `npm start`
-    - Port: 3000
-
-5. **Deploy**:
-
-    - Click "Save & Deploy"
-    - Coolify will build and deploy your application
-    - Monitor the build logs for any issues
-
-6. **Set up reverse proxy**:
-    - Configure your domain to point to your Coolify server
-    - Set up SSL certificates using Coolify's built-in tools
 
 ## License
 
