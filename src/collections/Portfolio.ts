@@ -5,9 +5,37 @@ export const Portfolio: CollectionConfig = {
     admin: {
         useAsTitle: "title",
         defaultColumns: ["title", "updatedAt"],
+        // Enable live preview
+        livePreview: {
+            url: ({ data, locale }) => {
+                // Return the URL where your frontend is running
+                const baseUrl =
+                    process.env.NEXT_PUBLIC_PAYLOAD_URL ||
+                    "http://localhost:3000";
+                return `${baseUrl}`;
+            },
+        },
     },
     access: {
-        read: () => true,
+        read: ({ req }) => {
+            // If there is a user logged in, let them retrieve all documents
+            if (req.user) return true;
+
+            // If there is no user, restrict to only published documents
+            return {
+                _status: {
+                    equals: "published",
+                },
+            };
+        },
+    },
+    // Enable versions, drafts, and autosave
+    versions: {
+        drafts: {
+            autosave: {
+                interval: 375, // Auto-save every 375ms for responsive live preview
+            },
+        },
     },
     fields: [
         {

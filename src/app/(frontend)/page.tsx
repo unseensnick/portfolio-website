@@ -3,19 +3,43 @@ import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { Projects } from "@/components/projects";
+import { RefreshRouteOnSave } from "@/components/RefreshRouteOnSave";
 import { getPortfolioData } from "@/lib/payload-utils";
 import React from "react";
+
+/**
+ * Check if we should show draft content based on search params
+ */
+async function shouldShowDraft(
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+): Promise<boolean> {
+    // Await searchParams in Next.js 15+
+    const params = await searchParams;
+
+    // Check for draft parameter in URL
+    return params.draft === "true";
+}
 
 /**
  * Main homepage component that renders all portfolio sections
  * Section IDs are used for navigation anchors
  */
-export default async function Home(): Promise<React.ReactNode> {
+export default async function Home({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<React.ReactNode> {
+    // Determine if we should fetch draft content
+    const isDraft = await shouldShowDraft(searchParams);
+
     // Fetch data from PayloadCMS or use fallback data if not available
-    const data = await getPortfolioData();
+    const data = await getPortfolioData(isDraft);
 
     return (
         <div className="min-h-screen bg-background">
+            {/* Live Preview Component - only renders in admin context */}
+            <RefreshRouteOnSave />
+
             {/* Hero/introduction section */}
             <div id="home" className="relative z-10">
                 <Hero {...data.hero} />
