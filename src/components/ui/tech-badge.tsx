@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { safelyExtractTechnologyNames } from "@/lib/payload-safe-helpers";
 import { cn } from "@/lib/utils";
 
 /**
@@ -50,7 +51,7 @@ export function TechBadge({ text, className, size = "md" }: TechBadgeProps) {
  * @property className - Additional CSS classes for the container
  */
 interface TechBadgeGroupProps {
-    technologies: string[] | { name: string }[];
+    technologies?: string[] | { name?: string }[];
     size?: "sm" | "md" | "lg";
     className?: string;
 }
@@ -62,20 +63,25 @@ interface TechBadgeGroupProps {
  * - Arranges badges in rows with proper spacing
  * - Groups badges into chunks for better visual organization
  * - Handles both string arrays and object arrays with name property
+ * - Safely handles null/undefined values during live preview using centralized helpers
  */
 export function TechBadgeGroup({
-    technologies,
+    technologies = [],
     size = "md",
     className,
 }: TechBadgeGroupProps) {
-    if (!technologies || technologies.length === 0) return null;
+    // Use centralized helper to safely extract technology names
+    const validTechnologies = safelyExtractTechnologyNames(technologies);
+
+    // Don't render anything if no valid technologies after filtering
+    if (validTechnologies.length === 0) return null;
 
     // Group technologies in chunks of 4 for better visual arrangement
     const chunkSize = 4;
     const techGroups = [];
 
-    for (let i = 0; i < technologies.length; i += chunkSize) {
-        techGroups.push(technologies.slice(i, i + chunkSize));
+    for (let i = 0; i < validTechnologies.length; i += chunkSize) {
+        techGroups.push(validTechnologies.slice(i, i + chunkSize));
     }
 
     return (
@@ -84,8 +90,8 @@ export function TechBadgeGroup({
                 <div key={groupIndex} className="flex flex-wrap gap-2.5">
                     {group.map((tech, index) => (
                         <TechBadge
-                            key={index}
-                            text={typeof tech === "string" ? tech : tech.name}
+                            key={`${tech}-${index}`}
+                            text={tech}
                             size={size}
                         />
                     ))}

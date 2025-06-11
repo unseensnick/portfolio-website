@@ -1,3 +1,11 @@
+import {
+    safelyExtractImageUrl,
+    safelyExtractNames,
+    safelyExtractParagraphs,
+    safelyProcessNavLinks,
+    safelyProcessTechnologies,
+    safeString
+} from "@/lib/payload-safe-helpers";
 import type { PortfolioData } from "@/types/portfolio";
 
 /**
@@ -90,6 +98,7 @@ const fallbackData = {
  * - Handles different image formats (direct paths or PayloadCMS media objects)
  * - Transforms nested data structures into the expected component props format
  * - Ensures type compatibility with component interfaces
+ * - Safe handling of arrays with null/undefined values during live preview
  *
  * @param data - Raw data from PayloadCMS API response
  * @returns Properly formatted portfolio data ready for component consumption
@@ -110,72 +119,74 @@ export function adaptPortfolioData(data: any) {
 
     return {
         nav: {
-            logo: data.nav.logo,
-            subtitle: data.nav.subtitle,
-            links: data.nav.links,
+            logo: safeString(data.nav.logo, "Portfolio"),
+            subtitle: safeString(data.nav.subtitle, "Developer"),
+            links: safelyProcessNavLinks(data.nav.links),
         },
         hero: {
-            greeting: data.hero.greeting,
-            title: data.hero.title,
-            description: data.hero.description,
-            githubUrl: data.hero.githubUrl,
-            image: data.hero.image?.url || data.hero.image, // Handle both PayloadCMS media and direct paths
+            greeting: safeString(data.hero.greeting, "Hello, I'm"),
+            title: safeString(data.hero.title, "A Developer"),
+            description: safeString(data.hero.description, "Please add content through the PayloadCMS admin panel"),
+            githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
+            image: safelyExtractImageUrl(data.hero.image, "/placeholder-image.svg") || "/placeholder-image.svg",
             ctaText: "View GitHub",
-            ctaLink: data.hero.githubUrl,
+            ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
             secondaryCtaText: "View Projects",
             secondaryCtaLink: "#projects",
         },
         about: {
-            title: data.about.title,
-            paragraphs: data.about.paragraphs?.map((p: any) => p.text) || [
-                data.about.bio,
-            ],
-            technologies:
-                data.about.technologies?.map((t: any) => t.name) || [],
-            interests: data.about.interests?.map((i: any) => i.name) || [],
-            image: data.about.image?.url || data.about.image,
-            technologiesHeading: data.about.technologiesHeading,
-            interestsHeading: data.about.interestsHeading,
+            title: safeString(data.about.title, "About Me"),
+            paragraphs: (() => {
+                const paragraphs = safelyExtractParagraphs(data.about.paragraphs);
+                if (paragraphs.length > 0) return paragraphs;
+                
+                // Fallback to bio field if paragraphs array is empty
+                const bio = safeString(data.about.bio);
+                return bio ? [bio] : ["Please add content through the PayloadCMS admin panel"];
+            })(),
+            technologies: safelyExtractNames(data.about.technologies),
+            interests: safelyExtractNames(data.about.interests),
+            image: safelyExtractImageUrl(data.about.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+            technologiesHeading: safeString(data.about.technologiesHeading, "Technologies"),
+            interestsHeading: safeString(data.about.interestsHeading, "Interests"),
         },
         projects: {
-            title: data.projects.title,
+            title: safeString(data.projects.title, "My Projects"),
             featured: {
-                title: data.projects.featured?.title || "Featured Project",
-                description:
-                    data.projects.featured?.description ||
-                    "A showcase of my best work",
-                projectUrl: data.projects.featured?.projectUrl,
-                codeUrl: data.projects.featured?.codeUrl,
-                image:
-                    data.projects.featured?.image?.url ||
-                    data.projects.featured?.image,
-                technologies: data.projects.featured?.technologies || [],
+                title: safeString(data.projects.featured?.title, "Featured Project"),
+                description: safeString(
+                    data.projects.featured?.description,
+                    "A showcase of my best work"
+                ),
+                projectUrl: safeString(data.projects.featured?.projectUrl),
+                codeUrl: safeString(data.projects.featured?.codeUrl),
+                image: safelyExtractImageUrl(data.projects.featured?.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+                technologies: safelyProcessTechnologies(data.projects.featured?.technologies),
             },
             items: (data.projects.items || []).map((project: any) => ({
-                title: project.title,
-                description: project.description,
-                projectUrl: project.projectUrl,
-                codeUrl: project.codeUrl,
-                image: project.image?.url || project.image,
-                technologies: project.technologies || [],
+                title: safeString(project.title, "Project"),
+                description: safeString(project.description, "Project description"),
+                projectUrl: safeString(project.projectUrl),
+                codeUrl: safeString(project.codeUrl),
+                image: safelyExtractImageUrl(project.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+                technologies: safelyProcessTechnologies(project.technologies),
             })),
-            description: data.projects.description,
-            viewMoreText:
-                data.projects.viewMoreText || "Want to see more of my work?",
-            viewAllLink: data.projects.viewAllLink,
+            description: safeString(data.projects.description, "Here are some of my recent projects"),
+            viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
+            viewAllLink: safeString(data.projects.viewAllLink),
         },
         contact: {
-            title: data.contact.title,
-            description: data.contact.description,
-            email: data.contact.email,
-            github: data.contact.github,
-            emailSubtitle: data.contact.emailSubtitle,
-            githubSubtitle: data.contact.githubSubtitle,
-            ctaTitle: data.contact.ctaTitle,
-            ctaDescription: data.contact.ctaDescription,
+            title: safeString(data.contact.title, "Get In Touch"),
+            description: safeString(data.contact.description, "Feel free to reach out for collaborations or just a friendly hello"),
+            email: safeString(data.contact.email, "example@example.com"),
+            github: safeString(data.contact.github, "https://github.com"),
+            emailSubtitle: safeString(data.contact.emailSubtitle, "Email"),
+            githubSubtitle: safeString(data.contact.githubSubtitle, "GitHub"),
+            ctaTitle: safeString(data.contact.ctaTitle, "Let's work together"),
+            ctaDescription: safeString(data.contact.ctaDescription, "I'm open to new opportunities and collaborations"),
         },
         footer: {
-            copyright: data.footer.copyright,
+            copyright: safeString(data.footer.copyright, "© 2025 All Rights Reserved"),
         },
     };
 }

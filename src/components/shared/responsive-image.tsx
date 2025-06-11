@@ -3,6 +3,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useState } from "react";
 
 /**
  * Props for the ResponsiveImage component
@@ -27,9 +28,10 @@ interface ResponsiveImageProps {
  *
  * Features:
  * - Handles different aspect ratios (square, landscape, portrait)
- * - Shows a placeholder when no image is provided
+ * - Shows a placeholder when no image is provided or when image fails to load
  * - Applies hover effects on desktop
  * - Adjusts border radius and shadow based on viewport
+ * - Graceful fallback handling for broken/missing images
  */
 export function ResponsiveImage({
     src,
@@ -40,6 +42,8 @@ export function ResponsiveImage({
     priority = false,
 }: ResponsiveImageProps) {
     const isMobile = useIsMobile();
+    const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true);
 
     // Convert named aspect ratios to corresponding CSS classes
     let aspectRatioClass = "";
@@ -67,40 +71,84 @@ export function ResponsiveImage({
         className
     );
 
-    return (
-        <div className={containerClasses}>
-            {src ? (
-                // Display actual image when src is provided
-                <Image
-                    src={src}
-                    alt={alt}
-                    fill={fillContainer}
+    // Determine if we should show placeholder
+    const shouldShowPlaceholder =
+        !src || imageError || src === "/placeholder-image.svg";
+
+    /**
+     * Renders the placeholder content
+     */
+    const renderPlaceholder = () => (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+            <div
+                className={cn(
+                    "rounded-full bg-primary/10 flex items-center justify-center mb-3",
+                    isMobile ? "size-12" : "size-16"
+                )}
+            >
+                <div
                     className={cn(
-                        "object-cover",
-                        isMobile
-                            ? "rounded-2xl"
-                            : "rounded-xl transition-transform duration-700 group-hover:scale-105"
+                        "rounded-full bg-primary/20",
+                        isMobile ? "size-6" : "size-8"
                     )}
-                    priority={priority}
-                />
-            ) : (
-                // Display placeholder when no image is provided
-                <div className="absolute inset-0 flex items-center justify-center">
+                ></div>
+            </div>
+            <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                    Placeholder Image
+                </p>
+                <p className="text-xs text-muted-foreground/70">
+                    Add content via PayloadCMS
+                </p>
+            </div>
+        </div>
+    );
+
+    /**
+     * Renders the actual image with error handling
+     */
+    const renderImage = () => (
+        <>
+            {/* Loading state */}
+            {imageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-muted/50 animate-pulse">
                     <div
                         className={cn(
-                            "rounded-full bg-primary/10 flex items-center justify-center",
-                            isMobile ? "size-12" : "size-16"
+                            "rounded-full bg-primary/10",
+                            isMobile ? "size-8" : "size-12"
                         )}
-                    >
-                        <div
-                            className={cn(
-                                "rounded-full bg-primary/20",
-                                isMobile ? "size-6" : "size-8"
-                            )}
-                        ></div>
-                    </div>
+                    ></div>
                 </div>
             )}
+
+            {/* Actual image */}
+            <Image
+                src={src!}
+                alt={alt}
+                fill={fillContainer}
+                className={cn(
+                    "object-cover transition-opacity duration-300",
+                    isMobile
+                        ? "rounded-2xl"
+                        : "rounded-xl transition-transform duration-700 group-hover:scale-105",
+                    imageLoading ? "opacity-0" : "opacity-100"
+                )}
+                priority={priority}
+                onLoad={() => setImageLoading(false)}
+                onError={() => {
+                    setImageError(true);
+                    setImageLoading(false);
+                    console.warn(
+                        `[ResponsiveImage] Failed to load image: ${src}`
+                    );
+                }}
+            />
+        </>
+    );
+
+    return (
+        <div className={containerClasses}>
+            {shouldShowPlaceholder ? renderPlaceholder() : renderImage()}
         </div>
     );
 }
