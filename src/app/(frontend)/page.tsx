@@ -4,6 +4,8 @@ import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { Projects } from "@/components/projects";
 import { RefreshRouteOnSave } from "@/components/RefreshRouteOnSave";
+import { SectionNavigation } from "@/components/section-navigation";
+import { SiteHeader } from "@/components/site-header";
 import { getPortfolioData } from "@/lib/payload-utils";
 import { draftMode } from "next/headers";
 import React from "react";
@@ -41,49 +43,68 @@ export default async function Home({
     const data = await getPortfolioData(isDraft);
 
     return (
-        <div className="min-h-screen bg-background">
+        <>
             {/* Live Preview Component - only renders in admin context */}
             <RefreshRouteOnSave />
 
-            {/* Show draft indicator when in draft mode */}
-            {isDraft && (
-                <div className="fixed top-20 right-4 z-50 bg-yellow-500 text-black px-3 py-1 rounded text-sm font-medium">
-                    Draft Mode
-                </div>
-            )}
+            {/* Site header with hexagon logo, subtitle and navigation - now gets draft content */}
+            <SiteHeader
+                logo={data.nav.logo}
+                subtitle={data.nav.subtitle}
+                logoSplitAt={data.nav.logoSplitAt}
+                navLinks={data.nav.links}
+            />
 
-            {/* Hero/introduction section */}
-            <div id="home" className="relative z-10">
-                <Hero {...data.hero} />
+            {/* Main content area */}
+            <div className="flex flex-1 bg-background">
+                {/* Main content wrapper */}
+                <main className="flex flex-1 flex-col">
+                    <div className="min-h-screen bg-background">
+                        {/* Show draft indicator when in draft mode */}
+                        {isDraft && (
+                            <div className="fixed top-20 right-4 z-50 bg-yellow-500 text-black px-3 py-1 rounded text-sm font-medium">
+                                Draft Mode
+                            </div>
+                        )}
+
+                        {/* Hero/introduction section */}
+                        <div id="home" className="relative z-10">
+                            <Hero {...data.hero} />
+                        </div>
+
+                        {/* Gradient divider */}
+                        <div className="max-w-7xl mx-auto px-8">
+                            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+                        </div>
+
+                        {/* Projects showcase section */}
+                        <div id="projects" className="relative z-10">
+                            <Projects {...data.projects} />
+                        </div>
+
+                        {/* About/bio section with light background */}
+                        <div id="about" className="relative z-10 bg-muted/30">
+                            <About {...data.about} />
+                        </div>
+
+                        {/* Gradient divider */}
+                        <div className="max-w-7xl mx-auto px-8">
+                            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+                        </div>
+
+                        {/* Contact form section */}
+                        <div id="contact" className="relative z-10">
+                            <Contact {...data.contact} />
+                        </div>
+
+                        {/* Site footer with copyright */}
+                        <Footer {...data.footer} />
+                    </div>
+                </main>
             </div>
 
-            {/* Gradient divider */}
-            <div className="max-w-7xl mx-auto px-8">
-                <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-            </div>
-
-            {/* Projects showcase section */}
-            <div id="projects" className="relative z-10">
-                <Projects {...data.projects} />
-            </div>
-
-            {/* About/bio section with light background */}
-            <div id="about" className="relative z-10 bg-muted/30">
-                <About {...data.about} />
-            </div>
-
-            {/* Gradient divider */}
-            <div className="max-w-7xl mx-auto px-8">
-                <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-            </div>
-
-            {/* Contact form section */}
-            <div id="contact" className="relative z-10">
-                <Contact {...data.contact} />
-            </div>
-
-            {/* Site footer with copyright */}
-            <Footer {...data.footer} />
-        </div>
+            {/* Desktop section navigation - now gets draft content */}
+            <SectionNavigation navLinks={data.nav.links} />
+        </>
     );
 }

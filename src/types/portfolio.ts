@@ -7,6 +7,7 @@ export interface NavLink {
 export interface Nav {
     logo: string;
     subtitle: string;
+    logoSplitAt?: number; // New field for logo split customization
     links: NavLink[];
 }
 

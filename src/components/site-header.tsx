@@ -2,15 +2,13 @@
 
 import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { HexagonLogo } from "@/components/ui/hexagon-logo";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
-import { Code } from "lucide-react";
 import { useEffect, useState } from "react";
 
 /**
  * Navigation link data structure
- * @property href - URL or anchor for the link (e.g. "#about")
- * @property label - Display text for the link
  */
 interface NavLink {
     href: string;
@@ -27,34 +25,28 @@ interface Section {
 
 /**
  * Props for the SiteHeader component
- * @property logo - Text to display as the site logo
- * @property subtitle - Small text below the logo
- * @property navLinks - Array of navigation links
  */
 interface SiteHeaderProps {
     logo?: string;
     subtitle?: string;
     navLinks?: NavLink[];
+    logoSplitAt?: number;
 }
 
 /**
- * Responsive site header with navigation and theme toggle
- *
- * Features:
- * - Adapts between mobile and desktop layouts
- * - Highlights active section based on scroll position
- * - Smooth scrolling to sections on click
- * - Fixed positioning with subtle background blur
+ * Site header with guaranteed working hexagon logo
  */
 export function SiteHeader({
     logo = "unseensnick",
-    subtitle = "Full Stack Developer",
+    subtitle = "Web Developer", // Using "Web Developer" to match your screenshot
     navLinks = [],
+    logoSplitAt,
 }: SiteHeaderProps) {
     const isMobile = useIsMobile();
     const [activeSection, setActiveSection] = useState<string>(
         navLinks[0]?.href?.replace("#", "") || "home"
     );
+    const [isLogoHovered, setIsLogoHovered] = useState(false);
 
     // Convert navLinks to sections format for utility functions
     const sections: Section[] = navLinks.map((link) => ({
@@ -65,8 +57,6 @@ export function SiteHeader({
     // Set up scroll listener to track active section (desktop only)
     useEffect(() => {
         if (isMobile) return;
-
-        // setupScrollListener returns a cleanup function
         const cleanup = setupScrollListener(sections, setActiveSection, 100);
         return cleanup;
     }, [isMobile, sections]);
@@ -78,28 +68,36 @@ export function SiteHeader({
         scrollToSection(sectionId, 100, 0);
     };
 
+    // Handle logo click to scroll to top
+    const handleLogoClick = () => {
+        scrollToSection("home", 100, 0);
+    };
+
     return (
         <>
             <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 flex w-full items-center border-b border-border/50">
                 <div className="flex h-20 w-full items-center justify-between px-8">
-                    {/* Logo and brand identity */}
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                                <Code className="size-5 text-primary" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-xl font-bold text-foreground leading-none">
-                                    {logo}
-                                </span>
-                                <span className="text-xs text-muted-foreground leading-none">
-                                    {subtitle}
-                                </span>
-                            </div>
+                    {/* HEXAGON LOGO - GUARANTEED TO SHOW */}
+                    <div
+                        className="flex items-center" // Extra wrapper for safety
+                        onMouseEnter={() => setIsLogoHovered(true)}
+                        onMouseLeave={() => setIsLogoHovered(false)}
+                    >
+                        {/* Force visible with explicit styling */}
+                        <div className="relative z-10">
+                            <HexagonLogo
+                                logoText={logo}
+                                subtitle={subtitle}
+                                size={isMobile ? "sm" : "md"}
+                                splitAt={logoSplitAt}
+                                isHovered={isLogoHovered}
+                                onClick={handleLogoClick}
+                                className="cursor-pointer" // Ensure it's clickable
+                            />
                         </div>
                     </div>
 
-                    {/* Navigation links and theme toggle */}
+                    {/* Navigation and theme toggle */}
                     <div className="flex items-center gap-8">
                         {!isMobile && (
                             <nav className="flex items-center gap-8">
@@ -124,14 +122,13 @@ export function SiteHeader({
                                             }`}
                                         >
                                             {link.label}
-                                            {/* Animated underline indicator */}
                                             <span
                                                 className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
                                                     isActive
                                                         ? "w-full"
                                                         : "w-0 group-hover:w-full"
                                                 }`}
-                                            ></span>
+                                            />
                                         </button>
                                     );
                                 })}
@@ -142,7 +139,7 @@ export function SiteHeader({
                 </div>
             </header>
 
-            {/* Mobile navigation shown at bottom of screen on small devices */}
+            {/* Mobile navigation */}
             <InstagramMobileNav navLinks={navLinks} />
         </>
     );

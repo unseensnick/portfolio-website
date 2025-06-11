@@ -166,15 +166,19 @@ export interface Portfolio {
    */
   title: string;
   /**
-   * Configure the top navigation bar of your website
+   * Configure your hexagon logo and navigation bar
    */
   nav: {
     /**
-     * Text to display as your logo in the navigation bar
+     * Main text for your hexagon logo (e.g., your name or brand). Examples: 'unseensnick', 'JohnDoe', 'Portfolio'
      */
     logo: string;
     /**
-     * Subtitle displayed next to your logo in the navigation bar
+     * Character position where gradient effect starts. Leave empty for auto-split. Examples: 'unseensnick' with 6 = 'unseen|snick', 'JohnDoe' with 4 = 'John|Doe'
+     */
+    logoSplitAt?: number | null;
+    /**
+     * Subtitle displayed below your logo (e.g., your profession or tagline)
      */
     subtitle: string;
     /**
@@ -533,6 +537,7 @@ export interface PortfolioSelect<T extends boolean = true> {
     | T
     | {
         logo?: T;
+        logoSplitAt?: T;
         subtitle?: T;
         links?:
           | T

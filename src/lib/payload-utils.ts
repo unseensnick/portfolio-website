@@ -17,6 +17,7 @@ const fallbackData = {
     nav: {
         logo: "Portfolio",
         subtitle: "Developer",
+        logoSplitAt: undefined,
         links: [
             { label: "Home", href: "#home" },
             { label: "Projects", href: "#projects" },
@@ -90,6 +91,21 @@ const fallbackData = {
 };
 
 /**
+ * Safe helper to extract number value with validation
+ */
+function safeNumber(value: any, min?: number, max?: number): number | undefined {
+    if (value === null || value === undefined || value === "") return undefined;
+    
+    const num = typeof value === "number" ? value : Number(value);
+    if (isNaN(num)) return undefined;
+    
+    if (min !== undefined && num < min) return undefined;
+    if (max !== undefined && num > max) return undefined;
+    
+    return num;
+}
+
+/**
  * Adapts the raw portfolio data from PayloadCMS to the format expected by components
  *
  * Features:
@@ -99,6 +115,7 @@ const fallbackData = {
  * - Transforms nested data structures into the expected component props format
  * - Ensures type compatibility with component interfaces
  * - Safe handling of arrays with null/undefined values during live preview
+ * - Supports new logo customization fields
  *
  * @param data - Raw data from PayloadCMS API response
  * @returns Properly formatted portfolio data ready for component consumption
@@ -114,6 +131,15 @@ export function adaptPortfolioData(data: any) {
         !data.contact ||
         !data.footer
     ) {
+        console.warn("[Portfolio] Using fallback data due to missing sections:", {
+            hasData: !!data,
+            hasNav: !!data?.nav,
+            hasHero: !!data?.hero,
+            hasProjects: !!data?.projects,
+            hasAbout: !!data?.about,
+            hasContact: !!data?.contact,
+            hasFooter: !!data?.footer,
+        });
         return fallbackData;
     }
 
@@ -121,6 +147,7 @@ export function adaptPortfolioData(data: any) {
         nav: {
             logo: safeString(data.nav.logo, "Portfolio"),
             subtitle: safeString(data.nav.subtitle, "Developer"),
+            logoSplitAt: safeNumber(data.nav.logoSplitAt, 0, 50),
             links: safelyProcessNavLinks(data.nav.links),
         },
         hero: {
@@ -192,7 +219,7 @@ export function adaptPortfolioData(data: any) {
 }
 
 /**
- * Fetches portfolio data from PayloadCMS API with improved draft handling
+ * Fetches portfolio data from PayloadCMS API with improved draft handling and error recovery
  *
  * Features:
  * - Connects to PayloadCMS API using environment variables or defaults
@@ -202,6 +229,7 @@ export function adaptPortfolioData(data: any) {
  * - Processes API response to match component data requirements
  * - Logs helpful error messages when API issues occur
  * - Automatic fallback from draft to published content on failure
+ * - Improved timeout handling and network error recovery
  *
  * @param draft - Whether to fetch draft content (for live preview)
  * @returns Promise resolving to formatted portfolio data
@@ -209,6 +237,8 @@ export function adaptPortfolioData(data: any) {
 export async function getPortfolioData(
     draft: boolean = false
 ): Promise<PortfolioData> {
+    const requestId = Math.random().toString(36).substr(2, 9);
+    
     try {
         const baseUrl =
             process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
@@ -225,86 +255,117 @@ export async function getPortfolioData(
 
         const apiUrl = `${baseUrl}/api/portfolio?${params.toString()}`;
 
-        console.log(`[Portfolio API] Fetching from: ${apiUrl}`);
-        console.log(`[Portfolio API] Draft mode: ${draft}`);
+        console.log(`[Portfolio API ${requestId}] Fetching from: ${apiUrl}`);
+        console.log(`[Portfolio API ${requestId}] Draft mode: ${draft}`);
 
-        // Prepare headers
+        // Prepare headers with timeout handling
         const headers: HeadersInit = {
             "Content-Type": "application/json",
         };
 
-        // Fetch the portfolio data from PayloadCMS
-        const response = await fetch(apiUrl, {
-            method: "GET",
-            headers,
-            // Different caching strategy for draft vs published
-            cache: draft ? "no-store" : "force-cache",
-            next: draft ? { revalidate: 0 } : { revalidate: 60 },
-        });
+        // Create AbortController for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-        if (!response.ok) {
-            console.error(
-                `[Portfolio API] HTTP Error: ${response.status} ${response.statusText}`
-            );
+        try {
+            // Fetch the portfolio data from PayloadCMS
+            const response = await fetch(apiUrl, {
+                method: "GET",
+                headers,
+                signal: controller.signal,
+                // Different caching strategy for draft vs published
+                cache: draft ? "no-store" : "force-cache",
+                next: draft ? { revalidate: 0 } : { revalidate: 60 },
+            });
 
-            // If draft request fails and we're not already trying published, try published
-            if (draft) {
-                console.log(
-                    "[Portfolio API] Draft request failed, trying published content..."
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                console.error(
+                    `[Portfolio API ${requestId}] HTTP Error: ${response.status} ${response.statusText}`
                 );
-                return getPortfolioData(false);
+
+                // Log response body for debugging
+                try {
+                    const errorText = await response.text();
+                    console.error(`[Portfolio API ${requestId}] Error body:`, errorText);
+                } catch (e) {
+                    console.error(`[Portfolio API ${requestId}] Could not read error body`);
+                }
+
+                // If draft request fails and we're not already trying published, try published
+                if (draft) {
+                    console.log(
+                        `[Portfolio API ${requestId}] Draft request failed, trying published content...`
+                    );
+                    return getPortfolioData(false);
+                }
+
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
-            return fallbackData;
-        }
+            const result = await response.json();
+            console.log(`[Portfolio API ${requestId}] Response:`, {
+                totalDocs: result.totalDocs,
+                hasNextPage: result.hasNextPage,
+                docs: result.docs?.length || 0,
+                firstDocId: result.docs?.[0]?.id || "none",
+                firstDocStatus: result.docs?.[0]?._status || "unknown",
+            });
 
-        const result = await response.json();
-        console.log(`[Portfolio API] Response:`, {
-            totalDocs: result.totalDocs,
-            hasNextPage: result.hasNextPage,
-            docs: result.docs?.length || 0,
-            firstDocId: result.docs?.[0]?.id || "none",
-            firstDocStatus: result.docs?.[0]?._status || "unknown",
-        });
+            // Get the first portfolio document
+            const portfolioDoc = result.docs?.[0];
 
-        // Get the first portfolio document
-        const portfolioDoc = result.docs?.[0];
-
-        if (!portfolioDoc) {
-            console.error(
-                `[Portfolio API] No portfolio documents found. Total docs: ${result.totalDocs}`
-            );
-
-            // If we're not in draft mode and no published docs found, try draft mode
-            if (!draft && result.totalDocs === 0) {
-                console.log(
-                    `[Portfolio API] No published docs, trying draft mode...`
+            if (!portfolioDoc) {
+                console.error(
+                    `[Portfolio API ${requestId}] No portfolio documents found. Total docs: ${result.totalDocs}`
                 );
-                return getPortfolioData(true);
+
+                // If we're not in draft mode and no published docs found, try draft mode
+                if (!draft && result.totalDocs === 0) {
+                    console.log(
+                        `[Portfolio API ${requestId}] No published docs, trying draft mode...`
+                    );
+                    return getPortfolioData(true);
+                }
+
+                throw new Error("No portfolio documents found");
             }
 
-            return fallbackData;
+            console.log(`[Portfolio API ${requestId}] Using document:`, {
+                id: portfolioDoc.id,
+                title: portfolioDoc.title,
+                status: portfolioDoc._status || "published",
+                logoText: portfolioDoc.nav?.logo,
+                logoSplitAt: portfolioDoc.nav?.logoSplitAt,
+            });
+
+            // Adapt the data to match component props
+            return adaptPortfolioData(portfolioDoc);
+
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+            throw fetchError;
         }
 
-        console.log(`[Portfolio API] Using document:`, {
-            id: portfolioDoc.id,
-            title: portfolioDoc.title,
-            status: portfolioDoc._status || "published",
-        });
-
-        // Adapt the data to match component props
-        return adaptPortfolioData(portfolioDoc);
     } catch (error) {
-        console.error("[Portfolio API] Error fetching portfolio data:", error);
+        console.error(`[Portfolio API ${requestId}] Error fetching portfolio data:`, error);
 
-        // If draft request fails, try published content
-        if (draft) {
+        // If it's a timeout or network error and we're in draft mode, try published content
+        if (draft && (error instanceof Error && (
+            error.name === 'AbortError' || 
+            error.message.includes('fetch') ||
+            error.message.includes('network') ||
+            error.message.includes('timeout')
+        ))) {
             console.log(
-                "[Portfolio API] Draft request error, falling back to published..."
+                `[Portfolio API ${requestId}] Draft request error (${error.message}), falling back to published...`
             );
             return getPortfolioData(false);
         }
 
+        // For any other error, return fallback data
+        console.warn(`[Portfolio API ${requestId}] Using fallback data due to error:`, error);
         return fallbackData;
     }
 }

@@ -1,7 +1,5 @@
-import { SectionNavigation } from "@/components/section-navigation";
-import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
-import { getPortfolioData } from "@/lib/payload-utils";
+import { generateFaviconMetadata } from "@/lib/favicon-utils";
 import { Geist } from "next/font/google";
 import React from "react";
 import "./styles.css";
@@ -11,8 +9,67 @@ const geist = Geist({
 });
 
 export const metadata = {
-    title: "Portfolio",
-    description: "Personal portfolio website",
+    title: "unseensnick - Web Developer",
+    description:
+        "Portfolio of unseensnick, a passionate web developer specializing in modern web technologies",
+    keywords: [
+        "unseensnick",
+        "web developer",
+        "web developer",
+        "portfolio",
+        "react",
+        "nextjs",
+        "typescript",
+    ],
+    authors: [{ name: "unseensnick" }],
+    creator: "unseensnick",
+
+    // Favicon using hexagon logo (server-side generated)
+    icons: generateFaviconMetadata(),
+
+    // Theme colors that match your design
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+        { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    ],
+
+    // Open Graph metadata for social sharing
+    openGraph: {
+        title: "unseensnick - Web Developer",
+        description: "Portfolio of unseensnick, a passionate web developer",
+        type: "website",
+        locale: "en_US",
+        siteName: "unseensnick Portfolio",
+    },
+
+    // Twitter card metadata
+    twitter: {
+        card: "summary",
+        title: "unseensnick - Web Developer",
+        description: "Portfolio of unseensnick, a passionate web developer",
+        creator: "@unseensnick", // Add your Twitter handle if you have one
+    },
+
+    // Robots and indexing
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
+
+    // Viewport settings
+    viewport: {
+        width: "device-width",
+        initialScale: 1,
+        maximumScale: 5,
+        userScalable: true,
+    },
 };
 
 interface RootLayoutProps {
@@ -20,9 +77,6 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-    // Fetch data from PayloadCMS or use fallback data if not available
-    const data = await getPortfolioData();
-
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={`${geist.className} antialiased`}>
@@ -32,31 +86,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {/* Layout container with fixed header */}
-                    <div
-                        style={
-                            { "--header-height": "5rem" } as React.CSSProperties
-                        }
-                        className="flex flex-col min-h-screen"
-                    >
-                        {/* Site header with logo, subtitle and navigation */}
-                        <SiteHeader
-                            logo={data.nav.logo}
-                            subtitle={data.nav.subtitle}
-                            navLinks={data.nav.links}
-                        />
-
-                        {/* Content area with sidebar */}
-                        <div className="flex flex-1 bg-background">
-                            {/* Main content wrapper */}
-                            <main className="flex flex-1 flex-col">
-                                {children}
-                            </main>
-                        </div>
-
-                        {/* Desktop section navigation */}
-                        <SectionNavigation navLinks={data.nav.links} />
-                    </div>
+                    {/* Simplified layout - navigation moved to page component for live preview */}
+                    <div className="flex flex-col min-h-screen">{children}</div>
                 </ThemeProvider>
             </body>
         </html>
