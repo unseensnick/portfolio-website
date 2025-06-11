@@ -6,15 +6,6 @@ import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-/**
- * Button configuration for use in ButtonGroup
- * @property text - Button label text
- * @property href - URL destination (internal or external)
- * @property icon - Optional Lucide icon component
- * @property variant - Button styling variant
- * @property external - Whether link opens in new tab
- * @property className - Additional CSS classes
- */
 interface ButtonItem {
     text: string;
     href: string;
@@ -30,12 +21,6 @@ interface ButtonItem {
     className?: string;
 }
 
-/**
- * Props for ButtonGroup component
- * @property buttons - Array of button configurations
- * @property fullWidthMobile - Whether buttons take full width on mobile
- * @property className - Additional CSS classes for container
- */
 interface ButtonGroupProps {
     buttons: ButtonItem[];
     fullWidthMobile?: boolean;
@@ -43,10 +28,7 @@ interface ButtonGroupProps {
 }
 
 /**
- * Renders a responsive group of buttons with consistent styling
- *
- * Automatically adapts between mobile (stacked) and desktop (row) layouts
- * Handles external links and icon placement consistently
+ * Responsive button group with automatic mobile/desktop layout adaptation
  */
 export function ButtonGroup({
     buttons,
@@ -78,13 +60,10 @@ export function ButtonGroup({
                         variant={button.variant || "default"}
                         size={isMobile ? "lg" : "default"}
                         className={cn(
-                            // Width control
                             isMobile && fullWidthMobile ? "w-full" : "",
-                            // Custom styling based on variant
                             isDefault
                                 ? "bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/20"
                                 : "border-2 hover:bg-muted",
-                            // Consistent sizing based on viewport
                             isMobile
                                 ? "py-4 text-base font-medium"
                                 : "px-8 py-6 text-base font-medium",

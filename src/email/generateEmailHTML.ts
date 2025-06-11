@@ -14,11 +14,14 @@ interface EmailData {
     userName?: string;
 }
 
+/**
+ * Generates HTML email from EJS template with inlined CSS
+ * Falls back to simple HTML if template compilation fails
+ */
 export const generateEmailHTML = async (data: EmailData): Promise<string> => {
     try {
         const templatePath = path.join(process.cwd(), "src/email/template.ejs");
 
-        // Check if template file exists
         if (!fs.existsSync(templatePath)) {
             console.error(`Email template not found at: ${templatePath}`);
             throw new Error("Email template file not found");
@@ -26,7 +29,6 @@ export const generateEmailHTML = async (data: EmailData): Promise<string> => {
 
         const templateContent = fs.readFileSync(templatePath, "utf8");
 
-        // Compile and render the template with EJS
         const preInlinedCSS = ejs.render(templateContent, {
             ...data,
             cta: data.cta || null,
@@ -35,14 +37,14 @@ export const generateEmailHTML = async (data: EmailData): Promise<string> => {
                 process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000",
         });
 
-        // Inline CSS for better email client compatibility
+        // Inline CSS for email client compatibility
         const html = juice(preInlinedCSS);
 
         return Promise.resolve(html);
     } catch (error) {
         console.error("Error generating email HTML:", error);
 
-        // Fallback to a simple HTML email if template fails
+        // Fallback HTML email
         const fallbackHtml = `
             <!DOCTYPE html>
             <html>

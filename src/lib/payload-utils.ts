@@ -9,9 +9,7 @@ import {
 import type { PortfolioData } from "@/types/portfolio";
 
 /**
- * Fallback portfolio data used when PayloadCMS data is unavailable
- * This provides a complete set of placeholder content for all website sections
- * to ensure the site can still render properly even without a CMS connection
+ * Default data used when PayloadCMS is unavailable
  */
 const fallbackData = {
     nav: {
@@ -90,9 +88,6 @@ const fallbackData = {
     },
 };
 
-/**
- * Safe helper to extract number value with validation
- */
 function safeNumber(value: any, min?: number, max?: number): number | undefined {
     if (value === null || value === undefined || value === "") return undefined;
     
@@ -106,22 +101,10 @@ function safeNumber(value: any, min?: number, max?: number): number | undefined 
 }
 
 /**
- * Adapts the raw portfolio data from PayloadCMS to the format expected by components
- *
- * Features:
- * - Validates that all required sections exist in the data
- * - Falls back to defaults for missing properties
- * - Handles different image formats (direct paths or PayloadCMS media objects)
- * - Transforms nested data structures into the expected component props format
- * - Ensures type compatibility with component interfaces
- * - Safe handling of arrays with null/undefined values during live preview
- * - Supports new logo customization fields
- *
- * @param data - Raw data from PayloadCMS API response
- * @returns Properly formatted portfolio data ready for component consumption
+ * Transforms raw PayloadCMS data into the format expected by components
  */
 export function adaptPortfolioData(data: any) {
-    // If data is not available or missing required sections, return fallback data
+    // Return fallback if required sections are missing
     if (
         !data ||
         !data.nav ||
@@ -219,20 +202,7 @@ export function adaptPortfolioData(data: any) {
 }
 
 /**
- * Fetches portfolio data from PayloadCMS API with improved draft handling and error recovery
- *
- * Features:
- * - Connects to PayloadCMS API using environment variables or defaults
- * - Supports draft content for live preview functionality
- * - Includes proper caching and revalidation strategy for draft vs published
- * - Handles API errors gracefully with fallback data
- * - Processes API response to match component data requirements
- * - Logs helpful error messages when API issues occur
- * - Automatic fallback from draft to published content on failure
- * - Improved timeout handling and network error recovery
- *
- * @param draft - Whether to fetch draft content (for live preview)
- * @returns Promise resolving to formatted portfolio data
+ * Fetches portfolio data from PayloadCMS with error handling and fallbacks
  */
 export async function getPortfolioData(
     draft: boolean = false
@@ -243,7 +213,6 @@ export async function getPortfolioData(
         const baseUrl =
             process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
 
-        // Build API URL with proper draft handling
         const params = new URLSearchParams({
             limit: "1",
             depth: "2",
@@ -258,22 +227,18 @@ export async function getPortfolioData(
         console.log(`[Portfolio API ${requestId}] Fetching from: ${apiUrl}`);
         console.log(`[Portfolio API ${requestId}] Draft mode: ${draft}`);
 
-        // Prepare headers with timeout handling
         const headers: HeadersInit = {
             "Content-Type": "application/json",
         };
 
-        // Create AbortController for timeout
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         try {
-            // Fetch the portfolio data from PayloadCMS
             const response = await fetch(apiUrl, {
                 method: "GET",
                 headers,
                 signal: controller.signal,
-                // Different caching strategy for draft vs published
                 cache: draft ? "no-store" : "force-cache",
                 next: draft ? { revalidate: 0 } : { revalidate: 60 },
             });
@@ -285,7 +250,6 @@ export async function getPortfolioData(
                     `[Portfolio API ${requestId}] HTTP Error: ${response.status} ${response.statusText}`
                 );
 
-                // Log response body for debugging
                 try {
                     const errorText = await response.text();
                     console.error(`[Portfolio API ${requestId}] Error body:`, errorText);
@@ -293,7 +257,7 @@ export async function getPortfolioData(
                     console.error(`[Portfolio API ${requestId}] Could not read error body`);
                 }
 
-                // If draft request fails and we're not already trying published, try published
+                // Try published content if draft request fails
                 if (draft) {
                     console.log(
                         `[Portfolio API ${requestId}] Draft request failed, trying published content...`
@@ -313,7 +277,6 @@ export async function getPortfolioData(
                 firstDocStatus: result.docs?.[0]?._status || "unknown",
             });
 
-            // Get the first portfolio document
             const portfolioDoc = result.docs?.[0];
 
             if (!portfolioDoc) {
@@ -321,7 +284,7 @@ export async function getPortfolioData(
                     `[Portfolio API ${requestId}] No portfolio documents found. Total docs: ${result.totalDocs}`
                 );
 
-                // If we're not in draft mode and no published docs found, try draft mode
+                // Try draft mode if no published docs found
                 if (!draft && result.totalDocs === 0) {
                     console.log(
                         `[Portfolio API ${requestId}] No published docs, trying draft mode...`
@@ -340,7 +303,6 @@ export async function getPortfolioData(
                 logoSplitAt: portfolioDoc.nav?.logoSplitAt,
             });
 
-            // Adapt the data to match component props
             return adaptPortfolioData(portfolioDoc);
 
         } catch (fetchError) {
@@ -351,7 +313,7 @@ export async function getPortfolioData(
     } catch (error) {
         console.error(`[Portfolio API ${requestId}] Error fetching portfolio data:`, error);
 
-        // If it's a timeout or network error and we're in draft mode, try published content
+        // Fallback from draft to published on network errors
         if (draft && (error instanceof Error && (
             error.name === 'AbortError' || 
             error.message.includes('fetch') ||
@@ -364,7 +326,6 @@ export async function getPortfolioData(
             return getPortfolioData(false);
         }
 
-        // For any other error, return fallback data
         console.warn(`[Portfolio API ${requestId}] Using fallback data due to error:`, error);
         return fallbackData;
     }

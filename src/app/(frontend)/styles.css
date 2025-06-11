@@ -1,8 +1,6 @@
-/* Import Tailwind CSS and animations */
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Custom variant for dark mode */
 @custom-variant dark (&:is(.dark *));
 
 /* Theme variable mapping for consistent styling */
@@ -46,10 +44,9 @@
     --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Light theme color palette using OKLCH for better color perception */
+/* Light theme - OKLCH colors for better perception */
 :root {
     --radius: 0.75rem;
-    /* Light mode - Refined with better contrast */
     --background: oklch(0.97 0.008 285);
     --foreground: oklch(0.18 0.02 285);
     --card: oklch(0.995 0.003 285);
@@ -82,7 +79,6 @@
     --sidebar-border: oklch(0.84 0.02 285);
     --sidebar-ring: oklch(0.5 0.22 285);
 
-    /* Custom scrollbar variables for light theme */
     --scrollbar-track: oklch(0.92 0.01 285);
     --scrollbar-thumb: oklch(0.84 0.02 285);
     --scrollbar-thumb-hover: oklch(0.5 0.22 285);
@@ -92,67 +88,50 @@
     --scrollbar-border-radius: 4px;
 }
 
-/* Dark theme color palette using OKLCH */
+/* Dark theme - Strategic card separation while maintaining Solo Leveling aesthetic */
 .dark {
-    /* Dark mode - Original Solo Leveling inspired base with strategic separation */
-    --background: oklch(0.06 0.02 285); /* Keep original dark base */
-    --foreground: oklch(0.94 0.01 280); /* Keep original bright text */
+    --background: oklch(0.06 0.02 285);
+    --foreground: oklch(0.94 0.01 280);
     --card: oklch(0.13 0.04 285); /* Strategic increase for card separation */
-    --card-foreground: oklch(0.94 0.01 280); /* Keep original bright text */
-    --popover: oklch(0.13 0.04 285); /* Match card */
-    --popover-foreground: oklch(0.94 0.01 280); /* Keep original bright text */
-    --primary: oklch(0.65 0.26 285); /* Keep original vibrant purple */
-    --primary-foreground: oklch(
-        0.06 0.02 285
-    ); /* Keep original dark text on purple */
-    --secondary: oklch(0.09 0.03 285); /* Keep original subtle secondary */
-    --secondary-foreground: oklch(
-        0.85 0.01 280
-    ); /* Keep original secondary text */
+    --card-foreground: oklch(0.94 0.01 280);
+    --popover: oklch(0.13 0.04 285);
+    --popover-foreground: oklch(0.94 0.01 280);
+    --primary: oklch(0.65 0.26 285);
+    --primary-foreground: oklch(0.06 0.02 285);
+    --secondary: oklch(0.09 0.03 285);
+    --secondary-foreground: oklch(0.85 0.01 280);
     --muted: oklch(
         0.16 0.03 285
-    ); /* Strategic increase for muted section separation */
-    --muted-foreground: oklch(0.6 0.02 285); /* Keep original muted text */
-    --accent: oklch(
-        0.19 0.04 285
-    ); /* Strategic increase for accent separation */
-    --accent-foreground: oklch(0.85 0.01 280); /* Keep original accent text */
-    --destructive: oklch(0.65 0.22 15); /* Keep original red */
+    ); /* Strategic increase for section separation */
+    --muted-foreground: oklch(0.6 0.02 285);
+    --accent: oklch(0.19 0.04 285);
+    --accent-foreground: oklch(0.85 0.01 280);
+    --destructive: oklch(0.65 0.22 15);
     --border: oklch(
         0.18 0.03 285
     ); /* Strategic increase for better definition */
-    --input: oklch(0.14 0.04 285); /* Keep original input */
-    --ring: oklch(0.65 0.26 285); /* Keep original purple focus rings */
-    --chart-1: oklch(0.65 0.26 285); /* Keep original chart colors */
+    --input: oklch(0.14 0.04 285);
+    --ring: oklch(0.65 0.26 285);
+    --chart-1: oklch(0.65 0.26 285);
     --chart-2: oklch(0.6 0.22 300);
     --chart-3: oklch(0.55 0.2 270);
     --chart-4: oklch(0.7 0.18 320);
     --chart-5: oklch(0.75 0.16 260);
-    --sidebar: oklch(0.08 0.03 285); /* Keep original sidebar */
-    --sidebar-foreground: oklch(0.94 0.01 280); /* Keep original sidebar text */
-    --sidebar-primary: oklch(0.65 0.26 285); /* Keep original purple */
-    --sidebar-primary-foreground: oklch(
-        0.06 0.02 285
-    ); /* Keep original dark on purple */
-    --sidebar-accent: oklch(0.12 0.03 285); /* Keep original sidebar accent */
-    --sidebar-accent-foreground: oklch(
-        0.85 0.01 280
-    ); /* Keep original accent text */
-    --sidebar-border: oklch(0.16 0.03 285); /* Keep original sidebar border */
-    --sidebar-ring: oklch(0.65 0.26 285); /* Keep original purple */
+    --sidebar: oklch(0.08 0.03 285);
+    --sidebar-foreground: oklch(0.94 0.01 280);
+    --sidebar-primary: oklch(0.65 0.26 285);
+    --sidebar-primary-foreground: oklch(0.06 0.02 285);
+    --sidebar-accent: oklch(0.12 0.03 285);
+    --sidebar-accent-foreground: oklch(0.85 0.01 280);
+    --sidebar-border: oklch(0.16 0.03 285);
+    --sidebar-ring: oklch(0.65 0.26 285);
 
-    /* Custom scrollbar variables for dark theme */
-    --scrollbar-track: oklch(0.08 0.03 285); /* Keep original track */
-    --scrollbar-thumb: oklch(0.18 0.03 285); /* Keep original thumb */
-    --scrollbar-thumb-hover: oklch(
-        0.65 0.26 285
-    ); /* Keep original purple hover */
-    --scrollbar-thumb-active: oklch(
-        0.7 0.26 285
-    ); /* Keep original purple active */
+    --scrollbar-track: oklch(0.08 0.03 285);
+    --scrollbar-thumb: oklch(0.18 0.03 285);
+    --scrollbar-thumb-hover: oklch(0.65 0.26 285);
+    --scrollbar-thumb-active: oklch(0.7 0.26 285);
 }
 
-/* Base styles and typography */
 @layer base {
     * {
         @apply border-border outline-ring/50;
@@ -168,7 +147,6 @@
         @apply bg-background text-foreground font-sans text-base leading-relaxed;
     }
 
-    /* Typography scale */
     h1,
     h2,
     h3,
@@ -192,16 +170,15 @@
         @apply leading-relaxed;
     }
 
-    /* Disable transitions during page load to prevent flash */
+    /* Disable transitions during page load */
     .preload * {
         transition: none !important;
     }
 }
 
-/* Custom Scrollbar Styles */
-/* Modern scrollbar design that matches the theme colors */
+/* Modern scrollbar that matches theme colors */
 
-/* Webkit browsers (Chrome, Safari, Edge) */
+/* Webkit browsers */
 ::-webkit-scrollbar {
     width: var(--scrollbar-width);
     height: var(--scrollbar-width);
@@ -236,13 +213,13 @@
     background: var(--scrollbar-track);
 }
 
-/* Firefox scrollbar styling */
+/* Firefox */
 * {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
-/* Thin scrollbar variant for smaller containers */
+/* Utility classes */
 .scrollbar-thin {
     scrollbar-width: thin;
 }
@@ -252,7 +229,6 @@
     height: var(--scrollbar-width-thin);
 }
 
-/* Hidden scrollbar but still scrollable */
 .scrollbar-none {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -262,7 +238,7 @@
     display: none;
 }
 
-/* Custom scrollbar for specific components */
+/* Overlay scrollbar that appears on hover */
 .scrollbar-overlay {
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
@@ -301,7 +277,7 @@
     background: var(--scrollbar-thumb-hover);
 }
 
-/* Scrollbar for code blocks and preformatted text */
+/* Code block scrollbars */
 pre,
 code {
     scrollbar-width: thin;
@@ -332,7 +308,7 @@ code::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }
 
-/* Responsive scrollbar adjustments */
+/* Mobile optimizations */
 @media (max-width: 768px) {
     :root {
         --scrollbar-width: 6px;
@@ -340,7 +316,7 @@ code::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* High contrast mode adjustments */
+/* Accessibility */
 @media (prefers-contrast: high) {
     :root {
         --scrollbar-thumb: var(--foreground);
@@ -353,7 +329,6 @@ code::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
     ::-webkit-scrollbar-thumb {
         transition: none;
@@ -364,7 +339,7 @@ code::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* Safe area utilities for mobile devices (iPhone notch/home indicator) */
+/* Safe area for mobile devices with notches/home indicators */
 @supports (padding: env(safe-area-inset-bottom)) {
     .pb-safe {
         padding-bottom: env(safe-area-inset-bottom);
@@ -375,11 +350,11 @@ code::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* Fallback for devices without safe area insets */
+/* Fallback for devices without safe areas */
 .pb-safe {
-    padding-bottom: 0.5rem; /* 8px fallback */
+    padding-bottom: 0.5rem;
 }
 
 .h-safe {
-    height: 0; /* No extra height on devices without safe area */
+    height: 0;
 }

@@ -8,18 +8,6 @@ import { formatExternalUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
 import { Github } from "lucide-react";
 
-/**
- * Props for the Hero component
- * @property greeting - Small text displayed above the title
- * @property title - Main heading (usually your name or role)
- * @property description - Brief description or tagline
- * @property githubUrl - GitHub profile URL
- * @property image - Hero image URL
- * @property ctaText - Primary button text
- * @property ctaLink - Primary button link (falls back to githubUrl)
- * @property secondaryCtaText - Secondary button text
- * @property secondaryCtaLink - Secondary button link (defaults to projects section)
- */
 interface HeroProps {
     greeting?: string;
     title?: string;
@@ -33,13 +21,7 @@ interface HeroProps {
 }
 
 /**
- * Hero section component for the landing page
- *
- * Features:
- * - Completely different layouts for mobile and desktop
- * - Animated image with decorative effects
- * - Primary and secondary call-to-action buttons
- * - Gradient text styling for visual interest
+ * Hero section with different layouts for mobile and desktop
  */
 export function Hero({
     greeting = "Welcome",
@@ -54,7 +36,6 @@ export function Hero({
 }: HeroProps) {
     const isMobile = useIsMobile();
 
-    // Configure call-to-action buttons
     const buttons = [
         {
             text: ctaText,
@@ -73,7 +54,7 @@ export function Hero({
         if (isMobile) {
             return (
                 <div className="w-full">
-                    {/* Hero image with decorative elements */}
+                    {/* Hero image with decorative blur effect */}
                     <div className="relative mb-8 mx-auto max-w-sm">
                         <ResponsiveImage
                             src={image}
@@ -81,11 +62,9 @@ export function Hero({
                             aspectRatio="square"
                             priority={true}
                         />
-                        {/* Decorative blur effect */}
                         <div className="absolute -inset-3 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-2xl -z-10 opacity-50 blur-lg"></div>
                     </div>
 
-                    {/* Hero content and call-to-action buttons */}
                     <div className="text-center space-y-6">
                         <div className="space-y-4">
                             <p className="text-xs text-primary font-medium uppercase tracking-wider">
@@ -109,10 +88,9 @@ export function Hero({
             );
         }
 
-        // Desktop version
+        // Desktop: two-column layout
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-                {/* Left column: content and call-to-action */}
                 <div className="space-y-8 max-w-xl">
                     <div className="space-y-6">
                         <p className="text-sm text-primary font-medium uppercase tracking-wider">
@@ -129,7 +107,6 @@ export function Hero({
                     <ButtonGroup buttons={buttons} fullWidthMobile={false} />
                 </div>
 
-                {/* Right column: hero image with effects */}
                 <div className="relative group">
                     <ResponsiveImage
                         src={image}
@@ -137,8 +114,6 @@ export function Hero({
                         aspectRatio="landscape"
                         priority={true}
                     />
-
-                    {/* Decorative blur effect */}
                     <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-3xl -z-10 opacity-50 blur-xl"></div>
                 </div>
             </div>

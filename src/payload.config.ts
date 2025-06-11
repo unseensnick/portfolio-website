@@ -1,4 +1,3 @@
-// storage-adapter-import-placeholder
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
@@ -21,7 +20,7 @@ export default buildConfig({
         importMap: {
             baseDir: path.resolve(dirname),
         },
-        // Configure live preview settings
+        // Live preview breakpoints for different devices
         livePreview: {
             breakpoints: [
                 {
@@ -70,8 +69,5 @@ export default buildConfig({
             },
         },
     }),
-    plugins: [
-        payloadCloudPlugin(),
-        // storage-adapter-placeholder
-    ],
+    plugins: [payloadCloudPlugin()],
 });

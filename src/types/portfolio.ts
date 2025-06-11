@@ -1,13 +1,13 @@
 export interface NavLink {
-    label: string; // Changed from "text" to "label"
+    label: string; 
     href: string;
-    icon?: string; // Added optional icon to match PayloadCMS schema
+    icon?: string; 
 }
 
 export interface Nav {
     logo: string;
     subtitle: string;
-    logoSplitAt?: number; // New field for logo split customization
+    logoSplitAt?: number; 
     links: NavLink[];
 }
 

@@ -5,15 +5,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 
-/**
- * Props for the ResponsiveImage component
- * @property src - Image source URL (optional for placeholder mode)
- * @property alt - Alternative text for accessibility
- * @property aspectRatio - Predefined or custom aspect ratio
- * @property className - Additional CSS classes
- * @property fillContainer - Whether image should fill its container
- * @property priority - Whether to prioritize image loading
- */
 interface ResponsiveImageProps {
     src?: string;
     alt: string;
@@ -24,14 +15,8 @@ interface ResponsiveImageProps {
 }
 
 /**
- * Responsive image component with consistent styling across breakpoints
- *
- * Features:
- * - Handles different aspect ratios (square, landscape, portrait)
- * - Shows a placeholder when no image is provided or when image fails to load
- * - Applies hover effects on desktop
- * - Adjusts border radius and shadow based on viewport
- * - Graceful fallback handling for broken/missing images
+ * Responsive image with placeholder fallback and error handling
+ * Adapts styling for mobile/desktop and provides graceful fallbacks
  */
 export function ResponsiveImage({
     src,
@@ -45,7 +30,7 @@ export function ResponsiveImage({
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
-    // Convert named aspect ratios to corresponding CSS classes
+    // Convert aspect ratio to CSS classes
     let aspectRatioClass = "";
     switch (aspectRatio) {
         case "square":
@@ -58,7 +43,6 @@ export function ResponsiveImage({
             aspectRatioClass = "aspect-[3/4]";
             break;
         default:
-            // Allow custom aspect ratio string (e.g., "aspect-[4/3]")
             aspectRatioClass = aspectRatio;
     }
 
@@ -71,13 +55,9 @@ export function ResponsiveImage({
         className
     );
 
-    // Determine if we should show placeholder
     const shouldShowPlaceholder =
         !src || imageError || src === "/placeholder-image.svg";
 
-    /**
-     * Renders the placeholder content
-     */
     const renderPlaceholder = () => (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
             <div
@@ -104,12 +84,8 @@ export function ResponsiveImage({
         </div>
     );
 
-    /**
-     * Renders the actual image with error handling
-     */
     const renderImage = () => (
         <>
-            {/* Loading state */}
             {imageLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-muted/50 animate-pulse">
                     <div
@@ -121,7 +97,6 @@ export function ResponsiveImage({
                 </div>
             )}
 
-            {/* Actual image */}
             <Image
                 src={src!}
                 alt={alt}

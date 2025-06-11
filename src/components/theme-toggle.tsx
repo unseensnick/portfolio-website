@@ -5,35 +5,24 @@ import { cn } from "@/lib/utils";
 import { Moon, Sun } from "lucide-react";
 import * as React from "react";
 
-/**
- * Props for the ThemeToggle component
- * Extends standard button props to allow all HTML button attributes
- */
 interface ThemeToggleProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     className?: string;
 }
 
 /**
- * Theme toggle button with animated transitions between light/dark modes
- *
- * Features:
- * - Smooth icon transitions between sun and moon
- * - Hover effects with subtle animations
- * - Automatically detects and displays current theme
- * - Handles SSR by showing a loading state until mounted
+ * Animated theme toggle with sun/moon icons
+ * Shows loading skeleton until mounted to prevent hydration mismatch
  */
 export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
     const { theme, setTheme } = useTheme();
-    // Track if component is mounted to prevent hydration mismatch
     const [mounted, setMounted] = React.useState<boolean>(false);
 
-    // Set mounted state once component is mounted on client
     React.useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Determine actual theme considering system preference
+    // Resolve actual theme considering system preference
     const resolvedTheme = React.useMemo(() => {
         if (!mounted) return theme;
 
@@ -46,12 +35,10 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
         return theme;
     }, [theme, mounted]);
 
-    // Toggle between light and dark modes
     const handleToggle = () => {
         setTheme(resolvedTheme === "light" ? "dark" : "light");
     };
 
-    // Show loading skeleton before mounting to prevent flicker
     if (!mounted) {
         return (
             <div className="size-10 rounded-full bg-muted/50 animate-pulse" />
@@ -75,7 +62,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
             {/* Background transition effect */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-            {/* Icon container with rotation animation */}
+            {/* Icon with rotation */}
             <div className="relative transition-transform duration-500 group-hover:scale-110">
                 {isDark ? (
                     <Sun className="size-4 text-foreground/80 group-hover:text-primary transition-colors duration-300" />
@@ -84,7 +71,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
                 )}
             </div>
 
-            {/* Subtle glow effect on hover */}
+            {/* Subtle glow effect */}
             <div className="absolute inset-0 rounded-full bg-primary/10 opacity-0 group-hover:opacity-50 transition-opacity duration-300 blur-xl" />
         </button>
     );

@@ -2,16 +2,6 @@
 
 import { cn } from "@/lib/utils";
 
-/**
- * Props for the HexagonLogo component
- * @property logoText - Main logo text (e.g., "unseensnick")
- * @property subtitle - Subtitle text (e.g., "Full Stack Developer")
- * @property size - Size variant for the logo
- * @property splitAt - Number of characters to keep in normal color before applying gradient
- * @property className - Additional CSS classes
- * @property isHovered - Whether the logo is in hovered state
- * @property onClick - Click handler for the logo
- */
 interface HexagonLogoProps {
     logoText?: string;
     subtitle?: string;
@@ -23,14 +13,8 @@ interface HexagonLogoProps {
 }
 
 /**
- * Hexagon Typography Logo Component
- *
- * Features:
- * - Modern hexagon icon with code brackets
- * - Customizable split typography with gradient effect
- * - Responsive sizing
- * - Hover animations
- * - Full customization of text content
+ * Hexagon logo with customizable split typography and gradient effects
+ * Features animated hexagon background and code brackets symbol
  */
 export function HexagonLogo({
     logoText = "unseensnick",
@@ -41,7 +25,6 @@ export function HexagonLogo({
     isHovered = false,
     onClick,
 }: HexagonLogoProps) {
-    // Size configurations
     const sizeClasses = {
         sm: "text-lg",
         md: "text-2xl",
@@ -70,15 +53,13 @@ export function HexagonLogo({
         xl: "text-lg",
     };
 
-    // Auto-calculate split point if not provided
-    // Default: split after first word or halfway through if one word
+    // Auto-calculate split point: after first word or 60% through single word
     const calculateSplitAt = () => {
         if (splitAt !== undefined) return splitAt;
 
         const spaceIndex = logoText.indexOf(" ");
         if (spaceIndex > 0) return spaceIndex;
 
-        // If no space, split roughly in the middle
         return Math.floor(logoText.length * 0.6);
     };
 
@@ -95,9 +76,9 @@ export function HexagonLogo({
             )}
             onClick={onClick}
         >
-            {/* Hexagon Icon with Code Brackets */}
+            {/* Hexagon with code brackets */}
             <div className={cn("relative", iconSizes[size])}>
-                {/* Hexagon Background */}
+                {/* Outer hexagon with gradient */}
                 <div
                     className={cn(
                         "absolute inset-0 bg-gradient-to-br from-primary to-primary/80 transition-all duration-300",
@@ -110,7 +91,7 @@ export function HexagonLogo({
                     }}
                 />
 
-                {/* White Inner Hexagon */}
+                {/* Inner white hexagon */}
                 <div
                     className={cn(
                         "absolute inset-1 bg-background transition-transform duration-300",
@@ -122,7 +103,7 @@ export function HexagonLogo({
                     }}
                 />
 
-                {/* Code Brackets Symbol */}
+                {/* Code brackets symbol */}
                 <div
                     className={cn(
                         "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary font-bold font-mono",
@@ -133,9 +114,8 @@ export function HexagonLogo({
                 </div>
             </div>
 
-            {/* Text Content */}
+            {/* Logo text with split typography */}
             <div className="flex flex-col">
-                {/* Main Logo Text with Split Typography */}
                 <div
                     className={cn(
                         sizeClasses[size],
@@ -153,7 +133,6 @@ export function HexagonLogo({
                     </span>
                 </div>
 
-                {/* Subtitle */}
                 <span
                     className={cn(
                         "text-muted-foreground font-medium leading-none mt-1",
@@ -168,7 +147,7 @@ export function HexagonLogo({
 }
 
 /**
- * Example usage with different configurations
+ * Examples component showing different logo configurations
  */
 export function HexagonLogoExamples() {
     return (
@@ -176,7 +155,6 @@ export function HexagonLogoExamples() {
             <h2 className="text-2xl font-bold">Hexagon Logo Examples</h2>
 
             <div className="space-y-6">
-                {/* Default */}
                 <div>
                     <h3 className="text-lg font-semibold mb-2">
                         Default (unseensnick)
@@ -184,7 +162,6 @@ export function HexagonLogoExamples() {
                     <HexagonLogo />
                 </div>
 
-                {/* Custom Text */}
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Custom Text</h3>
                     <HexagonLogo
@@ -194,7 +171,6 @@ export function HexagonLogoExamples() {
                     />
                 </div>
 
-                {/* Single Word */}
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Single Word</h3>
                     <HexagonLogo
@@ -204,7 +180,6 @@ export function HexagonLogoExamples() {
                     />
                 </div>
 
-                {/* Two Words */}
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Two Words</h3>
                     <HexagonLogo
@@ -213,7 +188,6 @@ export function HexagonLogoExamples() {
                     />
                 </div>
 
-                {/* Different Sizes */}
                 <div>
                     <h3 className="text-lg font-semibold mb-2">
                         Different Sizes

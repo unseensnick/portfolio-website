@@ -22,7 +22,5 @@ export const Users: CollectionConfig = {
                 description: "Your full name for personalization",
             },
         },
-        // Email field is automatically added by Payload for auth
-        // Add more fields as needed for your user profile
     ],
 };

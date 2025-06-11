@@ -8,14 +8,6 @@ import { ExternalLink, LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 
-/**
- * Props for ResponsiveCard component
- * @property children - Content to display inside the card
- * @property className - Additional CSS classes
- * @property href - Optional URL to make the card clickable
- * @property isExternal - Whether the link opens in a new tab
- * @property hoverEffect - Whether to apply hover animations
- */
 interface ResponsiveCardProps {
     children: ReactNode;
     className?: string;
@@ -25,12 +17,7 @@ interface ResponsiveCardProps {
 }
 
 /**
- * A responsive card component with consistent styling and optional hover effects
- *
- * Features:
- * - Adapts padding and sizing based on viewport
- * - Optional hover animations and shadow effects
- * - Can be wrapped in a link for navigation
+ * Card component with responsive padding and optional hover effects
  */
 export function ResponsiveCard({
     children,
@@ -70,15 +57,6 @@ export function ResponsiveCard({
     return content;
 }
 
-/**
- * Props for IconCard component
- * @property icon - Lucide icon to display
- * @property title - Card title text
- * @property subtitle - Supporting text below title
- * @property href - Optional URL for whole card
- * @property linkText - Optional link text at bottom
- * @property linkHref - URL for bottom link (falls back to href)
- */
 interface IconCardProps {
     icon: LucideIcon;
     title: string;
@@ -92,9 +70,6 @@ interface IconCardProps {
 
 /**
  * Card with centered icon, title, subtitle and optional link
- *
- * Simplifies common card pattern with consistent styling and spacing
- * Handles both card-level and text-level links appropriately
  */
 export function IconCard({
     icon: Icon,
@@ -108,7 +83,6 @@ export function IconCard({
 }: IconCardProps) {
     const isMobile = useIsMobile();
 
-    // Format URLs safely with proper protocol
     const textLinkHref = linkHref || href;
     const isEmailLink =
         textLinkHref?.startsWith && textLinkHref.startsWith("mailto:");
@@ -151,7 +125,6 @@ export function IconCard({
                 </p>
             </div>
 
-            {/* Optional link text */}
             {linkText &&
                 renderLinkText(
                     linkText,
@@ -162,7 +135,6 @@ export function IconCard({
         </div>
     );
 
-    // Helper to render link or static text
     const renderLinkText = (
         text: string,
         href: string,
@@ -194,7 +166,7 @@ export function IconCard({
         );
     };
 
-    // If the card has a href but no linkHref, make the whole card clickable
+    // Make whole card clickable if no separate link
     if (href && !linkHref) {
         return (
             <ResponsiveCard
@@ -207,7 +179,6 @@ export function IconCard({
         );
     }
 
-    // Otherwise just render the card content with a possible link inside
     return (
         <ResponsiveCard className={className}>{renderContent()}</ResponsiveCard>
     );

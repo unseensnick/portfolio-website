@@ -1,5 +1,4 @@
 import type { PayloadRequest } from "payload";
-
 import { generateEmailHTML } from "./generateEmailHTML";
 
 type ForgotPasswordEmailArgs =
@@ -10,6 +9,9 @@ type ForgotPasswordEmailArgs =
       }
     | undefined;
 
+/**
+ * Generates password reset email using the branded template
+ */
 export const generateForgotPasswordEmail = async (
     args: ForgotPasswordEmailArgs
 ): Promise<string> => {
@@ -17,7 +19,6 @@ export const generateForgotPasswordEmail = async (
         process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
     const resetUrl = `${baseUrl}/reset-password?token=${args?.token}`;
 
-    // Get user name if available
     const userName =
         args?.user?.name || args?.user?.email?.split("@")[0] || "there";
 

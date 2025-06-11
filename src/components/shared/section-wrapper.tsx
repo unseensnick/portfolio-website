@@ -4,16 +4,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
-/**
- * Props for the SectionWrapper component
- * @property id - HTML ID for the section (used for navigation)
- * @property title - Optional section heading
- * @property description - Optional section subheading
- * @property children - Content to render inside the section
- * @property className - Additional CSS classes for the section element
- * @property titleClassName - Additional CSS classes for the title
- * @property descriptionClassName - Additional CSS classes for the description
- */
 interface SectionWrapperProps {
     id?: string;
     title?: string;
@@ -25,13 +15,7 @@ interface SectionWrapperProps {
 }
 
 /**
- * Standardized section container with responsive spacing and header styling
- *
- * Features:
- * - Handles consistent spacing across all sections
- * - Provides optional title and description with gradient styling
- * - Adjusts text size, padding, and margins based on viewport
- * - Ensures consistent maximum width on larger screens
+ * Standardized section container with responsive spacing and gradient titles
  */
 export function SectionWrapper({
     id,
@@ -44,14 +28,12 @@ export function SectionWrapper({
 }: SectionWrapperProps) {
     const isMobile = useIsMobile();
 
-    // Apply gradient styling to title with responsive sizing
     const titleClasses = cn(
         "font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent",
         isMobile ? "text-3xl mb-4" : "text-4xl lg:text-5xl mb-6",
         titleClassName
     );
 
-    // Style description text with responsive sizing and max-width
     const descriptionClasses = cn(
         "text-muted-foreground",
         isMobile
@@ -70,7 +52,6 @@ export function SectionWrapper({
                     isMobile ? "px-6" : "max-w-7xl mx-auto px-8 w-full"
                 )}
             >
-                {/* Only render header if title or description is provided */}
                 {(title || description) && (
                     <div
                         className={cn(
