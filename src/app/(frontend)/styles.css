@@ -94,44 +94,62 @@
 
 /* Dark theme color palette using OKLCH */
 .dark {
-    /* Dark mode - Refined Solo Leveling inspired */
-    --background: oklch(0.06 0.02 285);
-    --foreground: oklch(0.94 0.01 280);
-    --card: oklch(0.11 0.04 285);
-    --card-foreground: oklch(0.94 0.01 280);
-    --popover: oklch(0.11 0.04 285);
-    --popover-foreground: oklch(0.94 0.01 280);
-    --primary: oklch(0.65 0.26 285);
-    --primary-foreground: oklch(0.06 0.02 285);
-    --secondary: oklch(0.09 0.03 285);
-    --secondary-foreground: oklch(0.85 0.01 280);
-    --muted: oklch(0.13 0.03 285);
-    --muted-foreground: oklch(0.6 0.02 285);
-    --accent: oklch(0.15 0.04 285);
-    --accent-foreground: oklch(0.85 0.01 280);
-    --destructive: oklch(0.65 0.22 15);
-    --border: oklch(0.18 0.03 285);
-    --input: oklch(0.14 0.04 285);
-    --ring: oklch(0.65 0.26 285);
-    --chart-1: oklch(0.65 0.26 285);
+    /* Dark mode - Original Solo Leveling inspired base with strategic separation */
+    --background: oklch(0.06 0.02 285); /* Keep original dark base */
+    --foreground: oklch(0.94 0.01 280); /* Keep original bright text */
+    --card: oklch(0.13 0.04 285); /* Strategic increase for card separation */
+    --card-foreground: oklch(0.94 0.01 280); /* Keep original bright text */
+    --popover: oklch(0.13 0.04 285); /* Match card */
+    --popover-foreground: oklch(0.94 0.01 280); /* Keep original bright text */
+    --primary: oklch(0.65 0.26 285); /* Keep original vibrant purple */
+    --primary-foreground: oklch(
+        0.06 0.02 285
+    ); /* Keep original dark text on purple */
+    --secondary: oklch(0.09 0.03 285); /* Keep original subtle secondary */
+    --secondary-foreground: oklch(
+        0.85 0.01 280
+    ); /* Keep original secondary text */
+    --muted: oklch(
+        0.16 0.03 285
+    ); /* Strategic increase for muted section separation */
+    --muted-foreground: oklch(0.6 0.02 285); /* Keep original muted text */
+    --accent: oklch(
+        0.19 0.04 285
+    ); /* Strategic increase for accent separation */
+    --accent-foreground: oklch(0.85 0.01 280); /* Keep original accent text */
+    --destructive: oklch(0.65 0.22 15); /* Keep original red */
+    --border: oklch(
+        0.18 0.03 285
+    ); /* Strategic increase for better definition */
+    --input: oklch(0.14 0.04 285); /* Keep original input */
+    --ring: oklch(0.65 0.26 285); /* Keep original purple focus rings */
+    --chart-1: oklch(0.65 0.26 285); /* Keep original chart colors */
     --chart-2: oklch(0.6 0.22 300);
     --chart-3: oklch(0.55 0.2 270);
     --chart-4: oklch(0.7 0.18 320);
     --chart-5: oklch(0.75 0.16 260);
-    --sidebar: oklch(0.08 0.03 285);
-    --sidebar-foreground: oklch(0.94 0.01 280);
-    --sidebar-primary: oklch(0.65 0.26 285);
-    --sidebar-primary-foreground: oklch(0.06 0.02 285);
-    --sidebar-accent: oklch(0.12 0.03 285);
-    --sidebar-accent-foreground: oklch(0.85 0.01 280);
-    --sidebar-border: oklch(0.16 0.03 285);
-    --sidebar-ring: oklch(0.65 0.26 285);
+    --sidebar: oklch(0.08 0.03 285); /* Keep original sidebar */
+    --sidebar-foreground: oklch(0.94 0.01 280); /* Keep original sidebar text */
+    --sidebar-primary: oklch(0.65 0.26 285); /* Keep original purple */
+    --sidebar-primary-foreground: oklch(
+        0.06 0.02 285
+    ); /* Keep original dark on purple */
+    --sidebar-accent: oklch(0.12 0.03 285); /* Keep original sidebar accent */
+    --sidebar-accent-foreground: oklch(
+        0.85 0.01 280
+    ); /* Keep original accent text */
+    --sidebar-border: oklch(0.16 0.03 285); /* Keep original sidebar border */
+    --sidebar-ring: oklch(0.65 0.26 285); /* Keep original purple */
 
     /* Custom scrollbar variables for dark theme */
-    --scrollbar-track: oklch(0.08 0.03 285);
-    --scrollbar-thumb: oklch(0.18 0.03 285);
-    --scrollbar-thumb-hover: oklch(0.65 0.26 285);
-    --scrollbar-thumb-active: oklch(0.7 0.26 285);
+    --scrollbar-track: oklch(0.08 0.03 285); /* Keep original track */
+    --scrollbar-thumb: oklch(0.18 0.03 285); /* Keep original thumb */
+    --scrollbar-thumb-hover: oklch(
+        0.65 0.26 285
+    ); /* Keep original purple hover */
+    --scrollbar-thumb-active: oklch(
+        0.7 0.26 285
+    ); /* Keep original purple active */
 }
 
 /* Base styles and typography */
