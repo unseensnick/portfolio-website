@@ -28,7 +28,7 @@ interface SiteHeaderProps {
  * Main site header with hexagon logo and navigation
  */
 export function SiteHeader({
-    logo = "unseensnick",
+    logo = "YourName",
     subtitle = "Web Developer",
     navLinks = [],
     logoSplitAt,

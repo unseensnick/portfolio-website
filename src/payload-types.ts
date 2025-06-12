@@ -170,11 +170,11 @@ export interface Portfolio {
    */
   nav: {
     /**
-     * Main text for your hexagon logo (e.g., your name or brand). Examples: 'unseensnick', 'JohnDoe', 'Portfolio'
+     * Main text for your hexagon logo (e.g., your name or brand). Examples: 'YourName', 'JohnDoe', 'Portfolio'
      */
     logo: string;
     /**
-     * Character position where gradient effect starts. Leave empty for auto-split. Examples: 'unseensnick' with 6 = 'unseen|snick', 'JohnDoe' with 4 = 'John|Doe'
+     * Character position where gradient effect starts. Leave empty for auto-split. Examples: 'YourName' with 4 = 'Your|Name', 'JohnDoe' with 4 = 'John|Doe'
      */
     logoSplitAt?: number | null;
     /**

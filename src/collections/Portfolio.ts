@@ -60,10 +60,10 @@ export const Portfolio: CollectionConfig = {
                     name: "logo",
                     type: "text",
                     required: true,
-                    defaultValue: "unseensnick",
+                    defaultValue: "YourName",
                     label: "Logo Text",
                     admin: {
-                        description: "Main text for your hexagon logo (e.g., your name or brand). Examples: 'unseensnick', 'JohnDoe', 'Portfolio'",
+                        description: "Main text for your hexagon logo (e.g., your name or brand). Examples: 'YourName', 'JohnDoe', 'Portfolio'",
                     },
                 },
                 {
@@ -71,7 +71,7 @@ export const Portfolio: CollectionConfig = {
                     type: "number",
                     label: "Logo Split Point (Optional)",
                     admin: {
-                        description: "Character position where gradient effect starts. Leave empty for auto-split. Examples: 'unseensnick' with 6 = 'unseen|snick', 'JohnDoe' with 4 = 'John|Doe'",
+                        description: "Character position where gradient effect starts. Leave empty for auto-split. Examples: 'YourName' with 4 = 'Your|Name', 'JohnDoe' with 4 = 'John|Doe'",
                         placeholder: "Auto-split if empty",
                     },
                     validate: (val: number | null | undefined) => {
@@ -171,7 +171,7 @@ export const Portfolio: CollectionConfig = {
                     name: "githubUrl",
                     type: "text",
                     required: true,
-                    defaultValue: "https://github.com/unseensnick",
+                    defaultValue: "https://github.com/yourusername",
                     label: "GitHub URL",
                     admin: {
                         description: "Your GitHub profile URL (with or without https://)",
@@ -581,7 +581,7 @@ export const Portfolio: CollectionConfig = {
                     name: "copyright",
                     type: "text",
                     required: true,
-                    defaultValue: "© 2024 UnseenSnick. All rights reserved.",
+                    defaultValue: "© 2024 Your Name. All rights reserved.",
                     label: "Copyright Text",
                     admin: {
                         description: "Copyright notice displayed in the footer",

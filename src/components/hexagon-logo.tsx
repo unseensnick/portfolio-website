@@ -17,7 +17,7 @@ interface HexagonLogoProps {
  * Shows developer-style <code/> brackets in the center
  */
 export function HexagonLogo({
-    logoText = "unseensnick",
+    logoText = "YourName",
     subtitle = "Full Stack Developer",
     size = "lg",
     splitAt,
