@@ -157,7 +157,3 @@ src/
 
     - Add all variables from your `.env` file are added in the "Production Environment Variables"
     - Configure the database connection string to your production database
-
-## License
-
-MIT
