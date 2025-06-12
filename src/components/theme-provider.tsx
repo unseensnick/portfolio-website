@@ -27,7 +27,7 @@ const ThemeContext = React.createContext<ThemeContextType | null>(null);
 export function ThemeProvider({
     children,
     defaultTheme = "system",
-    attribute = "class",
+
     enableSystem = true,
     disableTransitionOnChange = false,
     ...props
@@ -38,7 +38,7 @@ export function ThemeProvider({
 
     React.useEffect(() => setMounted(true), []);
 
-    // Apply theme classes with smooth transitions
+    // Update DOM classes when theme changes (with smooth transitions)
     React.useEffect(() => {
         const root = window.document.documentElement;
 

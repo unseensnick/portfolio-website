@@ -104,7 +104,7 @@ function safeNumber(value: any, min?: number, max?: number): number | undefined 
  * Transforms raw PayloadCMS data into the format expected by components
  */
 export function adaptPortfolioData(data: any) {
-    // Return fallback if required sections are missing
+    // Validate required sections exist before processing
     if (
         !data ||
         !data.nav ||
@@ -224,8 +224,7 @@ export async function getPortfolioData(
 
         const apiUrl = `${baseUrl}/api/portfolio?${params.toString()}`;
 
-        console.log(`[Portfolio API ${requestId}] Fetching from: ${apiUrl}`);
-        console.log(`[Portfolio API ${requestId}] Draft mode: ${draft}`);
+
 
         const headers: HeadersInit = {
             "Content-Type": "application/json",
@@ -253,15 +252,13 @@ export async function getPortfolioData(
                 try {
                     const errorText = await response.text();
                     console.error(`[Portfolio API ${requestId}] Error body:`, errorText);
-                } catch (e) {
+                } catch {
                     console.error(`[Portfolio API ${requestId}] Could not read error body`);
                 }
 
                 // Try published content if draft request fails
                 if (draft) {
-                    console.log(
-                        `[Portfolio API ${requestId}] Draft request failed, trying published content...`
-                    );
+                                    // Fallback to published content on draft error
                     return getPortfolioData(false);
                 }
 
@@ -269,13 +266,7 @@ export async function getPortfolioData(
             }
 
             const result = await response.json();
-            console.log(`[Portfolio API ${requestId}] Response:`, {
-                totalDocs: result.totalDocs,
-                hasNextPage: result.hasNextPage,
-                docs: result.docs?.length || 0,
-                firstDocId: result.docs?.[0]?.id || "none",
-                firstDocStatus: result.docs?.[0]?._status || "unknown",
-            });
+
 
             const portfolioDoc = result.docs?.[0];
 
@@ -286,22 +277,14 @@ export async function getPortfolioData(
 
                 // Try draft mode if no published docs found
                 if (!draft && result.totalDocs === 0) {
-                    console.log(
-                        `[Portfolio API ${requestId}] No published docs, trying draft mode...`
-                    );
+                                    // Fallback to draft content if no published docs exist
                     return getPortfolioData(true);
                 }
 
                 throw new Error("No portfolio documents found");
             }
 
-            console.log(`[Portfolio API ${requestId}] Using document:`, {
-                id: portfolioDoc.id,
-                title: portfolioDoc.title,
-                status: portfolioDoc._status || "published",
-                logoText: portfolioDoc.nav?.logo,
-                logoSplitAt: portfolioDoc.nav?.logoSplitAt,
-            });
+
 
             return adaptPortfolioData(portfolioDoc);
 
@@ -320,9 +303,7 @@ export async function getPortfolioData(
             error.message.includes('network') ||
             error.message.includes('timeout')
         ))) {
-            console.log(
-                `[Portfolio API ${requestId}] Draft request error (${error.message}), falling back to published...`
-            );
+            // Network error in draft mode - try published content
             return getPortfolioData(false);
         }
 

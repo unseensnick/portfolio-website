@@ -83,7 +83,7 @@ export function setupScrollListener(
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
 
-        // Activate last section when at bottom of page
+        // Always highlight last section when user scrolls to bottom
         const isAtBottom =
             Math.ceil(currentScrollY + windowHeight) >= documentHeight - 10;
 
@@ -92,7 +92,7 @@ export function setupScrollListener(
             return;
         }
 
-        // Find current section based on scroll position
+        // Determine which section is currently in view
         const scrollPosition = currentScrollY + (isMobile ? 150 : offset + 100);
 
         for (let i = sections.length - 1; i >= 0; i--) {
@@ -119,7 +119,7 @@ export function setupScrollListener(
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll(); // Run immediately to set initial active section
 
     return () => window.removeEventListener("scroll", handleScroll);
 }

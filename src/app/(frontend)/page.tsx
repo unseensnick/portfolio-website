@@ -1,9 +1,9 @@
+import { RefreshRouteOnSave } from "@/components/RefreshRouteOnSave";
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { Projects } from "@/components/projects";
-import { RefreshRouteOnSave } from "@/components/RefreshRouteOnSave";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
 import { getPortfolioData } from "@/lib/payload-utils";
@@ -11,7 +11,8 @@ import { draftMode } from "next/headers";
 import React from "react";
 
 /**
- * Determines if draft content should be shown based on URL params or draft mode
+ * Checks if we should show draft content from CMS
+ * Draft mode enables live preview while editing
  */
 async function shouldShowDraft(
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -24,7 +25,7 @@ async function shouldShowDraft(
 }
 
 /**
- * Homepage with all portfolio sections
+ * Main portfolio page - renders all sections with data from CMS
  */
 export default async function Home({
     searchParams,

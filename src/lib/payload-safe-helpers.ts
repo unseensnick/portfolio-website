@@ -158,28 +158,3 @@ export function hasRequiredProps(obj: any, requiredProps: string[]): boolean {
         return value !== null && value !== undefined && value !== "";
     });
 }
-
-/**
- * DEBUG: Log PayloadCMS data structure (development only)
- * Remove from imports when not needed
- */
-export function debugPayloadData(data: any, label: string = "PayloadCMS Data"): void {
-    if (process.env.NODE_ENV === 'development') {
-        console.group(`[DEBUG] ${label}`);
-        console.log('Type:', typeof data);
-        console.log('Value:', data);
-        
-        if (data && typeof data === 'object') {
-            console.log('Keys:', Object.keys(data));
-            
-            if (data.url || data.filename || data.src) {
-                console.log('Potential image properties:');
-                console.log('- url:', data.url);
-                console.log('- filename:', data.filename);
-                console.log('- src:', data.src);
-                console.log('- path:', data.path);
-            }
-        }
-        console.groupEnd();
-    }
-}

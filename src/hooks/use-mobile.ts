@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react";
 
 /**
- * Hook to detect mobile viewport size
- * 
- * Returns true when viewport width is below the breakpoint.
- * Handles SSR safely by defaulting to false.
+ * Detects if viewport is mobile-sized (default: <768px)
+ * Safe for SSR - always returns false on server
  */
 export function useIsMobile(breakpoint: number = 768): boolean {
     const [isMobile, setIsMobile] = useState<boolean>(false);

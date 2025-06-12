@@ -14,6 +14,9 @@ interface RootLayoutProps {
 export default async function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <head>
+                <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+            </head>
             <body className={`${geist.className} antialiased`}>
                 <ThemeProvider
                     attribute="class"

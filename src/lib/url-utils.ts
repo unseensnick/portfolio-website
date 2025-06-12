@@ -1,7 +1,6 @@
 /**
- * Ensures URLs have proper protocol for external links
- * 
- * Handles: empty URLs, email links, anchor links, existing protocols, plain domains
+ * Adds https:// protocol to URLs that don't have one
+ * Preserves mailto:, #anchors, and existing protocols
  */
 export function formatExternalUrl(url?: string): string {
     if (!url) return "#";

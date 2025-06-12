@@ -6,7 +6,7 @@ export const Portfolio: CollectionConfig = {
         useAsTitle: "title",
         defaultColumns: ["title", "updatedAt"],
         livePreview: {
-            url: ({ data, locale }) => {
+            url: ({ locale }) => {
                 const baseUrl =
                     process.env.NEXT_PUBLIC_PAYLOAD_URL ||
                     "http://localhost:3000";

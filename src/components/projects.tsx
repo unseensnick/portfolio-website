@@ -4,7 +4,7 @@ import { ButtonGroup } from "@/components/shared/button-group";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
 import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
-import { TechBadgeGroup } from "@/components/ui/tech-badge";
+import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";

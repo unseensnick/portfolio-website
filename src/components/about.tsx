@@ -2,9 +2,8 @@
 
 import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
-import { TechBadgeGroup } from "@/components/ui/tech-badge";
+import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 
 function InterestItem({ text }: { text: string }) {
     return (

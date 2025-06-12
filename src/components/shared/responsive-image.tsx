@@ -15,8 +15,8 @@ interface ResponsiveImageProps {
 }
 
 /**
- * Responsive image with placeholder fallback and error handling
- * Adapts styling for mobile/desktop and provides graceful fallbacks
+ * Image component that adapts to mobile/desktop with built-in error handling
+ * Shows placeholder when image fails to load or is missing
  */
 export function ResponsiveImage({
     src,
@@ -30,7 +30,7 @@ export function ResponsiveImage({
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
-    // Convert aspect ratio to CSS classes
+    // Map aspect ratio prop to Tailwind CSS classes
     let aspectRatioClass = "";
     switch (aspectRatio) {
         case "square":
@@ -113,9 +113,6 @@ export function ResponsiveImage({
                 onError={() => {
                     setImageError(true);
                     setImageLoading(false);
-                    console.warn(
-                        `[ResponsiveImage] Failed to load image: ${src}`
-                    );
                 }}
             />
         </>

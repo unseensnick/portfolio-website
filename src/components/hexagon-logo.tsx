@@ -13,8 +13,8 @@ interface HexagonLogoProps {
 }
 
 /**
- * Hexagon logo with customizable split typography and gradient effects
- * Features animated hexagon background and code brackets symbol
+ * Animated logo with hexagon icon and split-color text effect
+ * Shows developer-style <code/> brackets in the center
  */
 export function HexagonLogo({
     logoText = "unseensnick",
@@ -53,7 +53,7 @@ export function HexagonLogo({
         xl: "text-lg",
     };
 
-    // Auto-calculate split point: after first word or 60% through single word
+    // Smart split: after first word, or 60% through single word for gradient effect
     const calculateSplitAt = () => {
         if (splitAt !== undefined) return splitAt;
 
@@ -141,63 +141,6 @@ export function HexagonLogo({
                 >
                     {subtitle}
                 </span>
-            </div>
-        </div>
-    );
-}
-
-/**
- * Examples component showing different logo configurations
- */
-export function HexagonLogoExamples() {
-    return (
-        <div className="space-y-8 p-8">
-            <h2 className="text-2xl font-bold">Hexagon Logo Examples</h2>
-
-            <div className="space-y-6">
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">
-                        Default (unseensnick)
-                    </h3>
-                    <HexagonLogo />
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Custom Text</h3>
-                    <HexagonLogo
-                        logoText="JohnDoe"
-                        subtitle="Frontend Developer"
-                        splitAt={4}
-                    />
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Single Word</h3>
-                    <HexagonLogo
-                        logoText="Portfolio"
-                        subtitle="Creative Studio"
-                        splitAt={4}
-                    />
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Two Words</h3>
-                    <HexagonLogo
-                        logoText="Code Master"
-                        subtitle="Full Stack Engineer"
-                    />
-                </div>
-
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">
-                        Different Sizes
-                    </h3>
-                    <div className="space-y-4">
-                        <HexagonLogo size="sm" logoText="Small Logo" />
-                        <HexagonLogo size="md" logoText="Medium Logo" />
-                        <HexagonLogo size="lg" logoText="Large Logo" />
-                    </div>
-                </div>
             </div>
         </div>
     );

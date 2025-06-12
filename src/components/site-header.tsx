@@ -1,8 +1,8 @@
 "use client";
 
+import { HexagonLogo } from "@/components/hexagon-logo";
 import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { HexagonLogo } from "@/components/ui/hexagon-logo";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
 import { useEffect, useState } from "react";

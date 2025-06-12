@@ -15,7 +15,7 @@ interface HeroProps {
     githubUrl?: string;
     image?: string;
     ctaText?: string;
-    ctaLink?: string;
+
     secondaryCtaText?: string;
     secondaryCtaLink?: string;
 }
@@ -30,7 +30,7 @@ export function Hero({
     githubUrl = "https://github.com",
     image,
     ctaText = "View GitHub",
-    ctaLink,
+
     secondaryCtaText = "View Projects",
     secondaryCtaLink = "#projects",
 }: HeroProps) {
@@ -51,6 +51,7 @@ export function Hero({
     ];
 
     const renderContent = () => {
+        // Mobile: single column, image on top
         if (isMobile) {
             return (
                 <div className="w-full">
@@ -88,7 +89,7 @@ export function Hero({
             );
         }
 
-        // Desktop: two-column layout
+        // Desktop: side-by-side layout with content on left, image on right
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
                 <div className="space-y-8 max-w-xl">

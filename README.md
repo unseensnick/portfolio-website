@@ -76,16 +76,15 @@ Edit all website sections through the PayloadCMS admin panel:
 ```
 src/
 ├── app/             # Next.js app router pages and API routes
-├── components/      # Reusable React components
-│   ├── shared/      # Common components used across sections
-│   └── ui/          # Base UI components (buttons, cards, etc.)
+│   ├── (frontend)/  # Main website pages using frontend layout
+│   └── (payload)/   # PayloadCMS admin routes and API
+├── components/      # Reusable React components (flattened structure)
 ├── collections/     # PayloadCMS collection definitions
 │   ├── Media.ts     # Media collection for images and files
 │   ├── Portfolio.ts # Portfolio content collection
 │   └── Users.ts     # User authentication collection
 ├── hooks/           # Custom React hooks
 ├── lib/             # Utility functions and helpers
-├── payload/         # PayloadCMS configuration
 └── types/           # TypeScript type definitions
 ```
 

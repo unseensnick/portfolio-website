@@ -75,7 +75,7 @@ export function TechBadgeGroup({
         className
     );
 
-    // Handle row limiting with "+X more" indicator
+    // Limit badges shown with "+X more" indicator when maxRows is set
     let displayTechnologies = validTechnologies;
     let hiddenCount = 0;
 
@@ -116,24 +116,5 @@ export function TechBadgeGroup({
                 </Badge>
             )}
         </div>
-    );
-}
-
-/**
- * Compact variant limited to 2 rows
- */
-export function TechBadgeGroupCompact({
-    technologies = [],
-    size = "sm",
-    className,
-}: Omit<TechBadgeGroupProps, "maxRows" | "showCount">) {
-    return (
-        <TechBadgeGroup
-            technologies={technologies}
-            size={size}
-            className={className}
-            maxRows={2}
-            showCount={true}
-        />
     );
 }

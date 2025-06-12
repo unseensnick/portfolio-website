@@ -11,7 +11,6 @@ export const RefreshRouteOnSave: React.FC = () => {
         <PayloadLivePreview
             refresh={() => {
                 try {
-                    console.log("[Live Preview] Refreshing route...");
                     router.refresh();
                 } catch (error) {
                     console.error(
