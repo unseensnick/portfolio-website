@@ -11,6 +11,8 @@ A sleek, responsive portfolio website built with Next.js and PayloadCMS for deve
 - **TypeScript**: Type-safe codebase with enhanced developer experience
 - **Modular Components**: Reusable UI components with Tailwind CSS
 - **Animation Effects**: Subtle animations and transitions for modern UX
+- **Guided Tour**: Interactive tour system for user onboarding and demos
+- **Demo Mode**: Showcase mode with sample data for presentations
 
 ## Technology Stack
 

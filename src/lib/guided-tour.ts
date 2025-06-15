@@ -46,7 +46,7 @@ function waitForScrollComplete(element: Element): Promise<void> {
         };
         
         // Set maximum wait time
-        const maxTimeout = setTimeout(() => {
+        setTimeout(() => {
             window.removeEventListener('scroll', handleScroll);
             clearTimeout(scrollTimeout);
             resolve();
@@ -92,7 +92,7 @@ function isElementProperlyVisible(element: Element): boolean {
 /**
  * Handles scrolling with calculated delay before showing popover
  */
-async function handleScrollingWithDelay(element: Element, step: any, options: any): Promise<void> {
+async function handleScrollingWithDelay(element: Element, step: any): Promise<void> {
     const isVisible = isElementProperlyVisible(element);
     
     if (!isVisible) {
@@ -119,7 +119,7 @@ async function handleScrollingWithDelay(element: Element, step: any, options: an
             (popover as HTMLElement).style.transition = 'opacity 0.3s ease';
             
             // Force reflow then fade in
-            (popover as HTMLElement).offsetHeight;
+            void (popover as HTMLElement).offsetHeight;
             (popover as HTMLElement).style.opacity = '1';
         }
     } else {
@@ -439,7 +439,7 @@ export function createGuidedTour(automated: boolean = false) {
             allowKeyboardControl: false,
         }),
         // Add hooks to control the highlighting and popover timing
-        onBeforeHighlight: (element: Element | undefined, step: any, options: any) => {
+        onBeforeHighlight: (element: Element | undefined, step: any) => {
             console.log(`[Tour] Before highlight: ${step.popover?.title}`);
             
             // Hide popover immediately to prevent blinking
@@ -456,7 +456,7 @@ export function createGuidedTour(automated: boolean = false) {
             }
         },
         
-        onHighlighted: async (element: Element | undefined, step: any, options: any) => {
+        onHighlighted: async (element: Element | undefined, step: any) => {
             console.log(`[Tour] Highlighted step: ${step.popover?.title}`);
             console.log(`[Tour] Element found:`, element);
             
@@ -464,13 +464,13 @@ export function createGuidedTour(automated: boolean = false) {
             if (element) {
                 const isVisible = isElementProperlyVisible(element);
                 console.log(`[Tour] Element "${step.popover?.title}" is ${isVisible ? 'visible' : 'not visible'} - ${isVisible ? 'no scroll needed' : 'scrolling required'}`);
-                await handleScrollingWithDelay(element, step, options);
+                await handleScrollingWithDelay(element, step);
             } else {
                 console.log(`[Tour] No element found for step: ${step.popover?.title}`);
             }
         },
         
-        onDeselected: (element: Element | undefined, step: any, options: any) => {
+        onDeselected: (element: Element | undefined, step: any) => {
             console.log(`[Tour] Deselected step: ${step.popover?.title}`);
             
             // Clean up navigation when leaving navigation steps

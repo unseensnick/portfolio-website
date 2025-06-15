@@ -234,26 +234,6 @@ export function Projects({
           ]
         : [];
 
-    const renderProjects = () => (
-        <div className={cn(isMobile ? "space-y-6 mb-12" : "space-y-32")}>
-            {/* Featured project first on desktop only */}
-            {!isMobile && featured && <DesktopProjectItem {...featured} />}
-
-            {/* Project list */}
-            {isMobile
-                ? allProjects.map((project, index) => (
-                      <MobileProjectItem key={index} {...project} />
-                  ))
-                : items.map((project, index) => (
-                      <DesktopProjectItem
-                          key={index}
-                          {...project}
-                          reverse={index % 2 === 0}
-                      />
-                  ))}
-        </div>
-    );
-
     const renderViewAllLink = () => {
         if (!viewAllLink) return null;
 
