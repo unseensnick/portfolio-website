@@ -6,6 +6,7 @@ import { Hero } from "@/components/hero";
 import { Projects } from "@/components/projects";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
+import { TourControls } from "@/components/tour-controls";
 import { getDemoModeIndicator, shouldUseDemoMode } from "@/lib/demo-utils";
 import { getPortfolioData } from "@/lib/payload-utils";
 import { draftMode } from "next/headers";
@@ -37,6 +38,8 @@ export default async function Home({
     const params = await searchParams;
     const data = await getPortfolioData(isDraft, params);
     const isDemo = shouldUseDemoMode(params);
+    const showTourControls =
+        process.env.NODE_ENV === "development" || params.tour === "true";
 
     return (
         <>
@@ -61,6 +64,11 @@ export default async function Home({
                         {isDemo && (
                             <div className="fixed top-20 right-4 z-50 bg-blue-500 text-white px-3 py-1 rounded text-sm font-medium">
                                 {getDemoModeIndicator()}
+                            </div>
+                        )}
+                        {showTourControls && (
+                            <div className="fixed bottom-4 right-4 z-50">
+                                <TourControls />
                             </div>
                         )}
 

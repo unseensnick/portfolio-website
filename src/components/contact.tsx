@@ -117,7 +117,12 @@ export function Contact({
     );
 
     return (
-        <SectionWrapper id="contact" title={title} description={description}>
+        <SectionWrapper
+            id="contact"
+            title={title}
+            description={description}
+            data-tour="contact-section"
+        >
             {renderContactCards()}
             {renderCtaCard()}
         </SectionWrapper>

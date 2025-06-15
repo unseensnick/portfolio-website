@@ -83,6 +83,7 @@ export function Hero({
                             buttons={buttons}
                             fullWidthMobile={true}
                             className="px-4"
+                            data-tour="hero-cta"
                         />
                     </div>
                 </div>
@@ -105,7 +106,11 @@ export function Hero({
                         </p>
                     </div>
 
-                    <ButtonGroup buttons={buttons} fullWidthMobile={false} />
+                    <ButtonGroup
+                        buttons={buttons}
+                        fullWidthMobile={false}
+                        data-tour="hero-cta"
+                    />
                 </div>
 
                 <div className="relative group">
@@ -129,6 +134,7 @@ export function Hero({
                     ? "min-h-[85vh] flex items-center pt-8 pb-16"
                     : "min-h-[90vh] flex items-center"
             )}
+            data-tour="hero-section"
         >
             {renderContent()}
         </SectionWrapper>

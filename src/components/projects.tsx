@@ -281,8 +281,33 @@ export function Projects({
     };
 
     return (
-        <SectionWrapper id="projects" title={title} description={description}>
-            {renderProjects()}
+        <SectionWrapper
+            id="projects"
+            title={title}
+            description={description}
+            data-tour="projects-section"
+        >
+            <div data-tour="featured-project">
+                {!isMobile && featured && <DesktopProjectItem {...featured} />}
+            </div>
+            <div data-tour="project-grid">
+                <div
+                    className={cn(isMobile ? "space-y-6 mb-12" : "space-y-32")}
+                >
+                    {/* Project list */}
+                    {isMobile
+                        ? allProjects.map((project, index) => (
+                              <MobileProjectItem key={index} {...project} />
+                          ))
+                        : items.map((project, index) => (
+                              <DesktopProjectItem
+                                  key={index}
+                                  {...project}
+                                  reverse={index % 2 === 0}
+                              />
+                          ))}
+                </div>
+            </div>
             {renderViewAllLink()}
         </SectionWrapper>
     );

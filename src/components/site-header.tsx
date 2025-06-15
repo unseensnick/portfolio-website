@@ -63,7 +63,10 @@ export function SiteHeader({
 
     return (
         <>
-            <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 flex w-full items-center border-b border-border/50">
+            <header
+                className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 flex w-full items-center border-b border-border/50"
+                data-tour="navigation"
+            >
                 <div className="flex h-20 w-full items-center justify-between px-8">
                     <div
                         className="flex items-center"

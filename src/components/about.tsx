@@ -64,7 +64,7 @@ export function About({
                             ))}
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-4" data-tour="technologies">
                             <h3 className="text-lg font-semibold text-foreground">
                                 {technologiesHeading}
                             </h3>
@@ -112,7 +112,7 @@ export function About({
                         ))}
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-6" data-tour="technologies">
                         <h3 className="text-xl font-semibold text-foreground">
                             {technologiesHeading}
                         </h3>
@@ -135,7 +135,7 @@ export function About({
     };
 
     return (
-        <SectionWrapper id="about" title={title}>
+        <SectionWrapper id="about" title={title} data-tour="about-section">
             {renderContent()}
         </SectionWrapper>
     );

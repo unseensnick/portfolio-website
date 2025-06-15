@@ -48,6 +48,8 @@ For detailed email setup instructions, see [Email Configuration](./docs/email-se
 
 For demo mode and showcasing features, see [Demo Mode Guide](./docs/DEMO_MODE.md).
 
+For interactive tours and video creation, see [Guided Tour Guide](./docs/GUIDED_TOUR.md).
+
 ### Development
 
 1. Install dependencies:

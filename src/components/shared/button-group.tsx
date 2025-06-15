@@ -25,6 +25,7 @@ interface ButtonGroupProps {
     buttons: ButtonItem[];
     fullWidthMobile?: boolean;
     className?: string;
+    "data-tour"?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ export function ButtonGroup({
     buttons,
     fullWidthMobile = true,
     className = "",
+    ...props
 }: ButtonGroupProps) {
     const isMobile = useIsMobile();
 
@@ -49,6 +51,7 @@ export function ButtonGroup({
                     : "flex flex-col sm:flex-row gap-4 pt-4",
                 className
             )}
+            {...props}
         >
             {buttons.map((button, index) => {
                 const IconComponent = button.icon;

@@ -16,7 +16,10 @@ export function Footer({
 
     if (isMobile) {
         return (
-            <footer className="border-t border-border bg-background/50 backdrop-blur-sm">
+            <footer
+                className="border-t border-border bg-background/50 backdrop-blur-sm"
+                data-tour="footer"
+            >
                 <div className="px-6 py-8 text-center text-xs text-muted-foreground">
                     {copyright}
                 </div>
@@ -27,7 +30,7 @@ export function Footer({
     }
 
     return (
-        <footer className="border-t border-border">
+        <footer className="border-t border-border" data-tour="footer">
             <div className="max-w-6xl mx-auto px-8 py-12 text-center text-sm text-muted-foreground">
                 {copyright}
             </div>

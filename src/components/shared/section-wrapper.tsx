@@ -12,6 +12,7 @@ interface SectionWrapperProps {
     className?: string;
     titleClassName?: string;
     descriptionClassName?: string;
+    "data-tour"?: string;
 }
 
 /**
@@ -25,6 +26,7 @@ export function SectionWrapper({
     className = "",
     titleClassName = "",
     descriptionClassName = "",
+    ...props
 }: SectionWrapperProps) {
     const isMobile = useIsMobile();
 
@@ -46,6 +48,7 @@ export function SectionWrapper({
         <section
             id={id}
             className={cn(isMobile ? "py-16" : "py-24 lg:py-32", className)}
+            {...props}
         >
             <div
                 className={cn(
