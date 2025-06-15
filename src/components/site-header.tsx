@@ -3,6 +3,7 @@
 import { HexagonLogo } from "@/components/hexagon-logo";
 import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { TourControls } from "@/components/tour-controls";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
 import { useEffect, useState } from "react";
@@ -125,7 +126,11 @@ export function SiteHeader({
                                 })}
                             </nav>
                         )}
-                        <ThemeToggle />
+
+                        <div className="flex items-center gap-2">
+                            {isMobile && <TourControls variant="compact" />}
+                            <ThemeToggle />
+                        </div>
                     </div>
                 </div>
             </header>

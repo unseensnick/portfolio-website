@@ -41,7 +41,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
 
     if (!mounted) {
         return (
-            <div className="size-10 rounded-full bg-muted/50 animate-pulse" />
+            <div className="size-9 md:size-8 rounded-full bg-muted/50 animate-pulse" />
         );
     }
 
@@ -51,7 +51,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
         <button
             onClick={handleToggle}
             className={cn(
-                "group relative size-8 rounded-full bg-muted/50 hover:bg-muted transition-all duration-300 flex items-center justify-center",
+                "group relative size-9 md:size-8 rounded-full bg-muted/50 hover:bg-muted transition-all duration-300 flex items-center justify-center",
                 "hover:shadow-lg hover:shadow-black/5 hover:scale-105",
                 "focus:outline-none focus:ring-0 focus:ring-primary/30 focus:ring-offset-0",
                 className

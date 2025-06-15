@@ -829,10 +829,34 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAUL
 }
 
 /**
+ * Check if demo mode is active via URL parameter or environment
+ */
+function isDemoMode(): boolean {
+    if (typeof window === 'undefined') return false;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasDemo = urlParams.has('demo');
+    const isDemoEnv = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+    
+    const isDemo = hasDemo || isDemoEnv;
+    
+    if (isDemo) {
+        console.log('[Tour] Demo mode active - guided tour available');
+    }
+    
+    return isDemo;
+}
+
+/**
  * Utility function to check if tour should be shown
  */
 export function shouldShowTour(): boolean {
-    // Check if user has seen the tour before
+    // Only show tour in demo mode
+    if (!isDemoMode()) {
+        return false;
+    }
+    
+    // In demo mode, check if user has seen the tour before
     if (typeof window !== 'undefined') {
         const hasSeenTour = localStorage.getItem('portfolio-tour-seen');
         return !hasSeenTour;
@@ -862,12 +886,23 @@ export function resetTourStatus(): void {
  * Tour control functions for manual control
  */
 export const tourControls = {
-    start: () => startGuidedTour(false),
+    start: () => {
+        if (!isDemoMode()) {
+            console.warn('[Tour] Tour is only available in demo mode. Add ?demo to URL or run npm run demo');
+            return null;
+        }
+        return startGuidedTour(false);
+    },
     startAutomated: (duration?: number) => {
+        if (!isDemoMode()) {
+            console.warn('[Tour] Tour is only available in demo mode. Add ?demo to URL or run npm run demo');
+            return null;
+        }
         const driverObj = createGuidedTour(true);
         return startAutomatedTour(driverObj, duration);
     },
     reset: resetTourStatus,
     shouldShow: shouldShowTour,
-    markSeen: markTourAsSeen
+    markSeen: markTourAsSeen,
+    isDemoMode: isDemoMode
 }; 

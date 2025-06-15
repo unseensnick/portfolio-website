@@ -69,6 +69,24 @@ For interactive tours and video creation, see [Guided Tour Guide](./docs/GUIDED_
 3. Open [http://localhost:3000](http://localhost:3000) to view the website
 4. Access the CMS at [http://localhost:3000/admin](http://localhost:3000/admin)
 
+### Demo Mode (Guided Tour)
+
+The guided tour feature is only available in demo mode for security and user experience reasons:
+
+**Option 1: URL Parameter**
+
+```bash
+http://localhost:3000?demo
+```
+
+**Option 2: Demo Script**
+
+```bash
+npm run demo
+```
+
+This enables the interactive guided tour controls in the bottom-right corner of the page.
+
 ### Content Management
 
 Edit all website sections through the PayloadCMS admin panel:
