@@ -8,7 +8,10 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "generate:types": "PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types"
+        "generate:types": "PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types",
+        "demo": "cross-env NEXT_PUBLIC_DEMO_MODE=true next dev",
+        "demo:build": "cross-env NEXT_PUBLIC_DEMO_MODE=true next build",
+        "demo:start": "cross-env NEXT_PUBLIC_DEMO_MODE=true next start"
     },
     "dependencies": {
         "@payloadcms/db-postgres": "^3.40.0",
@@ -41,6 +44,7 @@
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "cross-env": "^7.0.3",
         "eslint": "9.28.0",
         "eslint-config-next": "15.3.3",
         "tailwindcss": "^4.1.8",

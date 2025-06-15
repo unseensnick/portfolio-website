@@ -6,6 +6,7 @@ import { Hero } from "@/components/hero";
 import { Projects } from "@/components/projects";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
+import { getDemoModeIndicator, shouldUseDemoMode } from "@/lib/demo-utils";
 import { getPortfolioData } from "@/lib/payload-utils";
 import { draftMode } from "next/headers";
 import React from "react";
@@ -33,7 +34,9 @@ export default async function Home({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<React.ReactNode> {
     const isDraft = await shouldShowDraft(searchParams);
-    const data = await getPortfolioData(isDraft);
+    const params = await searchParams;
+    const data = await getPortfolioData(isDraft, params);
+    const isDemo = shouldUseDemoMode(params);
 
     return (
         <>
@@ -49,10 +52,15 @@ export default async function Home({
             <div className="flex flex-1 bg-background">
                 <main className="flex flex-1 flex-col">
                     <div className="min-h-screen bg-background">
-                        {/* Draft mode indicator */}
+                        {/* Mode indicators */}
                         {isDraft && (
                             <div className="fixed top-20 right-4 z-50 bg-yellow-500 text-black px-3 py-1 rounded text-sm font-medium">
                                 Draft Mode
+                            </div>
+                        )}
+                        {isDemo && (
+                            <div className="fixed top-20 right-4 z-50 bg-blue-500 text-white px-3 py-1 rounded text-sm font-medium">
+                                {getDemoModeIndicator()}
                             </div>
                         )}
 

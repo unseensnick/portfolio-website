@@ -1,3 +1,5 @@
+import { demoData } from "@/lib/demo-data";
+import { logDemoModeStatus, shouldUseDemoMode } from "@/lib/demo-utils";
 import {
     safelyExtractImageUrl,
     safelyExtractNames,
@@ -203,10 +205,19 @@ export function adaptPortfolioData(data: any) {
 
 /**
  * Fetches portfolio data from PayloadCMS with error handling and fallbacks
+ * Supports demo mode for showcasing the portfolio
  */
 export async function getPortfolioData(
-    draft: boolean = false
+    draft: boolean = false,
+    searchParams?: { [key: string]: string | string[] | undefined }
 ): Promise<PortfolioData> {
+    // Check if demo mode should be used
+    const useDemoMode = shouldUseDemoMode(searchParams);
+    
+    if (useDemoMode) {
+        logDemoModeStatus(true, searchParams?.demo === "true" ? "url" : "env");
+        return demoData;
+    }
     const requestId = Math.random().toString(36).substr(2, 9);
     
     try {
@@ -308,6 +319,7 @@ export async function getPortfolioData(
         }
 
         console.warn(`[Portfolio API ${requestId}] Using fallback data due to error:`, error);
+        logDemoModeStatus(false, "disabled");
         return fallbackData;
     }
 }

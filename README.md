@@ -43,6 +43,8 @@ SMTP_PASS=your_smtp_password
 
 For detailed email setup instructions, see [Email Configuration](./docs/email-setup.md).
 
+For demo mode and showcasing features, see [Demo Mode Guide](./docs/DEMO_MODE.md).
+
 ### Development
 
 1. Install dependencies:
