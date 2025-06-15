@@ -1,6 +1,21 @@
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 
+// ===== TOUR TIMING CONSTANTS =====
+// These constants control various timing aspects of the guided tour for easy tweaking
+
+/** Duration to show the Instagram navigation step (in milliseconds) */
+const INSTAGRAM_STEP_DURATION = 4000; // 5 seconds
+
+/** Delay after desktop resize before continuing tour (in milliseconds) */
+const DESKTOP_RESIZE_DELAY = 100; // 100ms - minimal delay to reduce dimming time
+
+/** Mobile breakpoint width for responsive behavior */
+const MOBILE_BREAKPOINT = 765; // pixels
+
+/** Default step duration for automated tours (in milliseconds) */
+const DEFAULT_AUTOMATED_STEP_DURATION = 4000; // 4 seconds
+
 /**
  * Calculates the scroll distance and estimated time needed for smooth scrolling
  */
@@ -139,89 +154,115 @@ async function handleScrollingWithDelay(element: Element, step: any): Promise<vo
 }
 
 /**
+ * Creates a resize instruction overlay for the tour
+ */
+function createResizeInstructionOverlay(targetWidth: 'mobile' | 'desktop', onComplete: () => void): () => void {
+    const overlay = document.createElement('div');
+    overlay.className = 'tour-resize-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, -apple-system, sans-serif;
+    `;
+
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    `;
+
+    const title = document.createElement('h3');
+    title.style.cssText = `
+        margin: 0 0 16px 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #1f2937;
+    `;
+
+    const description = document.createElement('p');
+    description.style.cssText = `
+        margin: 0 0 24px 0;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #6b7280;
+    `;
+
+    const currentWidth = document.createElement('div');
+    currentWidth.style.cssText = `
+        background: #f3f4f6;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 16px 0;
+        font-family: monospace;
+        font-size: 14px;
+        color: #374151;
+    `;
+
+    if (targetWidth === 'mobile') {
+        title.textContent = 'Resize Browser to Mobile View';
+        description.textContent = `Please resize your browser window to ${MOBILE_BREAKPOINT}px or smaller to see the mobile navigation. The tour will automatically continue when the mobile view is detected.`;
+    } else {
+        title.textContent = 'Resize Browser to Desktop View';
+        description.textContent = `Please resize your browser window to larger than ${MOBILE_BREAKPOINT}px to return to desktop view. The tour will automatically continue when the desktop view is detected.`;
+    }
+
+    const updateCurrentWidth = () => {
+        const width = window.innerWidth;
+        currentWidth.textContent = `Current width: ${width}px (${targetWidth === 'mobile' ? `Need ≤${MOBILE_BREAKPOINT}px` : `Need >${MOBILE_BREAKPOINT}px`})`;
+        
+        // Check if target width is reached
+        if (targetWidth === 'mobile' && width <= MOBILE_BREAKPOINT) {
+            cleanup();
+            setTimeout(onComplete, 500); // Small delay for UI to update
+        } else if (targetWidth === 'desktop' && width > MOBILE_BREAKPOINT) {
+            cleanup();
+            setTimeout(onComplete, 500); // Small delay for UI to update
+        }
+    };
+
+    const cleanup = () => {
+        window.removeEventListener('resize', updateCurrentWidth);
+        if (overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+        }
+    };
+
+    content.appendChild(title);
+    content.appendChild(description);
+    content.appendChild(currentWidth);
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    // Update width display and listen for changes
+    updateCurrentWidth();
+    window.addEventListener('resize', updateCurrentWidth);
+
+    return cleanup;
+}
+
+/**
  * Temporarily shows navigation elements for tour demonstration
  */
 function showNavigationForTour(stepTitle: string): () => void {
     console.log(`[Tour] Attempting to show navigation for: ${stepTitle}`);
-    
-    if (stepTitle === 'Instagram-Style Mobile Navigation') {
-        return showInstagramNavForTour();
-    }
     
     if (stepTitle === 'Section Navigation Dots') {
         return showSectionNavForTour();
     }
     
     return () => {};
-}
-
-/**
- * Temporarily shows Instagram navigation for tour demonstration
- */
-function showInstagramNavForTour(): () => void {
-    console.log('[Tour] Attempting to show Instagram navigation...');
-    
-    // First, try to find the Instagram nav component and force it to render
-    const instagramNavContainer = document.querySelector('[data-tour="instagram-navigation"]') as HTMLElement;
-    
-    if (!instagramNavContainer) {
-        console.log('[Tour] Instagram navigation not found in DOM - it may be conditionally rendered');
-        
-        // Try to force render by temporarily setting mobile state
-        // This is a workaround for the conditional rendering
-        const siteHeader = document.querySelector('header[data-tour="navigation"]');
-        if (siteHeader) {
-            // Create a temporary Instagram nav element for the tour
-            const tempInstagramNav = document.createElement('div');
-            tempInstagramNav.setAttribute('data-tour', 'instagram-navigation');
-            tempInstagramNav.className = 'fixed bottom-0 left-0 right-0 z-60 tour-temp-instagram-nav';
-            tempInstagramNav.innerHTML = `
-                <div class="bg-background/95 backdrop-blur-xl border-t border-border/50">
-                    <div class="pb-safe">
-                        <nav class="flex items-center justify-around px-4 py-2">
-                            <div class="text-xs text-muted-foreground text-center py-4">
-                                Instagram-style Mobile Navigation<br/>
-                                <span class="text-primary">(Mobile Only)</span>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(tempInstagramNav);
-            
-            return () => {
-                console.log('[Tour] Cleaning up temporary Instagram navigation');
-                const tempNav = document.querySelector('.tour-temp-instagram-nav');
-                if (tempNav) {
-                    tempNav.remove();
-                }
-            };
-        }
-        
-        return () => {};
-    }
-    
-    console.log('[Tour] Instagram navigation found, making it visible');
-    
-    const originalDisplay = instagramNavContainer.style.display;
-    const originalPosition = instagramNavContainer.style.position;
-    const originalZIndex = instagramNavContainer.style.zIndex;
-    const originalVisibility = instagramNavContainer.style.visibility;
-    
-    // Force show the Instagram nav
-    instagramNavContainer.style.display = 'block';
-    instagramNavContainer.style.position = 'fixed';
-    instagramNavContainer.style.zIndex = '60'; // Higher than tour overlay
-    instagramNavContainer.style.visibility = 'visible';
-    
-    // Return cleanup function
-    return () => {
-        console.log('[Tour] Restoring Instagram navigation original state');
-        instagramNavContainer.style.display = originalDisplay;
-        instagramNavContainer.style.position = originalPosition;
-        instagramNavContainer.style.zIndex = originalZIndex;
-        instagramNavContainer.style.visibility = originalVisibility;
-    };
 }
 
 /**
@@ -316,14 +357,16 @@ const tourSteps = [
             align: 'center' as const,
         }
     },
+    // Special step for mobile navigation - will be handled differently
     {
-        element: '[data-tour="instagram-navigation"]',
+        element: 'body', // Temporary element, will be replaced
         popover: {
             title: 'Instagram-Style Mobile Navigation',
             description: 'This bottom navigation bar appears only on mobile devices, providing an Instagram-like experience with icons and smooth section navigation.',
             side: 'top' as const,
             align: 'center' as const,
-        }
+        },
+        special: 'mobile-navigation' // Special flag for custom handling
     },
     {
         element: '#projects',
@@ -429,7 +472,9 @@ const tourConfig = {
  * Creates and configures the driver instance
  */
 export function createGuidedTour(automated: boolean = false) {
-    let instagramNavCleanup: (() => void) | null = null;
+    let sectionNavCleanup: (() => void) | null = null;
+    let resizeOverlayCleanup: (() => void) | null = null;
+    let driverInstance: any = null; // Store driver instance in closure
     
     const config = {
         ...tourConfig,
@@ -448,17 +493,216 @@ export function createGuidedTour(automated: boolean = false) {
                 (popover as HTMLElement).style.display = 'none';
             }
             
+            // Handle special mobile navigation step
+            if (step.special === 'mobile-navigation') {
+                console.log('[Tour] Handling special mobile navigation step');
+                return; // Don't show navigation elements for this step
+            }
+            
             // Show navigation elements for specific steps
-            if (step.popover?.title === 'Instagram-Style Mobile Navigation' || 
-                step.popover?.title === 'Section Navigation Dots') {
+            if (step.popover?.title === 'Section Navigation Dots') {
                 console.log(`[Tour] Showing navigation for tour step: ${step.popover?.title}`);
-                instagramNavCleanup = showNavigationForTour(step.popover?.title);
+                sectionNavCleanup = showNavigationForTour(step.popover?.title);
             }
         },
         
         onHighlighted: async (element: Element | undefined, step: any) => {
             console.log(`[Tour] Highlighted step: ${step.popover?.title}`);
             console.log(`[Tour] Element found:`, element);
+            
+            // Handle special mobile navigation step
+            if (step.special === 'mobile-navigation') {
+                console.log('[Tour] Starting mobile navigation resize flow');
+                
+                // Hide the driver popover
+                const popover = document.querySelector('.driver-popover');
+                if (popover) {
+                    (popover as HTMLElement).style.display = 'none';
+                }
+                
+                // Check current width
+                const currentWidth = window.innerWidth;
+                
+                if (currentWidth > MOBILE_BREAKPOINT) {
+                    // Pause automated tour if running
+                    if ((window as any).pauseAutomatedTour) {
+                        (window as any).pauseAutomatedTour();
+                    }
+                    
+                    // Show resize instruction for mobile
+                    resizeOverlayCleanup = createResizeInstructionOverlay('mobile', () => {
+                        console.log('[Tour] Mobile width detected, showing Instagram navigation');
+                        
+                                                // Find the actual Instagram navigation element
+                        const instagramNav = document.querySelector('[data-tour="instagram-navigation"]');
+                        console.log('[Tour] Instagram navigation element found:', instagramNav);
+                        
+                        if (instagramNav) {
+                            console.log('[Tour] Instagram navigation found, proceeding with highlight');
+                            // Update the step element to point to the actual Instagram nav
+                            step.element = '[data-tour="instagram-navigation"]';
+                            
+                            // Use driver instance from closure
+                            console.log('[Tour] Driver instance check (closure):', driverInstance);
+                            console.log('[Tour] Driver instance check (global):', (window as any).currentTourDriver);
+                            
+                            if (driverInstance) {
+                                console.log('[Tour] Driver instance found, highlighting Instagram nav immediately');
+                                // Force driver to recalculate position for new viewport
+                                driverInstance.highlight({
+                                    element: '[data-tour="instagram-navigation"]',
+                                    popover: {
+                                        title: 'Instagram-Style Mobile Navigation',
+                                        description: 'This bottom navigation bar appears only on mobile devices, providing an Instagram-like experience with icons and smooth section navigation.',
+                                        side: 'top',
+                                        align: 'center',
+                                    }
+                                });
+                                
+                                console.log('[Tour] Instagram navigation highlighted, starting 8-second timer');
+                                // After showing Instagram nav, prepare for desktop resize
+                                setTimeout(() => {
+                                    console.log('[Tour] Preparing for desktop resize instruction');
+                                    
+                                    // Hide popover before showing resize instruction
+                                    const popover = document.querySelector('.driver-popover');
+                                    if (popover) {
+                                        (popover as HTMLElement).style.display = 'none';
+                                    }
+                                    
+                                    console.log('[Tour] Showing desktop resize instruction overlay');
+                                    // Show resize instruction for desktop
+                                    resizeOverlayCleanup = createResizeInstructionOverlay('desktop', () => {
+                                        console.log('[Tour] Desktop width detected, continuing tour');
+                                        
+                                        // Resume automated tour after a delay to allow UI to settle
+                                        setTimeout(() => {
+                                            console.log('[Tour] Desktop width detected, attempting to resume automated tour');
+                                            if ((window as any).resumeAutomatedTour) {
+                                                (window as any).resumeAutomatedTour();
+                                            } else {
+                                                console.log('[Tour] Resume function not available');
+                                                // If automated tour resume not available, manually move to next step
+                                                if (driverInstance) {
+                                                    driverInstance.moveNext();
+                                                }
+                                            }
+                                        }, DESKTOP_RESIZE_DELAY); // Minimal delay to reduce dimming time
+                                    });
+                                }, INSTAGRAM_STEP_DURATION); // Show Instagram nav
+                            } else {
+                                console.log('[Tour] Driver instance not found, trying to continue without highlighting');
+                                // If driver not found, just continue to next step
+                                setTimeout(() => {
+                                    // Try to get driver from global as fallback
+                                    const fallbackDriver = (window as any).currentTourDriver || driverInstance;
+                                    if (fallbackDriver) {
+                                        console.log('[Tour] Using fallback driver to continue');
+                                        fallbackDriver.moveNext();
+                                    } else {
+                                        console.log('[Tour] No driver instance available, cannot continue');
+                                    }
+                                    
+                                    // Resume automated tour
+                                    if ((window as any).resumeAutomatedTour) {
+                                        (window as any).resumeAutomatedTour();
+                                    }
+                                }, 1000);
+                            }
+                        } else {
+                            console.log('[Tour] Instagram navigation not found, continuing tour');
+                            // Continue to next step if Instagram nav not found
+                            const driverInstance = (window as any).currentTourDriver;
+                            if (driverInstance) {
+                                console.log('[Tour] Moving to next step since Instagram nav not found');
+                                driverInstance.moveNext();
+                                
+                                // Resume automated tour
+                                if ((window as any).resumeAutomatedTour) {
+                                    (window as any).resumeAutomatedTour();
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    // Already in mobile view, pause automated tour if running
+                    console.log('[Tour] Already in mobile view, pausing automated tour');
+                    if ((window as any).pauseAutomatedTour) {
+                        (window as any).pauseAutomatedTour();
+                    }
+                    
+                    // Show Instagram nav directly
+                    const instagramNav = document.querySelector('[data-tour="instagram-navigation"]');
+                    console.log('[Tour] Instagram navigation element found (already mobile):', instagramNav);
+                    
+                    if (instagramNav) {
+                        console.log('[Tour] Instagram navigation found, highlighting directly');
+                        console.log('[Tour] Driver instance check (already mobile - closure):', driverInstance);
+                        console.log('[Tour] Driver instance check (already mobile - global):', (window as any).currentTourDriver);
+                        
+                        if (driverInstance) {
+                            console.log('[Tour] Driver instance found, highlighting Instagram nav (already mobile)');
+                            // Force driver to recalculate position for mobile viewport
+                            driverInstance.highlight({
+                                element: '[data-tour="instagram-navigation"]',
+                                popover: {
+                                    title: 'Instagram-Style Mobile Navigation',
+                                    description: 'This bottom navigation bar appears only on mobile devices, providing an Instagram-like experience with icons and smooth section navigation.',
+                                    side: 'top',
+                                    align: 'center',
+                                }
+                            });
+                            
+                            console.log('[Tour] Instagram navigation highlighted (already mobile), starting 8-second timer');
+                            // After showing Instagram nav, prepare for desktop resize
+                            setTimeout(() => {
+                                console.log('[Tour] Preparing for desktop resize instruction (already mobile)');
+                                
+                                // Hide popover before showing resize instruction
+                                const popover = document.querySelector('.driver-popover');
+                                if (popover) {
+                                    (popover as HTMLElement).style.display = 'none';
+                                }
+                                
+                                console.log('[Tour] Showing desktop resize instruction overlay (already mobile)');
+                                // Show resize instruction for desktop
+                                resizeOverlayCleanup = createResizeInstructionOverlay('desktop', () => {
+                                    console.log('[Tour] Desktop width detected, continuing tour');
+                                    
+                                    // Resume automated tour after a delay to allow UI to settle
+                                    setTimeout(() => {
+                                        console.log('[Tour] Desktop width detected (already mobile), attempting to resume automated tour');
+                                        if ((window as any).resumeAutomatedTour) {
+                                            (window as any).resumeAutomatedTour();
+                                        } else {
+                                            console.log('[Tour] Resume function not available');
+                                            // If automated tour resume not available, manually move to next step
+                                            if (driverInstance) {
+                                                driverInstance.moveNext();
+                                            }
+                                        }
+                                    }, DESKTOP_RESIZE_DELAY); // Minimal delay to reduce dimming time
+                                });
+                            }, INSTAGRAM_STEP_DURATION); // Show Instagram nav
+                        } else {
+                            console.log('[Tour] Driver instance not found (already mobile)');
+                        }
+                    } else {
+                        console.log('[Tour] Instagram navigation not found (already mobile), continuing tour');
+                        if (driverInstance) {
+                            driverInstance.moveNext();
+                            
+                            // Resume automated tour
+                            if ((window as any).resumeAutomatedTour) {
+                                (window as any).resumeAutomatedTour();
+                            }
+                        } else {
+                            console.log('[Tour] No driver instance available (already mobile)');
+                        }
+                    }
+                }
+                return; // Don't continue with normal flow
+            }
             
             // Calculate and handle scrolling with delayed popover
             if (element) {
@@ -474,24 +718,46 @@ export function createGuidedTour(automated: boolean = false) {
             console.log(`[Tour] Deselected step: ${step.popover?.title}`);
             
             // Clean up navigation when leaving navigation steps
-            if ((step.popover?.title === 'Instagram-Style Mobile Navigation' || 
-                 step.popover?.title === 'Section Navigation Dots') && instagramNavCleanup) {
+            if (step.popover?.title === 'Section Navigation Dots' && sectionNavCleanup) {
                 console.log(`[Tour] Cleaning up navigation for: ${step.popover?.title}`);
-                instagramNavCleanup();
-                instagramNavCleanup = null;
+                sectionNavCleanup();
+                sectionNavCleanup = null;
+            }
+            
+            // Clean up resize overlay if it exists
+            if (resizeOverlayCleanup) {
+                resizeOverlayCleanup();
+                resizeOverlayCleanup = null;
             }
         },
         
         onDestroyed: () => {
-            // Clean up Instagram navigation if tour is destroyed
-            if (instagramNavCleanup) {
-                instagramNavCleanup();
-                instagramNavCleanup = null;
+            // Clean up navigation if tour is destroyed
+            if (sectionNavCleanup) {
+                sectionNavCleanup();
+                sectionNavCleanup = null;
+            }
+            
+            // Clean up resize overlay if it exists
+            if (resizeOverlayCleanup) {
+                resizeOverlayCleanup();
+                resizeOverlayCleanup = null;
+            }
+            
+            // Clean up global driver reference
+            if ((window as any).currentTourDriver) {
+                delete (window as any).currentTourDriver;
             }
         }
     };
 
-    return driver(config);
+    driverInstance = driver(config);
+    
+    // Store driver instance globally as well for compatibility
+    (window as any).currentTourDriver = driverInstance;
+    console.log('[Tour] Driver instance created and stored:', driverInstance);
+    
+    return driverInstance;
 }
 
 /**
@@ -499,6 +765,10 @@ export function createGuidedTour(automated: boolean = false) {
  */
 export function startGuidedTour(automated: boolean = false) {
     const driverObj = createGuidedTour(automated);
+    
+    // Store driver instance globally for resize callbacks
+    (window as any).currentTourDriver = driverObj;
+    console.log('[Tour] Driver instance stored globally:', driverObj);
     
     if (automated) {
         return startAutomatedTour(driverObj);
@@ -512,9 +782,30 @@ export function startGuidedTour(automated: boolean = false) {
  * Starts an automated tour that progresses automatically
  * Perfect for showcase videos
  */
-export function startAutomatedTour(driverObj: any, stepDuration: number = 4000) {
+export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAULT_AUTOMATED_STEP_DURATION) {
     let currentStep = 0;
     const totalSteps = tourSteps.length;
+    let progressTimeout: NodeJS.Timeout | null = null;
+    
+    // Store pause/resume functions globally for resize interactions
+    (window as any).pauseAutomatedTour = () => {
+        if (progressTimeout) {
+            clearTimeout(progressTimeout);
+            progressTimeout = null;
+            console.log('[Tour] Automated tour paused for resize interaction');
+        }
+    };
+    
+    (window as any).resumeAutomatedTour = () => {
+        console.log('[Tour] Attempting to resume automated tour');
+        if (!progressTimeout) {
+            console.log('[Tour] Automated tour resumed after resize interaction');
+            // Schedule next step with normal timing
+            progressTimeout = setTimeout(progressToNextStep, stepDuration);
+        } else {
+            console.log('[Tour] Automated tour was already running');
+        }
+    };
     
     // Start the tour
     driverObj.drive(0);
@@ -522,6 +813,16 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = 4000) 
     const progressToNextStep = () => {
         if (currentStep < totalSteps - 1) {
             currentStep++;
+            
+            // Check if this is the special mobile navigation step
+            if (tourSteps[currentStep].special === 'mobile-navigation') {
+                console.log('[Tour] Reached mobile navigation step - automated progression will be paused');
+                // Don't schedule next step - it will be handled by resize callbacks
+                setTimeout(() => {
+                    driverObj.moveTo(currentStep);
+                }, 50);
+                return;
+            }
             
             // Calculate dynamic delay based on next element's scroll requirements
             const nextStepElement = document.querySelector(tourSteps[currentStep].element);
@@ -548,7 +849,7 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = 4000) 
             
             // Schedule next step - use base duration for visible elements, extended for scrolling
             const nextStepDelay = isVisible ? stepDuration : stepDuration + dynamicDelay;
-            setTimeout(progressToNextStep, nextStepDelay);
+            progressTimeout = setTimeout(progressToNextStep, nextStepDelay);
         } else {
             // Tour completed
             setTimeout(() => {
@@ -559,7 +860,7 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = 4000) 
     };
     
     // Start automatic progression with initial delay
-    setTimeout(progressToNextStep, stepDuration);
+    progressTimeout = setTimeout(progressToNextStep, stepDuration);
     
     return driverObj;
 }

@@ -60,14 +60,26 @@ The guided tour covers these sections in order:
 
 1. **Hero Section** - Introduction and main call-to-action
 2. **CTA Buttons** - GitHub and Projects navigation
-3. **Navigation Menu** - Site navigation and smooth scrolling
-4. **Projects Section** - Portfolio showcase overview
-5. **Featured Project** - Highlighted main project
-6. **Project Grid** - Additional projects display
-7. **About Section** - Personal background and skills
-8. **Technology Stack** - Skills and tools showcase
-9. **Contact Section** - Contact information and forms
-10. **Footer** - Site completion and copyright
+3. **Main Header Navigation** - Site navigation and responsive design
+4. **Desktop Navigation Menu** - Smooth scrolling links with active states
+5. **Theme Toggle** - Dark/light mode switching functionality
+6. **Section Navigation Dots** - Right-side dot navigation with tooltips
+7. **Instagram-Style Mobile Navigation** - Interactive browser resize demonstration for mobile navigation
+8. **Projects Showcase** - Featured project and portfolio grid overview
+9. **Featured Project** - Highlighted main project with detailed display
+10. **Project Grid** - Additional projects in responsive layout
+11. **About Section** - Personal background and skills overview
+12. **Personal Story** - Professional journey and experience
+13. **Technology Stack** - Skills and tools showcase with interactive badges
+14. **Personal Interests** - Interests and passions outside of work
+15. **Contact Section** - Contact information and connection options
+16. **Footer** - Site completion and copyright information
+
+### Special Features
+
+- **Browser Resize Detection**: The tour automatically detects when you resize your browser window to demonstrate responsive features
+- **Mobile Navigation Demo**: Step 7 pauses the tour and instructs you to resize your browser to ≤765px to see the mobile navigation, then automatically continues when the resize is detected
+- **Responsive Adaptation**: All tour steps automatically adapt to different screen sizes for optimal viewing
 
 ## 🛠️ Customization
 
