@@ -215,7 +215,6 @@ export function Projects({
 }: ProjectsProps) {
     const isMobile = useIsMobile();
 
-    // On mobile, show all projects in a single list
     const allProjects = featured ? [featured, ...items] : [...items];
 
     const formattedViewAllLink = viewAllLink

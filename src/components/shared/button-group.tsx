@@ -28,9 +28,7 @@ interface ButtonGroupProps {
     "data-tour"?: string;
 }
 
-/**
- * Responsive button group with automatic mobile/desktop layout adaptation
- */
+/** Responsive button group for CTA sections */
 export function ButtonGroup({
     buttons,
     fullWidthMobile = true,
@@ -55,22 +53,14 @@ export function ButtonGroup({
         >
             {buttons.map((button, index) => {
                 const IconComponent = button.icon;
-                const isDefault = button.variant !== "outline";
 
                 return (
                     <Button
                         key={index}
                         variant={button.variant || "default"}
-                        size={isMobile ? "lg" : "default"}
+                        size="lg"
                         className={cn(
                             isMobile && fullWidthMobile ? "w-full" : "",
-                            isDefault
-                                ? "bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/20"
-                                : "border-2 hover:bg-muted",
-                            isMobile
-                                ? "py-4 text-base font-medium"
-                                : "px-8 py-6 text-base font-medium",
-                            "transition-all duration-300",
                             button.className
                         )}
                         asChild
@@ -80,12 +70,7 @@ export function ButtonGroup({
                             target={button.external ? "_blank" : undefined}
                         >
                             {IconComponent && (
-                                <IconComponent
-                                    className={cn(
-                                        isMobile ? "size-4" : "size-5",
-                                        "mr-2"
-                                    )}
-                                />
+                                <IconComponent className="mr-2" />
                             )}
                             {button.text}
                         </Link>

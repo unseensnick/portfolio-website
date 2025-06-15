@@ -159,56 +159,18 @@ async function handleScrollingWithDelay(element: Element, step: any): Promise<vo
 function createResizeInstructionOverlay(targetWidth: 'mobile' | 'desktop', onComplete: () => void): () => void {
     const overlay = document.createElement('div');
     overlay.className = 'tour-resize-overlay';
-    overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: system-ui, -apple-system, sans-serif;
-    `;
 
     const content = document.createElement('div');
-    content.style.cssText = `
-        background: white;
-        border-radius: 12px;
-        padding: 32px;
-        max-width: 500px;
-        text-align: center;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    `;
+    content.className = 'tour-resize-overlay-content';
 
     const title = document.createElement('h3');
-    title.style.cssText = `
-        margin: 0 0 16px 0;
-        font-size: 24px;
-        font-weight: 600;
-        color: #1f2937;
-    `;
+    title.className = 'tour-resize-overlay-title';
 
     const description = document.createElement('p');
-    description.style.cssText = `
-        margin: 0 0 24px 0;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #6b7280;
-    `;
+    description.className = 'tour-resize-overlay-description';
 
     const currentWidth = document.createElement('div');
-    currentWidth.style.cssText = `
-        background: #f3f4f6;
-        border-radius: 8px;
-        padding: 12px;
-        margin: 16px 0;
-        font-family: monospace;
-        font-size: 14px;
-        color: #374151;
-    `;
+    currentWidth.className = 'tour-resize-overlay-current-width';
 
     if (targetWidth === 'mobile') {
         title.textContent = 'Resize Browser to Mobile View';
@@ -346,6 +308,7 @@ const tourSteps = [
             description: 'The theme toggle allows users to switch between light and dark modes. It features smooth animations, remembers the user\'s preference, and automatically shows the system\'s preferred theme by default.',
             side: 'bottom' as const,
             align: 'center' as const,
+            popoverClass: 'tour-popover theme-toggle-popover',
         }
     },
     {

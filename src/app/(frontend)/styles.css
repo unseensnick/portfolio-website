@@ -107,9 +107,7 @@
     --accent: oklch(0.19 0.04 285);
     --accent-foreground: oklch(0.85 0.01 280);
     --destructive: oklch(0.65 0.22 15);
-    --border: oklch(
-        0.18 0.03 285
-    ); /* Strategic increase for better definition */
+    --border: oklch(0.18 0.03 285);
     --input: oklch(0.14 0.04 285);
     --ring: oklch(0.65 0.26 285);
     --chart-1: oklch(0.65 0.26 285);
@@ -357,4 +355,443 @@ code::-webkit-scrollbar-thumb:hover {
 
 .h-safe {
     height: 0;
+}
+
+/* ===== TOUR RESIZE INSTRUCTION OVERLAY ===== */
+/* Styles for the resize instruction overlay that appears during mobile navigation step */
+
+.tour-resize-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+}
+
+.tour-resize-overlay-content {
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    max-width: 500px;
+    text-align: center;
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .tour-resize-overlay-content {
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.4),
+        0 10px 10px -5px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.tour-resize-overlay-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.3;
+}
+
+.tour-resize-overlay-description {
+    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+}
+
+.tour-resize-overlay-current-width {
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    margin: 1rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+}
+
+/* Responsive adjustments for resize overlay */
+@media (max-width: 640px) {
+    .tour-resize-overlay-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-width: none;
+    }
+
+    .tour-resize-overlay-title {
+        font-size: 1.25rem;
+    }
+
+    .tour-resize-overlay-description {
+        font-size: 0.875rem;
+    }
+}
+
+/* ===== DRIVER.JS THEMING ===== */
+/* Enhanced popover styling with improved readability and design system integration */
+
+/* Main popover container with enhanced visual design */
+.tour-popover.driver-popover {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(16px) saturate(180%);
+    max-width: 420px;
+    min-width: 320px;
+    font-family: var(--font-sans);
+    color: var(--card-foreground);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Enhanced dark theme with better contrast and depth */
+.dark .tour-popover.driver-popover {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.8),
+        0 10px 20px -5px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Popover arrow with enhanced styling */
+.tour-popover .driver-popover-arrow {
+    border-color: var(--card);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.dark .tour-popover .driver-popover-arrow {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+}
+
+/* Title with improved typography and spacing */
+.tour-popover .driver-popover-title {
+    color: var(--card-foreground);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.025em;
+}
+
+/* Description with enhanced readability */
+.tour-popover .driver-popover-description {
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+}
+
+/* Close button with improved design */
+.tour-popover .driver-popover-close-btn {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-out;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tour-popover .driver-popover-close-btn:hover {
+    background: var(--accent);
+    color: var(--accent-foreground);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer with improved spacing and design */
+.tour-popover .driver-popover-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Progress text with enhanced styling */
+.tour-popover .driver-popover-progress-text {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Navigation buttons with improved design and interactions */
+.tour-popover .driver-popover-prev-btn,
+.tour-popover .driver-popover-next-btn {
+    background: var(--primary);
+    color: var(--primary-foreground) !important;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 40px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tour-popover .driver-popover-prev-btn:hover,
+.tour-popover .driver-popover-next-btn:hover {
+    background: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1);
+}
+
+.tour-popover .driver-popover-prev-btn:active,
+.tour-popover .driver-popover-next-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Previous button with secondary styling */
+.tour-popover .driver-popover-prev-btn {
+    background: var(--secondary);
+    color: var(--secondary-foreground) !important;
+    border: 1px solid var(--border);
+}
+
+.tour-popover .driver-popover-prev-btn:hover {
+    background: var(--accent);
+    color: var(--accent-foreground) !important;
+    filter: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced button text visibility with maximum specificity */
+.tour-popover.driver-popover .driver-popover-prev-btn,
+.tour-popover.driver-popover .driver-popover-prev-btn:link,
+.tour-popover.driver-popover .driver-popover-prev-btn:visited {
+    font-weight: 600 !important;
+    color: #374151 !important; /* Dark gray for light theme */
+    text-shadow: none !important;
+}
+
+.tour-popover.driver-popover .driver-popover-next-btn,
+.tour-popover.driver-popover .driver-popover-next-btn:link,
+.tour-popover.driver-popover .driver-popover-next-btn:visited {
+    font-weight: 600 !important;
+    color: #ffffff !important; /* Always white */
+    text-shadow: none !important;
+}
+
+/* Dark theme specific button improvements with high specificity */
+.dark .tour-popover.driver-popover .driver-popover-prev-btn,
+.dark .tour-popover.driver-popover .driver-popover-prev-btn:link,
+.dark .tour-popover.driver-popover .driver-popover-prev-btn:visited {
+    background: var(--secondary) !important;
+    color: #e5e7eb !important; /* Light gray for dark theme */
+    border: 1px solid var(--border) !important;
+    text-shadow: none !important;
+}
+
+.dark .tour-popover.driver-popover .driver-popover-next-btn,
+.dark .tour-popover.driver-popover .driver-popover-next-btn:link,
+.dark .tour-popover.driver-popover .driver-popover-next-btn:visited {
+    background: var(--primary) !important;
+    color: #ffffff !important; /* Always white */
+    text-shadow: none !important;
+}
+
+/* Light theme specific button improvements with high specificity */
+html:not(.dark) .tour-popover.driver-popover .driver-popover-prev-btn,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-prev-btn:link,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-prev-btn:visited {
+    background: var(--secondary) !important;
+    color: #374151 !important; /* Dark gray for light theme */
+    text-shadow: none !important;
+}
+
+html:not(.dark) .tour-popover.driver-popover .driver-popover-next-btn,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-next-btn:link,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-next-btn:visited {
+    background: var(--primary) !important;
+    color: #ffffff !important; /* Always white */
+    text-shadow: none !important;
+}
+
+/* Disabled button states with clear visual feedback */
+.tour-popover .driver-popover-prev-btn:disabled,
+.tour-popover .driver-popover-next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+.tour-popover .driver-popover-prev-btn:disabled:hover,
+.tour-popover .driver-popover-next-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+    background: var(--secondary);
+    color: var(--secondary-foreground) !important;
+}
+
+/* Special positioning for theme toggle popover */
+.tour-popover.driver-popover.theme-toggle-popover {
+    transform: translateY(10px) !important;
+    max-width: 450px;
+    min-width: 350px;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    .tour-popover.driver-popover {
+        max-width: 320px;
+        min-width: 260px;
+        margin: 0.75rem;
+        padding: 1.25rem;
+    }
+
+    /* Adjust theme toggle positioning for mobile */
+    .tour-popover.driver-popover.theme-toggle-popover {
+        transform: translateY(8px) !important;
+        max-width: 340px;
+        min-width: 280px;
+    }
+
+    .tour-popover .driver-popover-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .tour-popover .driver-popover-description {
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .tour-popover .driver-popover-prev-btn,
+    .tour-popover .driver-popover-next-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        min-height: 36px;
+    }
+
+    .tour-popover .driver-popover-footer {
+        gap: 0.75rem;
+        padding-top: 0.875rem;
+        margin-top: 0.875rem;
+    }
+}
+
+/* Smooth entrance animation */
+.tour-popover.driver-popover {
+    animation: tourPopoverFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tourPopoverFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* High contrast mode support for accessibility */
+@media (prefers-contrast: high) {
+    .tour-popover.driver-popover {
+        border-width: 2px;
+        box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.5),
+            0 0 0 2px var(--foreground);
+    }
+
+    .tour-popover .driver-popover-prev-btn,
+    .tour-popover .driver-popover-next-btn,
+    .tour-popover .driver-popover-close-btn {
+        border-width: 2px;
+    }
+
+    .tour-popover .driver-popover-title {
+        font-weight: 700;
+    }
+
+    .tour-popover .driver-popover-description {
+        font-weight: 500;
+    }
+}
+
+/* Enhanced highlighting - preserve cutout while improving visibility */
+
+/* Clean, subtle enhancement for highlighted elements in dark mode */
+.dark .driver-active-element {
+    /* Subtle inner border that doesn't interfere with cutout */
+    box-shadow: inset 0 0 0 2px rgba(167, 139, 250, 0.6) !important;
+    /* Very light background tint for better visibility */
+    background-color: rgba(167, 139, 250, 0.05) !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease-out !important;
+}
+
+/* Clean enhancement for light mode */
+html:not(.dark) .driver-active-element {
+    /* Subtle inner border for definition */
+    box-shadow: inset 0 0 0 2px rgba(139, 92, 246, 0.4) !important;
+    background-color: rgba(139, 92, 246, 0.03) !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease-out !important;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .tour-popover.driver-popover {
+        animation: none;
+        transition: none;
+    }
+
+    .tour-popover .driver-popover-prev-btn,
+    .tour-popover .driver-popover-next-btn,
+    .tour-popover .driver-popover-close-btn {
+        transition: none;
+    }
+
+    .tour-popover .driver-popover-prev-btn:hover,
+    .tour-popover .driver-popover-next-btn:hover,
+    .tour-popover .driver-popover-close-btn:hover {
+        transform: none;
+    }
+
+    .driver-active-element {
+        transition: none !important;
+    }
 }

@@ -51,7 +51,6 @@ export function Hero({
     ];
 
     const renderContent = () => {
-        // Mobile: single column, image on top
         if (isMobile) {
             return (
                 <div className="w-full">
@@ -90,7 +89,6 @@ export function Hero({
             );
         }
 
-        // Desktop: side-by-side layout with content on left, image on right
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
                 <div className="space-y-8 max-w-xl">

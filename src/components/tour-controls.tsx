@@ -21,7 +21,6 @@ export function TourControls({ className }: TourControlsProps) {
 
         const driverObj = tourControls.start();
 
-        // Listen for tour completion
         const originalDestroy = driverObj.destroy;
         driverObj.destroy = function () {
             setIsRunning(false);
@@ -33,9 +32,8 @@ export function TourControls({ className }: TourControlsProps) {
         if (isRunning) return;
         setIsRunning(true);
 
-        const driverObj = tourControls.startAutomated(3000); // 3 seconds per step
+        const driverObj = tourControls.startAutomated(3000);
 
-        // Listen for tour completion
         const originalDestroy = driverObj.destroy;
         driverObj.destroy = function () {
             setIsRunning(false);
