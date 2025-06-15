@@ -139,6 +139,126 @@ async function handleScrollingWithDelay(element: Element, step: any, options: an
 }
 
 /**
+ * Temporarily shows navigation elements for tour demonstration
+ */
+function showNavigationForTour(stepTitle: string): () => void {
+    console.log(`[Tour] Attempting to show navigation for: ${stepTitle}`);
+    
+    if (stepTitle === 'Instagram-Style Mobile Navigation') {
+        return showInstagramNavForTour();
+    }
+    
+    if (stepTitle === 'Section Navigation Dots') {
+        return showSectionNavForTour();
+    }
+    
+    return () => {};
+}
+
+/**
+ * Temporarily shows Instagram navigation for tour demonstration
+ */
+function showInstagramNavForTour(): () => void {
+    console.log('[Tour] Attempting to show Instagram navigation...');
+    
+    // First, try to find the Instagram nav component and force it to render
+    const instagramNavContainer = document.querySelector('[data-tour="instagram-navigation"]') as HTMLElement;
+    
+    if (!instagramNavContainer) {
+        console.log('[Tour] Instagram navigation not found in DOM - it may be conditionally rendered');
+        
+        // Try to force render by temporarily setting mobile state
+        // This is a workaround for the conditional rendering
+        const siteHeader = document.querySelector('header[data-tour="navigation"]');
+        if (siteHeader) {
+            // Create a temporary Instagram nav element for the tour
+            const tempInstagramNav = document.createElement('div');
+            tempInstagramNav.setAttribute('data-tour', 'instagram-navigation');
+            tempInstagramNav.className = 'fixed bottom-0 left-0 right-0 z-60 tour-temp-instagram-nav';
+            tempInstagramNav.innerHTML = `
+                <div class="bg-background/95 backdrop-blur-xl border-t border-border/50">
+                    <div class="pb-safe">
+                        <nav class="flex items-center justify-around px-4 py-2">
+                            <div class="text-xs text-muted-foreground text-center py-4">
+                                Instagram-style Mobile Navigation<br/>
+                                <span class="text-primary">(Mobile Only)</span>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(tempInstagramNav);
+            
+            return () => {
+                console.log('[Tour] Cleaning up temporary Instagram navigation');
+                const tempNav = document.querySelector('.tour-temp-instagram-nav');
+                if (tempNav) {
+                    tempNav.remove();
+                }
+            };
+        }
+        
+        return () => {};
+    }
+    
+    console.log('[Tour] Instagram navigation found, making it visible');
+    
+    const originalDisplay = instagramNavContainer.style.display;
+    const originalPosition = instagramNavContainer.style.position;
+    const originalZIndex = instagramNavContainer.style.zIndex;
+    const originalVisibility = instagramNavContainer.style.visibility;
+    
+    // Force show the Instagram nav
+    instagramNavContainer.style.display = 'block';
+    instagramNavContainer.style.position = 'fixed';
+    instagramNavContainer.style.zIndex = '60'; // Higher than tour overlay
+    instagramNavContainer.style.visibility = 'visible';
+    
+    // Return cleanup function
+    return () => {
+        console.log('[Tour] Restoring Instagram navigation original state');
+        instagramNavContainer.style.display = originalDisplay;
+        instagramNavContainer.style.position = originalPosition;
+        instagramNavContainer.style.zIndex = originalZIndex;
+        instagramNavContainer.style.visibility = originalVisibility;
+    };
+}
+
+/**
+ * Temporarily shows section navigation for tour demonstration
+ */
+function showSectionNavForTour(): () => void {
+    console.log('[Tour] Attempting to show section navigation...');
+    
+    const sectionNav = document.querySelector('[data-tour="section-navigation"]') as HTMLElement;
+    
+    if (!sectionNav) {
+        console.log('[Tour] Section navigation not found in DOM');
+        return () => {};
+    }
+    
+    console.log('[Tour] Section navigation found, making it visible');
+    
+    // Store original classes and styles
+    const originalClasses = sectionNav.className;
+    const originalDisplay = sectionNav.style.display;
+    const originalZIndex = sectionNav.style.zIndex;
+    
+    // Force show the section nav by removing the hidden class and ensuring visibility
+    sectionNav.className = originalClasses.replace('hidden lg:block', 'block');
+    sectionNav.style.display = 'block';
+    sectionNav.style.zIndex = '60'; // Higher than tour overlay
+    
+    // Return cleanup function
+    return () => {
+        console.log('[Tour] Restoring section navigation original state');
+        sectionNav.className = originalClasses;
+        sectionNav.style.display = originalDisplay;
+        sectionNav.style.zIndex = originalZIndex;
+    };
+}
+
+/**
  * Tour step configuration for the portfolio website
  */
 const tourSteps = [
@@ -163,9 +283,36 @@ const tourSteps = [
     {
         element: '[data-tour="navigation"]',
         popover: {
-            title: 'Navigation Menu',
-            description: 'The navigation provides smooth scrolling to different sections of the portfolio. It\'s responsive and works on all devices.',
+            title: 'Main Header Navigation',
+            description: 'The main site header contains the logo and primary navigation. It includes both desktop navigation links and responsive design elements.',
             side: 'bottom' as const,
+            align: 'center' as const,
+        }
+    },
+    {
+        element: '[data-tour="desktop-navigation"]',
+        popover: {
+            title: 'Desktop Navigation Menu',
+            description: 'The desktop navigation provides smooth scrolling links to different portfolio sections. It features active state indicators and hover effects.',
+            side: 'bottom' as const,
+            align: 'center' as const,
+        }
+    },
+    {
+        element: '[data-tour="section-navigation"]',
+        popover: {
+            title: 'Section Navigation Dots',
+            description: 'The right-side dot navigation provides quick access to different sections with visual indicators and tooltips. This appears only on larger screens.',
+            side: 'left' as const,
+            align: 'center' as const,
+        }
+    },
+    {
+        element: '[data-tour="instagram-navigation"]',
+        popover: {
+            title: 'Instagram-Style Mobile Navigation',
+            description: 'This bottom navigation bar appears only on mobile devices, providing an Instagram-like experience with icons and smooth section navigation.',
+            side: 'top' as const,
             align: 'center' as const,
         }
     },
@@ -249,17 +396,14 @@ const tourConfig = {
     popoverOffset: 20,
     smoothScroll: false, // Disable driver.js built-in scrolling
     animate: false, // Disable driver.js animations to prevent conflicts
-    
-    // Hooks for automated progression
-    onDeselected: (element: Element | undefined, step: any, options: any) => {
-        console.log(`[Tour] Deselected step: ${step.popover?.title}`);
-    }
 };
 
 /**
  * Creates and configures the driver instance
  */
 export function createGuidedTour(automated: boolean = false) {
+    let instagramNavCleanup: (() => void) | null = null;
+    
     const config = {
         ...tourConfig,
         steps: tourSteps,
@@ -276,18 +420,48 @@ export function createGuidedTour(automated: boolean = false) {
             if (popover) {
                 (popover as HTMLElement).style.display = 'none';
             }
+            
+            // Show navigation elements for specific steps
+            if (step.popover?.title === 'Instagram-Style Mobile Navigation' || 
+                step.popover?.title === 'Section Navigation Dots') {
+                console.log(`[Tour] Showing navigation for tour step: ${step.popover?.title}`);
+                instagramNavCleanup = showNavigationForTour(step.popover?.title);
+            }
         },
         
         onHighlighted: async (element: Element | undefined, step: any, options: any) => {
             console.log(`[Tour] Highlighted step: ${step.popover?.title}`);
+            console.log(`[Tour] Element found:`, element);
             
             // Calculate and handle scrolling with delayed popover
             if (element) {
                 const isVisible = isElementProperlyVisible(element);
                 console.log(`[Tour] Element "${step.popover?.title}" is ${isVisible ? 'visible' : 'not visible'} - ${isVisible ? 'no scroll needed' : 'scrolling required'}`);
                 await handleScrollingWithDelay(element, step, options);
+            } else {
+                console.log(`[Tour] No element found for step: ${step.popover?.title}`);
             }
         },
+        
+        onDeselected: (element: Element | undefined, step: any, options: any) => {
+            console.log(`[Tour] Deselected step: ${step.popover?.title}`);
+            
+            // Clean up navigation when leaving navigation steps
+            if ((step.popover?.title === 'Instagram-Style Mobile Navigation' || 
+                 step.popover?.title === 'Section Navigation Dots') && instagramNavCleanup) {
+                console.log(`[Tour] Cleaning up navigation for: ${step.popover?.title}`);
+                instagramNavCleanup();
+                instagramNavCleanup = null;
+            }
+        },
+        
+        onDestroyed: () => {
+            // Clean up Instagram navigation if tour is destroyed
+            if (instagramNavCleanup) {
+                instagramNavCleanup();
+                instagramNavCleanup = null;
+            }
+        }
     };
 
     return driver(config);

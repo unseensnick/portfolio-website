@@ -51,7 +51,10 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
     };
 
     return (
-        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
+        <div
+            className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:block"
+            data-tour="section-navigation"
+        >
             <nav className="flex flex-col gap-6">
                 {sections.map((section) => {
                     const isActive = activeSection === section.id;

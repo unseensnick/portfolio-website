@@ -188,4 +188,39 @@
             font-size: 0.8rem !important;
         }
     }
+
+    /* Tour-specific styles */
+    .driver-popover {
+        display: none !important;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .driver-popover.driver-popover-visible {
+        display: block !important;
+    }
+
+    /* Disable conflicting animations */
+    .driver-highlighted-element {
+        animation: none !important;
+    }
+
+    .driver-overlay {
+        animation: none !important;
+    }
+
+    /* Temporary Instagram navigation for tour */
+    .tour-temp-instagram-nav {
+        background: hsl(var(--background) / 0.95);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid hsl(var(--border) / 0.5);
+    }
+
+    .tour-temp-instagram-nav .text-primary {
+        color: hsl(var(--primary));
+    }
+
+    .tour-temp-instagram-nav .text-muted-foreground {
+        color: hsl(var(--muted-foreground));
+    }
 }

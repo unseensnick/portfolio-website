@@ -88,7 +88,10 @@ export function SiteHeader({
 
                     <div className="flex items-center gap-8">
                         {!isMobile && (
-                            <nav className="flex items-center gap-8">
+                            <nav
+                                className="flex items-center gap-8"
+                                data-tour="desktop-navigation"
+                            >
                                 {navLinks.map((link) => {
                                     const sectionId = link.href.replace(
                                         "#",
