@@ -32,6 +32,9 @@ PAYLOAD_SECRET=your-secret-key-change-me
 DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
 NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
 
+# Demo Mode Configuration (optional - for showcasing)
+NEXT_PUBLIC_DEMO_MODE=false
+
 # Email Configuration (for password resets and notifications)
 EMAIL_FROM=noreply@yourportfolio.com
 EMAIL_FROM_NAME=Portfolio Website
