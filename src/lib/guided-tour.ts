@@ -299,6 +299,15 @@ const tourSteps = [
         }
     },
     {
+        element: '[data-tour="theme-toggle"]',
+        popover: {
+            title: 'Theme Toggle',
+            description: 'The theme toggle allows users to switch between light and dark modes. It features smooth animations, remembers the user\'s preference, and automatically shows the system\'s preferred theme by default.',
+            side: 'bottom' as const,
+            align: 'center' as const,
+        }
+    },
+    {
         element: '[data-tour="section-navigation"]',
         popover: {
             title: 'Section Navigation Dots',
@@ -353,10 +362,28 @@ const tourSteps = [
         }
     },
     {
+        element: '[data-tour="about-paragraphs"]',
+        popover: {
+            title: 'Personal Story',
+            description: 'These paragraphs tell my professional story, background, and what drives me as a developer. They provide context about my journey and experience.',
+            side: 'right' as const,
+            align: 'center' as const,
+        }
+    },
+    {
         element: '[data-tour="technologies"]',
         popover: {
             title: 'Technology Stack',
             description: 'A comprehensive list of technologies, frameworks, and tools I\'m proficient with, displayed as interactive badges.',
+            side: 'right' as const,
+            align: 'center' as const,
+        }
+    },
+    {
+        element: '[data-tour="interests"]',
+        popover: {
+            title: 'Personal Interests',
+            description: 'This section showcases my personal interests and passions outside of work, giving visitors a more complete picture of who I am.',
             side: 'right' as const,
             align: 'center' as const,
         }

@@ -57,6 +57,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
                 className
             )}
             aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+            data-tour="theme-toggle"
             {...props}
         >
             {/* Background transition effect */}

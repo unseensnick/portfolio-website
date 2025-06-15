@@ -53,7 +53,7 @@ export function About({
                     </div>
 
                     <div className="space-y-8">
-                        <div className="space-y-4">
+                        <div className="space-y-4" data-tour="about-paragraphs">
                             {paragraphs.map((paragraph, index) => (
                                 <p
                                     key={index}
@@ -74,7 +74,7 @@ export function About({
                             />
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-4" data-tour="interests">
                             <h3 className="text-lg font-semibold text-foreground">
                                 {interestsHeading}
                             </h3>
@@ -101,7 +101,7 @@ export function About({
                 </div>
 
                 <div className="lg:col-span-3 space-y-12">
-                    <div className="space-y-6">
+                    <div className="space-y-6" data-tour="about-paragraphs">
                         {paragraphs.map((paragraph, index) => (
                             <p
                                 key={index}
@@ -119,7 +119,7 @@ export function About({
                         <TechBadgeGroup technologies={technologies} size="lg" />
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-6" data-tour="interests">
                         <h3 className="text-xl font-semibold text-foreground">
                             {interestsHeading}
                         </h3>
