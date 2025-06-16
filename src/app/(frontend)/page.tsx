@@ -3,10 +3,10 @@ import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
+import { MobileDemoWrapper } from "@/components/mobile-demo-wrapper";
 import { Projects } from "@/components/projects";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
-import { TourControls } from "@/components/tour-controls";
 import { getDemoModeIndicator, shouldUseDemoMode } from "@/lib/demo-utils";
 import { getPortfolioData } from "@/lib/payload-utils";
 import { draftMode } from "next/headers";
@@ -42,7 +42,7 @@ export default async function Home({
         process.env.NODE_ENV === "development" || params.tour === "true";
 
     return (
-        <>
+        <MobileDemoWrapper showTourControls={showTourControls}>
             <RefreshRouteOnSave />
 
             <SiteHeader
@@ -54,21 +54,18 @@ export default async function Home({
 
             <div className="flex flex-1 bg-background">
                 <main className="flex flex-1 flex-col">
-                    <div className="min-h-screen bg-background">
-                        {/* Mode indicators */}
+                    <div className="min-h-screen bg-background relative">
+                        {/* Mode indicators - positioned relative to wrapper */}
                         {isDraft && (
-                            <div className="fixed top-20 right-4 z-50 bg-yellow-500 text-black px-3 py-1 rounded text-sm font-medium">
+                            <div className="absolute top-4 right-4 z-50 bg-yellow-500 dark:bg-yellow-600 text-yellow-950 dark:text-yellow-50 px-3 py-1 rounded text-sm font-medium shadow-lg">
                                 Draft Mode
                             </div>
                         )}
                         {isDemo && (
-                            <div className="fixed top-20 right-4 z-50 bg-blue-500 text-white px-3 py-1 rounded text-sm font-medium">
+                            <div
+                                className={`absolute ${isDraft ? "top-16" : "top-4"} right-4 z-50 bg-primary text-primary-foreground px-3 py-1 rounded text-sm font-medium shadow-lg`}
+                            >
                                 {getDemoModeIndicator()}
-                            </div>
-                        )}
-                        {showTourControls && (
-                            <div className="fixed bottom-4 right-4 z-50 hidden md:block">
-                                <TourControls />
                             </div>
                         )}
 
@@ -104,6 +101,6 @@ export default async function Home({
             </div>
 
             <SectionNavigation navLinks={data.nav.links} />
-        </>
+        </MobileDemoWrapper>
     );
 }

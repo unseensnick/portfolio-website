@@ -3,13 +3,24 @@
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { tourControls } from "@/lib/guided-tour";
-import { Play, RotateCcw, Settings, Users, X, Zap } from "lucide-react";
+import {
+    Monitor,
+    Play,
+    RotateCcw,
+    Settings,
+    Smartphone,
+    Users,
+    X,
+    Zap,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 interface TourControlsProps {
     className?: string;
     variant?: "desktop" | "mobile" | "compact";
+    forceMobileView?: boolean;
+    onMobileToggle?: (mobile: boolean) => void;
 }
 
 /**
@@ -19,16 +30,48 @@ interface TourControlsProps {
 export function TourControls({
     className,
     variant = "desktop",
+    forceMobileView = false,
+    onMobileToggle,
 }: TourControlsProps) {
     const [isRunning, setIsRunning] = useState(false);
     const [showMobileModal, setShowMobileModal] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [globalMobileState, setGlobalMobileState] = useState(false);
     const isDemoMode = tourControls.isDemoMode();
     const isMobile = useIsMobile();
 
+    // Use global mobile state if no props provided (when used in site header)
+    const currentMobileView = onMobileToggle
+        ? forceMobileView
+        : globalMobileState;
+    const handleMobileToggleClick =
+        onMobileToggle ||
+        ((mobile: boolean) => {
+            if ((window as any).toggleMobileDemo) {
+                (window as any).toggleMobileDemo(mobile);
+            }
+        });
+
     useEffect(() => {
         setMounted(true);
-    }, []);
+
+        // Sync with global mobile state if no props provided
+        if (!onMobileToggle) {
+            const syncGlobalState = () => {
+                if ((window as any).getMobileDemoState) {
+                    setGlobalMobileState((window as any).getMobileDemoState());
+                }
+            };
+
+            // Initial sync
+            syncGlobalState();
+
+            // Set up interval to sync state
+            const interval = setInterval(syncGlobalState, 100);
+
+            return () => clearInterval(interval);
+        }
+    }, [onMobileToggle]);
 
     const handleManualTour = () => {
         if (isRunning || !isDemoMode) return;
@@ -125,6 +168,51 @@ export function TourControls({
                                 </div>
 
                                 <div className="space-y-3">
+                                    {/* Mobile/Desktop Toggle */}
+                                    <div className="pb-3 border-b border-border">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-sm font-medium text-muted-foreground">
+                                                View Mode
+                                            </span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                onClick={() =>
+                                                    handleMobileToggleClick(
+                                                        false
+                                                    )
+                                                }
+                                                size="sm"
+                                                variant={
+                                                    !currentMobileView
+                                                        ? "default"
+                                                        : "outline"
+                                                }
+                                                className="flex-1 justify-center gap-2"
+                                            >
+                                                <Monitor className="size-4" />
+                                                Desktop
+                                            </Button>
+                                            <Button
+                                                onClick={() =>
+                                                    handleMobileToggleClick(
+                                                        true
+                                                    )
+                                                }
+                                                size="sm"
+                                                variant={
+                                                    currentMobileView
+                                                        ? "default"
+                                                        : "outline"
+                                                }
+                                                className="flex-1 justify-center gap-2"
+                                            >
+                                                <Smartphone className="size-4" />
+                                                Mobile
+                                            </Button>
+                                        </div>
+                                    </div>
+
                                     <Button
                                         onClick={handleManualTour}
                                         disabled={isRunning}
@@ -215,41 +303,68 @@ export function TourControls({
         );
     }
 
-    // Desktop variant (original)
+    // Desktop variant with mobile toggle
     return (
-        <div className={`flex flex-wrap gap-2 ${className}`}>
-            <Button
-                onClick={handleManualTour}
-                disabled={isRunning}
-                size="sm"
-                variant="outline"
-                className="flex items-center gap-2"
-            >
-                <Users className="size-4" />
-                Start Tour
-            </Button>
+        <div
+            className={`bg-background/95 backdrop-blur-sm border border-border/60 rounded-xl p-3 shadow-xl ${className}`}
+        >
+            {/* Mobile/Desktop Toggle - Compact horizontal layout */}
+            <div className="flex items-center gap-1 mb-3">
+                <Button
+                    onClick={() => handleMobileToggleClick(false)}
+                    size="sm"
+                    variant={!currentMobileView ? "default" : "outline"}
+                    className="h-8 px-3 text-xs"
+                >
+                    <Monitor className="size-3 mr-1" />
+                    Desktop
+                </Button>
+                <Button
+                    onClick={() => handleMobileToggleClick(true)}
+                    size="sm"
+                    variant={currentMobileView ? "default" : "outline"}
+                    className="h-8 px-3 text-xs"
+                >
+                    <Smartphone className="size-3 mr-1" />
+                    Mobile
+                </Button>
+            </div>
 
-            <Button
-                onClick={handleAutomatedTour}
-                disabled={isRunning}
-                size="sm"
-                variant="outline"
-                className="flex items-center gap-2"
-            >
-                <Play className="size-4" />
-                Auto Demo
-            </Button>
+            {/* Tour Controls - Vertical stack for better organization */}
+            <div className="flex flex-col gap-1">
+                <Button
+                    onClick={handleManualTour}
+                    disabled={isRunning}
+                    size="sm"
+                    variant="outline"
+                    className="h-8 justify-start text-xs"
+                >
+                    <Users className="size-3 mr-2" />
+                    Start Tour
+                </Button>
 
-            <Button
-                onClick={handleReset}
-                disabled={isRunning}
-                size="sm"
-                variant="ghost"
-                className="flex items-center gap-2"
-            >
-                <RotateCcw className="size-4" />
-                Reset
-            </Button>
+                <Button
+                    onClick={handleAutomatedTour}
+                    disabled={isRunning}
+                    size="sm"
+                    variant="outline"
+                    className="h-8 justify-start text-xs"
+                >
+                    <Play className="size-3 mr-2" />
+                    Auto Demo
+                </Button>
+
+                <Button
+                    onClick={handleReset}
+                    disabled={isRunning}
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 justify-start text-xs text-muted-foreground hover:text-foreground"
+                >
+                    <RotateCcw className="size-3 mr-2" />
+                    Reset
+                </Button>
+            </div>
         </div>
     );
 }

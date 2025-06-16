@@ -795,3 +795,15 @@ html:not(.dark) .driver-active-element {
         transition: none !important;
     }
 }
+
+/* Special positioning for Instagram navigation popover - offset up to avoid blocking nav */
+.tour-popover.driver-popover.instagram-nav-popover {
+    transform: translateY(-80px) !important;
+}
+
+/* Responsive adjustment for mobile Instagram nav popover */
+@media (max-width: 768px) {
+    .tour-popover.driver-popover.instagram-nav-popover {
+        transform: translateY(-60px) !important;
+    }
+}
