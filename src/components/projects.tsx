@@ -237,10 +237,12 @@ export function Projects({
         if (!formattedViewAllLink) return null;
 
         return (
-            <div className="text-center">
+            <div className="flex flex-col items-center text-center">
                 <div className="space-y-4">
                     <p className="text-muted-foreground">{viewMoreText}</p>
-                    <ButtonGroup buttons={githubButton} />
+                    <div className="flex justify-center">
+                        <ButtonGroup buttons={githubButton} />
+                    </div>
                 </div>
             </div>
         );
