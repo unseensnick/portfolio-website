@@ -57,7 +57,12 @@ export const demoData: PortfolioData = {
             description: "A full-stack e-commerce platform built with Next.js, featuring user authentication, payment processing, inventory management, and an admin dashboard. Includes real-time notifications and responsive design.",
             projectUrl: "https://demo-ecommerce.vercel.app",
             codeUrl: "https://github.com/johndoe/ecommerce-platform",
-            image: "/placeholder-image.svg",
+            media: {
+                image: {
+                    url: "/placeholder-image.svg",
+                    alt: "E-Commerce Platform Screenshot"
+                }
+            },
             technologies: [
                 { name: "Next.js" },
                 { name: "TypeScript" },
@@ -73,7 +78,17 @@ export const demoData: PortfolioData = {
                 description: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features. Built with React and Socket.io.",
                 projectUrl: "https://demo-tasks.vercel.app",
                 codeUrl: "https://github.com/johndoe/task-manager",
-                image: "/placeholder-image.svg",
+                media: {
+                    image: {
+                        url: "/placeholder-image.svg",
+                        alt: "Task Management App Screenshot"
+                    },
+                    video: {
+                        src: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                        title: "Task Management App Demo",
+                        description: "See the app in action with real-time collaboration features"
+                    }
+                },
                 technologies: [
                     { name: "React" },
                     { name: "Node.js" },
@@ -86,7 +101,12 @@ export const demoData: PortfolioData = {
                 description: "A beautiful weather dashboard with location-based forecasts, interactive maps, and weather alerts. Features a clean, responsive design with dark/light mode support.",
                 projectUrl: "https://demo-weather.vercel.app",
                 codeUrl: "https://github.com/johndoe/weather-dashboard",
-                image: "/placeholder-image.svg",
+                media: {
+                    image: {
+                        url: "/placeholder-image.svg",
+                        alt: "Weather Dashboard Screenshot"
+                    }
+                },
                 technologies: [
                     { name: "Vue.js" },
                     { name: "TypeScript" },
@@ -99,7 +119,12 @@ export const demoData: PortfolioData = {
                 description: "A modern blog platform with markdown support, syntax highlighting, and SEO optimization. Includes a content management system and comment functionality.",
                 projectUrl: "https://demo-blog.vercel.app",
                 codeUrl: "https://github.com/johndoe/blog-platform",
-                image: "/placeholder-image.svg",
+                media: {
+                    image: {
+                        url: "/placeholder-image.svg",
+                        alt: "Blog Platform Screenshot"
+                    }
+                },
                 technologies: [
                     { name: "Next.js" },
                     { name: "MDX" },

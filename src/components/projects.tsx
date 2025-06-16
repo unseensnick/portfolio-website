@@ -21,12 +21,7 @@ interface ProjectItemProps {
     codeUrl?: string;
     technologies?: Technology[];
 
-    image?: string;
-    videoSrc?: string;
-    videoFile?: any;
-    videoTitle?: string;
-    videoDescription?: string;
-
+    // New consolidated media structure
     media?: {
         image?:
             | {
@@ -56,11 +51,6 @@ function ProjectItem({
     projectUrl,
     codeUrl,
     technologies,
-    image,
-    videoSrc,
-    videoFile,
-    videoTitle,
-    videoDescription,
     media,
     reverse = false,
     isMobile,
@@ -93,16 +83,7 @@ function ProjectItem({
     }
 
     const renderMedia = () => (
-        <ResponsiveMedia
-            src={image}
-            videoSrc={videoSrc}
-            videoFile={videoFile}
-            alt={title}
-            aspectRatio="landscape"
-            videoTitle={videoTitle}
-            videoDescription={videoDescription}
-            media={media}
-        />
+        <ResponsiveMedia media={media} alt={title} aspectRatio="landscape" />
     );
 
     const renderContent = () => (
@@ -186,13 +167,6 @@ interface ProjectItem {
     codeUrl?: string;
     technologies?: Technology[];
 
-    // Legacy props for backward compatibility
-    image?: string;
-    videoSrc?: string;
-    videoFile?: any;
-    videoTitle?: string;
-    videoDescription?: string;
-
     // New consolidated media structure
     media?: {
         image?:
@@ -260,29 +234,13 @@ export function Projects({
         : [];
 
     const renderViewAllLink = () => {
-        if (!viewAllLink) return null;
+        if (!formattedViewAllLink) return null;
 
         return (
-            <div className={cn("text-center", !isMobile && "mt-24")}>
-                <div
-                    className={createResponsiveSpacing("cardContent", isMobile)}
-                >
-                    <p
-                        className={cn(
-                            "text-muted-foreground",
-                            createResponsiveText("body", isMobile),
-                            isMobile && "px-4"
-                        )}
-                    >
-                        {viewMoreText}
-                    </p>
-                    <ButtonGroup
-                        buttons={githubButton}
-                        fullWidthMobile={isMobile}
-                        className={cn(
-                            isMobile ? "max-w-sm mx-auto" : "justify-center"
-                        )}
-                    />
+            <div className="text-center">
+                <div className="space-y-4">
+                    <p className="text-muted-foreground">{viewMoreText}</p>
+                    <ButtonGroup buttons={githubButton} />
                 </div>
             </div>
         );

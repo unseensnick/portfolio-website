@@ -1,15 +1,19 @@
-import { cn } from "@/lib/utils";
+"use client";
+
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+    cn,
+    commonClasses,
+    createIconContainer,
+    createResponsiveContainer,
+    createResponsiveIconSize,
+    getAspectRatioClass,
+} from "@/lib/utils";
+import Image from "next/image";
+import { useState } from "react";
 import VideoPlayer from "../VideoPlayer";
-import { ResponsiveImage } from "./responsive-image";
 
 interface ResponsiveMediaProps {
-    // Legacy props for backward compatibility
-    src?: string;
-    videoSrc?: string;
-    videoFile?: any;
-    videoTitle?: string;
-    videoDescription?: string;
-
     // New consolidated media structure
     media?: {
         image?:
@@ -31,77 +35,138 @@ interface ResponsiveMediaProps {
     };
 
     alt: string;
-    aspectRatio?: "square" | "landscape" | "portrait";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
     className?: string;
     priority?: boolean;
+    fillContainer?: boolean;
 }
 
 /**
- * Responsive media component that can display either an image or video
+ * Unified responsive media component that can display either an image or video
  * Prioritizes video if both are provided
- * Supports both legacy props and new consolidated media structure
+ * Includes built-in error handling and loading states for images
  */
 export function ResponsiveMedia({
-    // Legacy props
-    src,
-    videoSrc,
-    videoFile,
-    videoTitle,
-    videoDescription,
-
-    // New consolidated props
     media,
-
     alt,
     aspectRatio = "landscape",
     className = "",
     priority = false,
+    fillContainer = true,
 }: ResponsiveMediaProps) {
-    // Determine video source - prioritize new structure, then legacy
-    let finalVideoSrc: string | undefined;
-    let finalVideoTitle: string | undefined;
-    let finalVideoDescription: string | undefined;
-    let finalImageSrc: string | undefined;
+    const isMobile = useIsMobile();
+    const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true);
 
-    if (media) {
-        // New consolidated structure
-        finalVideoSrc = media.video?.file?.url || media.video?.src;
-        finalVideoTitle = media.video?.title;
-        finalVideoDescription = media.video?.description;
-        finalImageSrc =
-            media.image?.url ||
-            (typeof media.image === "string" ? media.image : undefined);
-    } else {
-        // Legacy structure for backward compatibility
-        finalVideoSrc = videoFile?.url || videoSrc;
-        finalVideoTitle = videoTitle;
-        finalVideoDescription = videoDescription;
-        finalImageSrc = src;
-    }
+    // Extract media sources
+    const videoSrc = media?.video?.file?.url || media?.video?.src;
+    const videoTitle = media?.video?.title;
+    const videoDescription = media?.video?.description;
+    const imageSrc =
+        media?.image?.url ||
+        (typeof media?.image === "string" ? media.image : undefined);
 
     // If video source is provided, render video player
-    if (finalVideoSrc) {
+    if (videoSrc) {
         return (
             <div className={cn("relative w-full", className)}>
                 <VideoPlayer
-                    src={finalVideoSrc}
-                    title={finalVideoTitle}
-                    description={finalVideoDescription}
+                    src={videoSrc}
+                    title={videoTitle}
+                    description={videoDescription}
                     className="w-full"
-                    poster={finalImageSrc} // Use image as poster if available
+                    poster={imageSrc} // Use image as poster if available
                 />
             </div>
         );
     }
 
-    // Fallback to image if no video
+    // Image rendering logic (consolidated from ResponsiveImage)
+    const containerClasses = cn(
+        getAspectRatioClass(aspectRatio),
+        "bg-gradient-to-br from-muted via-muted to-muted/50 relative overflow-hidden border border-border/50",
+        createResponsiveContainer("image", isMobile),
+        className
+    );
+
+    const shouldShowPlaceholder =
+        !imageSrc || imageError || imageSrc === "/placeholder-image.svg";
+
+    const renderPlaceholder = () => (
+        <div
+            className={cn(
+                "absolute inset-0 text-center p-4",
+                commonClasses.flexCenterCol
+            )}
+        >
+            <div
+                className={cn(
+                    createIconContainer(isMobile ? "sm" : "md", "primary"),
+                    "mb-3"
+                )}
+            >
+                <div
+                    className={cn(
+                        "rounded-full bg-primary/20",
+                        createResponsiveIconSize("md", isMobile)
+                    )}
+                ></div>
+            </div>
+            <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                    Placeholder Image
+                </p>
+                <p className="text-xs text-muted-foreground/70">
+                    Add content via PayloadCMS
+                </p>
+            </div>
+        </div>
+    );
+
+    const renderImage = () => (
+        <>
+            {imageLoading && (
+                <div
+                    className={cn(
+                        "absolute inset-0 bg-muted/50",
+                        commonClasses.flexCenter,
+                        commonClasses.loadingPulse
+                    )}
+                >
+                    <div
+                        className={cn(
+                            createIconContainer(
+                                isMobile ? "sm" : "md",
+                                "primary"
+                            )
+                        )}
+                    ></div>
+                </div>
+            )}
+
+            <Image
+                src={imageSrc!}
+                alt={alt}
+                fill={fillContainer}
+                className={cn(
+                    "object-cover transition-opacity duration-300",
+                    createResponsiveContainer("card", isMobile),
+                    imageLoading ? "opacity-0" : "opacity-100"
+                )}
+                priority={priority}
+                onLoad={() => setImageLoading(false)}
+                onError={() => {
+                    setImageError(true);
+                    setImageLoading(false);
+                }}
+            />
+        </>
+    );
+
+    // Fallback to image rendering
     return (
-        <ResponsiveImage
-            src={finalImageSrc}
-            alt={alt}
-            aspectRatio={aspectRatio}
-            className={className}
-            priority={priority}
-        />
+        <div className={containerClasses}>
+            {shouldShowPlaceholder ? renderPlaceholder() : renderImage()}
+        </div>
     );
 }

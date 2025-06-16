@@ -1,7 +1,7 @@
 "use client";
 
 import { ButtonGroup } from "@/components/shared/button-group";
-import { ResponsiveImage } from "@/components/shared/responsive-image";
+import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -54,12 +54,22 @@ export function Hero({
         },
     ];
 
+    // Create media structure for ResponsiveMedia
+    const heroMedia = image
+        ? {
+              image: {
+                  url: image,
+                  alt: "Hero",
+              },
+          }
+        : undefined;
+
     const renderMobileLayout = () => (
         <div className="w-full">
             {/* Hero image with decorative blur effect */}
             <div className="relative mb-8 mx-auto max-w-sm">
-                <ResponsiveImage
-                    src={image}
+                <ResponsiveMedia
+                    media={heroMedia}
                     alt="Hero"
                     aspectRatio="square"
                     priority={true}
@@ -127,8 +137,8 @@ export function Hero({
             </div>
 
             <div className="relative group">
-                <ResponsiveImage
-                    src={image}
+                <ResponsiveMedia
+                    media={heroMedia}
                     alt="Hero"
                     aspectRatio="landscape"
                     priority={true}

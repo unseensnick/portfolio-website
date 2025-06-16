@@ -1,6 +1,6 @@
 "use client";
 
-import { ResponsiveImage } from "@/components/shared/responsive-image";
+import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -48,10 +48,20 @@ export function About({
     const isMobile = useIsMobile();
     const { container, content, spacing } = createContentWrapper(isMobile);
 
+    // Create media structure for ResponsiveMedia
+    const aboutMedia = image
+        ? {
+              image: {
+                  url: image,
+                  alt: "About",
+              },
+          }
+        : undefined;
+
     const renderImage = () => (
         <div className={isMobile ? "mx-auto max-w-sm" : "lg:col-span-2"}>
-            <ResponsiveImage
-                src={image}
+            <ResponsiveMedia
+                media={aboutMedia}
                 alt="About"
                 aspectRatio={isMobile ? "square" : "portrait"}
             />

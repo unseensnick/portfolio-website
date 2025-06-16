@@ -53,7 +53,12 @@ const fallbackData = {
             description: "Please add content through the PayloadCMS admin panel",
             projectUrl: "#",
             codeUrl: "#",
-            image: "/placeholder-image.svg",
+            media: {
+                image: {
+                    url: "/placeholder-image.svg",
+                    alt: "Featured project placeholder"
+                }
+            },
             technologies: [
                 { name: "React" },
                 { name: "TypeScript" },
@@ -66,7 +71,12 @@ const fallbackData = {
                 description: "Please add content through the PayloadCMS admin panel",
                 projectUrl: "#",
                 codeUrl: "#",
-                image: "/placeholder-image.svg",
+                media: {
+                    image: {
+                        url: "/placeholder-image.svg",
+                        alt: "Sample project placeholder"
+                    }
+                },
                 technologies: [{ name: "Next.js" }, { name: "JavaScript" }],
             },
         ],
@@ -167,7 +177,12 @@ export function adaptPortfolioData(data: any) {
                         description: "A showcase of my best work",
                         projectUrl: undefined,
                         codeUrl: undefined,
-                        image: "/placeholder-image.svg",
+                        media: {
+                            image: {
+                                url: "/placeholder-image.svg",
+                                alt: "Featured project placeholder"
+                            }
+                        },
                         technologies: [],
                     };
                 }
@@ -186,18 +201,20 @@ export function adaptPortfolioData(data: any) {
                         title: safeString(featured.media.video.title),
                         description: safeString(featured.media.video.description)
                     } : undefined
-                } : undefined;
+                } : {
+                    image: {
+                        url: "/placeholder-image.svg",
+                        alt: featured.title || "Project image"
+                    }
+                };
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
                     description: safeString(featured.description, "A showcase of my best work"),
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
-                    technologies: safelyProcessTechnologies(featured.technologies),
-                    // Legacy image support
-                    image: safelyExtractImageUrl(featured.image) || "/placeholder-image.svg",
-                    // New media structure
                     media: processedMedia,
+                    technologies: safelyProcessTechnologies(featured.technologies),
                 };
             })(),
             items: (data.projects.items || []).map((project: any) => {
@@ -215,18 +232,20 @@ export function adaptPortfolioData(data: any) {
                         title: safeString(project.media.video.title),
                         description: safeString(project.media.video.description)
                     } : undefined
-                } : undefined;
+                } : {
+                    image: {
+                        url: "/placeholder-image.svg",
+                        alt: project.title || "Project image"
+                    }
+                };
 
                 return {
                     title: safeString(project.title, "Project"),
                     description: safeString(project.description, "Project description"),
                     projectUrl: safeString(project.projectUrl),
                     codeUrl: safeString(project.codeUrl),
-                    technologies: safelyProcessTechnologies(project.technologies),
-                    // Legacy image support
-                    image: safelyExtractImageUrl(project.image) || "/placeholder-image.svg",
-                    // New media structure
                     media: processedMedia,
+                    technologies: safelyProcessTechnologies(project.technologies),
                 };
             }),
             description: safeString(data.projects.description, "Here are some of my recent projects"),

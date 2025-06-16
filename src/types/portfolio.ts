@@ -43,13 +43,6 @@ export interface ProjectItem {
     projectUrl?: string;
     codeUrl?: string;
     
-    // Legacy props for backward compatibility
-    image?: string;
-    videoSrc?: string;
-    videoFile?: any;
-    videoTitle?: string;
-    videoDescription?: string;
-    
     // New consolidated media structure
     media?: {
         image?: {
