@@ -89,7 +89,7 @@ export function TourControls({
                         className="h-9 w-9 p-0 hover:bg-muted/50"
                         title="Demo Controls"
                     >
-                        <Zap className="h-4 w-4" />
+                        <Zap className="size-4" />
                     </Button>
                 </div>
 
@@ -118,9 +118,9 @@ export function TourControls({
                                         }
                                         size="sm"
                                         variant="ghost"
-                                        className="h-8 w-8 p-0"
+                                        className="size-8 p-0"
                                     >
-                                        <X className="h-4 w-4" />
+                                        <X className="size-4" />
                                     </Button>
                                 </div>
 
@@ -132,7 +132,7 @@ export function TourControls({
                                         variant="outline"
                                         className="w-full justify-start gap-3 h-12"
                                     >
-                                        <Users className="h-4 w-4" />
+                                        <Users className="size-4" />
                                         Start Interactive Tour
                                     </Button>
 
@@ -143,7 +143,7 @@ export function TourControls({
                                         variant="outline"
                                         className="w-full justify-start gap-3 h-12"
                                     >
-                                        <Play className="h-4 w-4" />
+                                        <Play className="size-4" />
                                         Auto Demo (3s intervals)
                                     </Button>
 
@@ -154,7 +154,7 @@ export function TourControls({
                                         variant="ghost"
                                         className="w-full justify-start gap-3 h-10 text-muted-foreground"
                                     >
-                                        <RotateCcw className="h-4 w-4" />
+                                        <RotateCcw className="size-4" />
                                         Reset Tour Status
                                     </Button>
                                 </div>
@@ -171,7 +171,7 @@ export function TourControls({
         return (
             <div className={`flex flex-col gap-3 ${className}`}>
                 <div className="flex items-center gap-2 mb-2">
-                    <Zap className="h-4 w-4 text-primary" />
+                    <Zap className="size-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">
                         Demo Mode
                     </span>
@@ -185,7 +185,7 @@ export function TourControls({
                         variant="outline"
                         className="w-full justify-start gap-3 h-12"
                     >
-                        <Users className="h-4 w-4" />
+                        <Users className="size-4" />
                         Start Interactive Tour
                     </Button>
 
@@ -196,8 +196,8 @@ export function TourControls({
                         variant="outline"
                         className="w-full justify-start gap-3 h-12"
                     >
-                        <Play className="h-4 w-4" />
-                        Auto Demo (3s intervals)
+                        <Play className="size-4" />
+                        Auto Demo (4s intervals)
                     </Button>
 
                     <Button
@@ -207,7 +207,7 @@ export function TourControls({
                         variant="ghost"
                         className="w-full justify-start gap-3 h-10 text-muted-foreground"
                     >
-                        <RotateCcw className="h-4 w-4" />
+                        <RotateCcw className="size-4" />
                         Reset Tour Status
                     </Button>
                 </div>
@@ -225,7 +225,7 @@ export function TourControls({
                 variant="outline"
                 className="flex items-center gap-2"
             >
-                <Users className="h-4 w-4" />
+                <Users className="size-4" />
                 Start Tour
             </Button>
 
@@ -236,7 +236,7 @@ export function TourControls({
                 variant="outline"
                 className="flex items-center gap-2"
             >
-                <Play className="h-4 w-4" />
+                <Play className="size-4" />
                 Auto Demo
             </Button>
 
@@ -247,7 +247,7 @@ export function TourControls({
                 variant="ghost"
                 className="flex items-center gap-2"
             >
-                <RotateCcw className="h-4 w-4" />
+                <RotateCcw className="size-4" />
                 Reset
             </Button>
         </div>
