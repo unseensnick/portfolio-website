@@ -50,7 +50,7 @@ const fallbackData = {
         featured: {
             title: "Featured Project",
             description:
-                "Please add content through the PayloadCMS admin panel",
+                "Placeholder Image Add content via PayloadCMS",
             projectUrl: "#",
             codeUrl: "#",
             image: "/placeholder-image.svg",
@@ -64,7 +64,7 @@ const fallbackData = {
             {
                 title: "Sample Project",
                 description:
-                    "Please add content through the PayloadCMS admin panel",
+                    "Placeholder Image Add content via PayloadCMS",
                 projectUrl: "#",
                 codeUrl: "#",
                 image: "/placeholder-image.svg",
@@ -164,25 +164,86 @@ export function adaptPortfolioData(data: any) {
         },
         projects: {
             title: safeString(data.projects.title, "My Projects"),
-            featured: {
-                title: safeString(data.projects.featured?.title, "Featured Project"),
-                description: safeString(
-                    data.projects.featured?.description,
-                    "A showcase of my best work"
-                ),
-                projectUrl: safeString(data.projects.featured?.projectUrl),
-                codeUrl: safeString(data.projects.featured?.codeUrl),
-                image: safelyExtractImageUrl(data.projects.featured?.image, "/placeholder-image.svg") || "/placeholder-image.svg",
-                technologies: safelyProcessTechnologies(data.projects.featured?.technologies),
-            },
-            items: (data.projects.items || []).map((project: any) => ({
-                title: safeString(project.title, "Project"),
-                description: safeString(project.description, "Project description"),
-                projectUrl: safeString(project.projectUrl),
-                codeUrl: safeString(project.codeUrl),
-                image: safelyExtractImageUrl(project.image, "/placeholder-image.svg") || "/placeholder-image.svg",
-                technologies: safelyProcessTechnologies(project.technologies),
-            })),
+            featured: (() => {
+                const featured = data.projects.featured;
+                if (!featured) return {
+                    title: "Featured Project",
+                    description: "A showcase of my best work",
+                    projectUrl: undefined,
+                    codeUrl: undefined,
+                    image: "/placeholder-image.svg",
+                    technologies: [],
+                };
+
+                // Extract media data (new consolidated structure)
+                const mediaData = featured.media ? {
+                    media: {
+                        image: featured.media.image ? {
+                            url: safelyExtractImageUrl(featured.media.image),
+                            alt: featured.media.image?.alt || featured.title
+                        } : undefined,
+                        video: featured.media.video ? {
+                            src: safeString(featured.media.video.src),
+                            file: featured.media.video.file ? {
+                                url: safelyExtractImageUrl(featured.media.video.file)
+                            } : undefined,
+                            title: safeString(featured.media.video.title),
+                            description: safeString(featured.media.video.description)
+                        } : undefined
+                    }
+                } : {};
+
+                return {
+                    title: safeString(featured.title, "Featured Project"),
+                    description: safeString(featured.description, "A showcase of my best work"),
+                    projectUrl: safeString(featured.projectUrl),
+                    codeUrl: safeString(featured.codeUrl),
+                    // Legacy image field for backward compatibility
+                    image: safelyExtractImageUrl(featured.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+                    // Legacy video fields for backward compatibility
+                    videoSrc: safeString(featured.videoSrc),
+                    videoTitle: safeString(featured.videoTitle),
+                    videoDescription: safeString(featured.videoDescription),
+                    technologies: safelyProcessTechnologies(featured.technologies),
+                    // New consolidated media structure
+                    ...mediaData
+                };
+            })(),
+            items: (data.projects.items || []).map((project: any) => {
+                // Extract media data (new consolidated structure)
+                const mediaData = project.media ? {
+                    media: {
+                        image: project.media.image ? {
+                            url: safelyExtractImageUrl(project.media.image),
+                            alt: project.media.image?.alt || project.title
+                        } : undefined,
+                        video: project.media.video ? {
+                            src: safeString(project.media.video.src),
+                            file: project.media.video.file ? {
+                                url: safelyExtractImageUrl(project.media.video.file)
+                            } : undefined,
+                            title: safeString(project.media.video.title),
+                            description: safeString(project.media.video.description)
+                        } : undefined
+                    }
+                } : {};
+
+                return {
+                    title: safeString(project.title, "Project"),
+                    description: safeString(project.description, "Project description"),
+                    projectUrl: safeString(project.projectUrl),
+                    codeUrl: safeString(project.codeUrl),
+                    // Legacy image field for backward compatibility
+                    image: safelyExtractImageUrl(project.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+                    // Legacy video fields for backward compatibility
+                    videoSrc: safeString(project.videoSrc),
+                    videoTitle: safeString(project.videoTitle),
+                    videoDescription: safeString(project.videoDescription),
+                    technologies: safelyProcessTechnologies(project.technologies),
+                    // New consolidated media structure
+                    ...mediaData
+                };
+            }),
             description: safeString(data.projects.description, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
             viewAllLink: safeString(data.projects.viewAllLink),

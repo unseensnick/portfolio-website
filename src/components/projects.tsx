@@ -3,6 +3,7 @@
 import { ButtonGroup } from "@/components/shared/button-group";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
 import { ResponsiveImage } from "@/components/shared/responsive-image";
+import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -20,7 +21,33 @@ interface ProjectItemProps {
     projectUrl?: string;
     codeUrl?: string;
     technologies?: Technology[];
+
+    // Legacy props for backward compatibility
     image?: string;
+    videoSrc?: string;
+    videoFile?: any;
+    videoTitle?: string;
+    videoDescription?: string;
+
+    // New consolidated media structure
+    media?: {
+        image?:
+            | {
+                  url?: string;
+                  alt?: string;
+              }
+            | any;
+        video?: {
+            src?: string;
+            file?:
+                | {
+                      url?: string;
+                  }
+                | any;
+            title?: string;
+            description?: string;
+        };
+    };
 }
 
 /**
@@ -33,6 +60,11 @@ function MobileProjectItem({
     codeUrl,
     technologies,
     image,
+    videoSrc,
+    videoFile,
+    videoTitle,
+    videoDescription,
+    media,
 }: ProjectItemProps) {
     const buttons = [];
 
@@ -58,10 +90,15 @@ function MobileProjectItem({
     return (
         <ResponsiveCard className="overflow-hidden p-0">
             <div>
-                <ResponsiveImage
+                <ResponsiveMedia
                     src={image}
+                    videoSrc={videoSrc}
+                    videoFile={videoFile}
                     alt={title}
                     aspectRatio="landscape"
+                    videoTitle={videoTitle}
+                    videoDescription={videoDescription}
+                    media={media}
                 />
             </div>
 
@@ -101,6 +138,11 @@ function DesktopProjectItem({
     codeUrl,
     technologies,
     image,
+    videoSrc,
+    videoFile,
+    videoTitle,
+    videoDescription,
+    media,
     reverse = false,
 }: ProjectItemProps & { reverse?: boolean }) {
     const buttons = [];
@@ -138,10 +180,15 @@ function DesktopProjectItem({
                         reverse && "lg:col-start-2"
                     )}
                 >
-                    <ResponsiveImage
+                    <ResponsiveMedia
                         src={image}
+                        videoSrc={videoSrc}
+                        videoFile={videoFile}
                         alt={title}
                         aspectRatio="landscape"
+                        videoTitle={videoTitle}
+                        videoDescription={videoDescription}
+                        media={media}
                     />
                 </div>
 
@@ -185,7 +232,33 @@ interface ProjectItem {
     projectUrl?: string;
     codeUrl?: string;
     technologies?: Technology[];
+
+    // Legacy props for backward compatibility
     image?: string;
+    videoSrc?: string;
+    videoFile?: any;
+    videoTitle?: string;
+    videoDescription?: string;
+
+    // New consolidated media structure
+    media?: {
+        image?:
+            | {
+                  url?: string;
+                  alt?: string;
+              }
+            | any;
+        video?: {
+            src?: string;
+            file?:
+                | {
+                      url?: string;
+                  }
+                | any;
+            title?: string;
+            description?: string;
+        };
+    };
 }
 
 interface ProjectsProps {

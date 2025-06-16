@@ -276,9 +276,35 @@ export interface Portfolio {
           }[]
         | null;
       /**
-       * Screenshot or thumbnail of your featured project
+       * Configure image and/or video for your featured project. Video will take priority if both are provided.
        */
-      image?: (number | null) | Media;
+      media?: {
+        /**
+         * Screenshot or thumbnail of your project (used as fallback or video poster)
+         */
+        image?: (number | null) | Media;
+        /**
+         * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
+         */
+        video?: {
+          /**
+           * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
+           */
+          src?: string | null;
+          /**
+           * Alternative: Upload a video file directly (will override URL if both provided)
+           */
+          file?: (number | null) | Media;
+          /**
+           * Optional: Title displayed above the video player
+           */
+          title?: string | null;
+          /**
+           * Optional: Description displayed below the video title
+           */
+          description?: string | null;
+        };
+      };
     };
     /**
      * Additional projects to display in your portfolio
@@ -314,9 +340,35 @@ export interface Portfolio {
               }[]
             | null;
           /**
-           * Screenshot or thumbnail of this project
+           * Configure image and/or video for this project. Video will take priority if both are provided.
            */
-          image?: (number | null) | Media;
+          media?: {
+            /**
+             * Screenshot or thumbnail of your project (used as fallback or video poster)
+             */
+            image?: (number | null) | Media;
+            /**
+             * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
+             */
+            video?: {
+              /**
+               * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
+               */
+              src?: string | null;
+              /**
+               * Alternative: Upload a video file directly (will override URL if both provided)
+               */
+              file?: (number | null) | Media;
+              /**
+               * Optional: Title displayed above the video player
+               */
+              title?: string | null;
+              /**
+               * Optional: Description displayed below the video title
+               */
+              description?: string | null;
+            };
+          };
           id?: string | null;
         }[]
       | null;
@@ -576,7 +628,19 @@ export interface PortfolioSelect<T extends boolean = true> {
                     name?: T;
                     id?: T;
                   };
-              image?: T;
+              media?:
+                | T
+                | {
+                    image?: T;
+                    video?:
+                      | T
+                      | {
+                          src?: T;
+                          file?: T;
+                          title?: T;
+                          description?: T;
+                        };
+                  };
             };
         items?:
           | T
@@ -591,7 +655,19 @@ export interface PortfolioSelect<T extends boolean = true> {
                     name?: T;
                     id?: T;
                   };
-              image?: T;
+              media?:
+                | T
+                | {
+                    image?: T;
+                    video?:
+                      | T
+                      | {
+                          src?: T;
+                          file?: T;
+                          title?: T;
+                          description?: T;
+                        };
+                  };
               id?: T;
             };
         viewAllLink?: T;

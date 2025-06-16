@@ -285,13 +285,67 @@ export const Portfolio: CollectionConfig = {
                             ],
                         },
                         {
-                            name: "image",
-                            type: "upload",
-                            relationTo: "media",
-                            label: "Project Image",
+                            name: "media",
+                            type: "group",
+                            label: "Project Media",
                             admin: {
-                                description: "Screenshot or thumbnail of your featured project",
+                                description: "Configure image and/or video for your featured project. Video will take priority if both are provided.",
                             },
+                            fields: [
+                                {
+                                    name: "image",
+                                    type: "upload",
+                                    relationTo: "media",
+                                    label: "Project Image",
+                                    admin: {
+                                        description: "Screenshot or thumbnail of your project (used as fallback or video poster)",
+                                    },
+                                },
+                                {
+                                    name: "video",
+                                    type: "group",
+                                    label: "Project Video (Optional)",
+                                    admin: {
+                                        description: "Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos",
+                                    },
+                                    fields: [
+                                        {
+                                            name: "src",
+                                            type: "text",
+                                            label: "Video URL",
+                                            admin: {
+                                                description: "YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.",
+                                                placeholder: "https://youtube.com/watch?v=... or https://example.com/video.mp4",
+                                            },
+                                        },
+                                        {
+                                            name: "file",
+                                            type: "upload",
+                                            relationTo: "media",
+                                            label: "Upload Video File",
+                                            admin: {
+                                                description: "Alternative: Upload a video file directly (will override URL if both provided)",
+                                            },
+                                        },
+                                        {
+                                            name: "title",
+                                            type: "text",
+                                            label: "Video Title",
+                                            admin: {
+                                                description: "Optional: Title displayed above the video player",
+                                            },
+                                        },
+                                        {
+                                            name: "description",
+                                            type: "text",
+                                            label: "Video Description",
+                                            admin: {
+                                                description: "Optional: Description displayed below the video title",
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
                         },
                     ],
                 },
@@ -357,13 +411,67 @@ export const Portfolio: CollectionConfig = {
                             ],
                         },
                         {
-                            name: "image",
-                            type: "upload",
-                            relationTo: "media",
-                            label: "Project Image",
+                            name: "media",
+                            type: "group",
+                            label: "Project Media",
                             admin: {
-                                description: "Screenshot or thumbnail of this project",
+                                description: "Configure image and/or video for this project. Video will take priority if both are provided.",
                             },
+                            fields: [
+                                {
+                                    name: "image",
+                                    type: "upload",
+                                    relationTo: "media",
+                                    label: "Project Image",
+                                    admin: {
+                                        description: "Screenshot or thumbnail of your project (used as fallback or video poster)",
+                                    },
+                                },
+                                {
+                                    name: "video",
+                                    type: "group",
+                                    label: "Project Video (Optional)",
+                                    admin: {
+                                        description: "Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos",
+                                    },
+                                    fields: [
+                                        {
+                                            name: "src",
+                                            type: "text",
+                                            label: "Video URL",
+                                            admin: {
+                                                description: "YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.",
+                                                placeholder: "https://youtube.com/watch?v=... or https://example.com/video.mp4",
+                                            },
+                                        },
+                                        {
+                                            name: "file",
+                                            type: "upload",
+                                            relationTo: "media",
+                                            label: "Upload Video File",
+                                            admin: {
+                                                description: "Alternative: Upload a video file directly (will override URL if both provided)",
+                                            },
+                                        },
+                                        {
+                                            name: "title",
+                                            type: "text",
+                                            label: "Video Title",
+                                            admin: {
+                                                description: "Optional: Title displayed above the video player",
+                                            },
+                                        },
+                                        {
+                                            name: "description",
+                                            type: "text",
+                                            label: "Video Description",
+                                            admin: {
+                                                description: "Optional: Description displayed below the video title",
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
                         },
                     ],
                 },

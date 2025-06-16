@@ -44,3 +44,9 @@ next-env.d.ts
 # Misc
 /legacy code
 src/app/debug-portfolio
+# next-video
+media/*
+!media/*.json
+!media/*.js
+!media/*.ts
+public/_next-video

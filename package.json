@@ -8,7 +8,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "generate:types": "PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types",
+        "generate:types": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types",
         "demo": "cross-env NEXT_PUBLIC_DEMO_MODE=true next dev",
         "demo:build": "cross-env NEXT_PUBLIC_DEMO_MODE=true next build",
         "demo:start": "cross-env NEXT_PUBLIC_DEMO_MODE=true next start"
@@ -33,6 +33,7 @@
         "juice": "^11.0.1",
         "lucide-react": "^0.513.0",
         "next": "15.3.3",
+        "next-video": "^2.2.0",
         "payload": "^3.40.0",
         "postcss": "^8.5.4",
         "react": "^19.0.0",
