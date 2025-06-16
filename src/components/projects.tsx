@@ -16,7 +16,7 @@ interface Technology {
 
 interface ProjectItemProps {
     title: string;
-    description: string;
+    description: Array<{ text: string }>;
     projectUrl?: string;
     codeUrl?: string;
     technologies?: Technology[];
@@ -97,14 +97,19 @@ function ProjectItem({
                 >
                     {title}
                 </h3>
-                <p
-                    className={cn(
-                        "text-muted-foreground leading-relaxed",
-                        createResponsiveText("body", isMobile)
-                    )}
-                >
-                    {description}
-                </p>
+                <div className="space-y-4">
+                    {description.map((paragraph, index) => (
+                        <p
+                            key={index}
+                            className={cn(
+                                "text-muted-foreground leading-relaxed",
+                                createResponsiveText("body", isMobile)
+                            )}
+                        >
+                            {paragraph.text}
+                        </p>
+                    ))}
+                </div>
 
                 {technologies && technologies.length > 0 && (
                     <TechBadgeGroup
@@ -162,7 +167,7 @@ function ProjectItem({
 
 interface ProjectItem {
     title: string;
-    description: string;
+    description: Array<{ text: string }>;
     projectUrl?: string;
     codeUrl?: string;
     technologies?: Technology[];
@@ -204,7 +209,7 @@ export function Projects({
     title = "Projects",
     featured = {
         title: "Featured Project",
-        description: "A showcase of my best work",
+        description: [{ text: "A showcase of my best work" }],
         projectUrl: "#",
         codeUrl: "#",
     },
@@ -255,7 +260,7 @@ export function Projects({
             description={description}
             data-tour="projects-section"
         >
-            <div data-tour="featured-project">
+            <div data-tour="featured-project" className="mb-12 lg:mb-24">
                 {!isMobile && featured && (
                     <ProjectItem {...featured} isMobile={isMobile} />
                 )}

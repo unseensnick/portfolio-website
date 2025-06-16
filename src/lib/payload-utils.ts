@@ -1,15 +1,16 @@
 import { demoData } from "@/lib/demo-data";
 import { logDemoModeStatus, shouldUseDemoMode } from "@/lib/demo-utils";
+import { logger } from "@/lib/utils";
+import type { PortfolioData } from "@/types/portfolio";
 import {
     safelyExtractImageUrl,
     safelyExtractNames,
     safelyExtractParagraphs,
+    safelyExtractProjectDescriptions,
     safelyProcessNavLinks,
     safelyProcessTechnologies,
     safeString
-} from "@/lib/payload-safe-helpers";
-import { logger } from "@/lib/utils";
-import type { PortfolioData } from "@/types/portfolio";
+} from "./payload-safe-helpers";
 
 /**
  * Default data used when PayloadCMS is unavailable
@@ -50,7 +51,7 @@ const fallbackData = {
         title: "My Projects",
         featured: {
             title: "Featured Project",
-            description: "Please add content through the PayloadCMS admin panel",
+            description: [{ text: "Please add content through the PayloadCMS admin panel" }],
             projectUrl: "#",
             codeUrl: "#",
             media: {
@@ -68,7 +69,7 @@ const fallbackData = {
         items: [
             {
                 title: "Sample Project",
-                description: "Please add content through the PayloadCMS admin panel",
+                description: [{ text: "Please add content through the PayloadCMS admin panel" }],
                 projectUrl: "#",
                 codeUrl: "#",
                 media: {
@@ -174,7 +175,7 @@ export function adaptPortfolioData(data: any) {
                 if (!featured) {
                     return {
                         title: "Featured Project",
-                        description: "A showcase of my best work",
+                        description: [{ text: "A showcase of my best work" }],
                         projectUrl: undefined,
                         codeUrl: undefined,
                         media: {
@@ -210,7 +211,7 @@ export function adaptPortfolioData(data: any) {
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
-                    description: safeString(featured.description, "A showcase of my best work"),
+                    description: safelyExtractProjectDescriptions(featured.description) || [{ text: "A showcase of my best work" }],
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
                     media: processedMedia,
@@ -241,7 +242,7 @@ export function adaptPortfolioData(data: any) {
 
                 return {
                     title: safeString(project.title, "Project"),
-                    description: safeString(project.description, "Project description"),
+                    description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
                     projectUrl: safeString(project.projectUrl),
                     codeUrl: safeString(project.codeUrl),
                     media: processedMedia,

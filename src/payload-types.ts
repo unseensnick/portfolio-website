@@ -252,9 +252,17 @@ export interface Portfolio {
        */
       title: string;
       /**
-       * Detailed description of your featured project
+       * Detailed description of your featured project (multiple paragraphs for better formatting)
        */
-      description: string;
+      description?:
+        | {
+            /**
+             * Content for this paragraph
+             */
+            text: string;
+            id?: string | null;
+          }[]
+        | null;
       /**
        * URL to the live demo of your project (with or without https://)
        */
@@ -316,9 +324,17 @@ export interface Portfolio {
            */
           title: string;
           /**
-           * Detailed description of this project
+           * Detailed description of this project (multiple paragraphs for better formatting)
            */
-          description: string;
+          description?:
+            | {
+                /**
+                 * Content for this paragraph
+                 */
+                text: string;
+                id?: string | null;
+              }[]
+            | null;
           /**
            * URL to the live demo of this project (with or without https://)
            */
@@ -619,7 +635,12 @@ export interface PortfolioSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              description?: T;
+              description?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
               projectUrl?: T;
               codeUrl?: T;
               technologies?:
@@ -646,7 +667,12 @@ export interface PortfolioSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              description?: T;
+              description?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
               projectUrl?: T;
               codeUrl?: T;
               technologies?:

@@ -54,7 +54,10 @@ export const demoData: PortfolioData = {
         viewAllLink: "https://github.com/johndoe",
         featured: {
             title: "E-Commerce Platform",
-            description: "A full-stack e-commerce platform built with Next.js, featuring user authentication, payment processing, inventory management, and an admin dashboard. Includes real-time notifications and responsive design.",
+            description: [
+                { text: "A full-stack e-commerce platform built with Next.js, featuring user authentication, payment processing, inventory management, and an admin dashboard." },
+                { text: "Includes real-time notifications and responsive design optimized for both desktop and mobile experiences." }
+            ],
             projectUrl: "https://demo-ecommerce.vercel.app",
             codeUrl: "https://github.com/johndoe/ecommerce-platform",
             media: {
@@ -75,7 +78,10 @@ export const demoData: PortfolioData = {
         items: [
             {
                 title: "Task Management App",
-                description: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features. Built with React and Socket.io.",
+                description: [
+                    { text: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features." },
+                    { text: "Built with React and Socket.io for seamless real-time communication and state synchronization across multiple users." }
+                ],
                 projectUrl: "https://demo-tasks.vercel.app",
                 codeUrl: "https://github.com/johndoe/task-manager",
                 media: {
@@ -98,7 +104,10 @@ export const demoData: PortfolioData = {
             },
             {
                 title: "Weather Dashboard",
-                description: "A beautiful weather dashboard with location-based forecasts, interactive maps, and weather alerts. Features a clean, responsive design with dark/light mode support.",
+                description: [
+                    { text: "A beautiful weather dashboard with location-based forecasts, interactive maps, and weather alerts." },
+                    { text: "Features a clean, responsive design with dark/light mode support and detailed weather analytics." }
+                ],
                 projectUrl: "https://demo-weather.vercel.app",
                 codeUrl: "https://github.com/johndoe/weather-dashboard",
                 media: {
@@ -116,7 +125,10 @@ export const demoData: PortfolioData = {
             },
             {
                 title: "Blog Platform",
-                description: "A modern blog platform with markdown support, syntax highlighting, and SEO optimization. Includes a content management system and comment functionality.",
+                description: [
+                    { text: "A modern blog platform with markdown support, syntax highlighting, and SEO optimization." },
+                    { text: "Includes a content management system and comment functionality with spam protection and moderation tools." }
+                ],
                 projectUrl: "https://demo-blog.vercel.app",
                 codeUrl: "https://github.com/johndoe/blog-platform",
                 media: {

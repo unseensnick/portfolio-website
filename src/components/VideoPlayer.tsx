@@ -6,6 +6,7 @@ interface VideoPlayerProps extends Omit<VideoProps, "src"> {
     title?: string;
     description?: string;
     className?: string;
+    showMetadata?: boolean; // New prop to control title/description display
 }
 
 // Helper function to detect YouTube URLs
@@ -47,6 +48,7 @@ export default function VideoPlayer({
     title,
     description,
     className = "",
+    showMetadata = false,
     ...props
 }: VideoPlayerProps) {
     // Convert src to string if it's an object (imported video)
@@ -65,8 +67,12 @@ export default function VideoPlayer({
 
     return (
         <div className={`video-container ${className}`}>
-            {title && <h3 className="text-xl font-semibold mb-2">{title}</h3>}
-            {description && <p className="text-gray-600 mb-4">{description}</p>}
+            {showMetadata && title && (
+                <h3 className="text-xl font-semibold mb-2">{title}</h3>
+            )}
+            {showMetadata && description && (
+                <p className="text-gray-600 mb-4">{description}</p>
+            )}
 
             {isYouTubeUrl(srcString) ? (
                 // YouTube iframe embed

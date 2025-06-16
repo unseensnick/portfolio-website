@@ -39,7 +39,7 @@ export interface Technology {
 
 export interface ProjectItem {
     title: string;
-    description: string;
+    description: Array<{ text: string }>;
     projectUrl?: string;
     codeUrl?: string;
     

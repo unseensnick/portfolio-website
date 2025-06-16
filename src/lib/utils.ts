@@ -224,8 +224,8 @@ export function createResponsiveSpacing(
             desktop: "py-24 lg:py-32",
         },
         projectGrid: {
-            mobile: "space-y-6 mb-12",
-            desktop: "space-y-16 mb-24",
+            mobile: "space-y-12 mb-16",
+            desktop: "space-y-24 mb-32",
         },
     };
     

@@ -132,3 +132,17 @@ export function safeString(value?: any, fallback: string = ""): string {
     const validString = validateAndTrimString(value);
     return validString || fallback;
 }
+
+/**
+ * Extract project descriptions as paragraph objects: { text: string }[]
+ * Used for project descriptions that need to support multiple paragraphs
+ */
+export function safelyExtractProjectDescriptions(descriptions?: any[]): Array<{ text: string }> {
+    return safeArrayMap(descriptions, (desc) => {
+        if (desc && typeof desc === "object" && desc.text) {
+            const text = validateAndTrimString(desc.text);
+            return text ? { text } : null;
+        }
+        return null;
+    });
+}

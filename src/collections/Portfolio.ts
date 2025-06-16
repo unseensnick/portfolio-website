@@ -242,12 +242,22 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "description",
-                            type: "textarea",
-                            required: true,
+                            type: "array",
                             label: "Project Description",
                             admin: {
-                                description: "Detailed description of your featured project",
+                                description: "Detailed description of your featured project (multiple paragraphs for better formatting)",
                             },
+                            fields: [
+                                {
+                                    name: "text",
+                                    type: "textarea",
+                                    required: true,
+                                    label: "Paragraph Text",
+                                    admin: {
+                                        description: "Content for this paragraph",
+                                    },
+                                },
+                            ],
                         },
                         {
                             name: "projectUrl",
@@ -368,12 +378,22 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "description",
-                            type: "textarea",
-                            required: true,
+                            type: "array",
                             label: "Project Description",
                             admin: {
-                                description: "Detailed description of this project",
+                                description: "Detailed description of this project (multiple paragraphs for better formatting)",
                             },
+                            fields: [
+                                {
+                                    name: "text",
+                                    type: "textarea",
+                                    required: true,
+                                    label: "Paragraph Text",
+                                    admin: {
+                                        description: "Content for this paragraph",
+                                    },
+                                },
+                            ],
                         },
                         {
                             name: "projectUrl",
