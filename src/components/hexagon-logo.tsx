@@ -1,11 +1,11 @@
 "use client";
 
-import { cn, commonClasses } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn, commonClasses, createResponsiveText } from "@/lib/utils";
 
 interface HexagonLogoProps {
     logoText?: string;
     subtitle?: string;
-    size?: "sm" | "md" | "lg" | "xl";
     splitAt?: number;
     className?: string;
     isHovered?: boolean;
@@ -13,45 +13,18 @@ interface HexagonLogoProps {
 }
 
 /**
- * Animated logo with hexagon icon and split-color text effect
+ * Simplified animated logo with hexagon icon and split-color text effect
  * Shows developer-style <code/> brackets in the center
  */
 export function HexagonLogo({
     logoText = "YourName",
     subtitle = "Full Stack Developer",
-    size = "lg",
     splitAt,
     className = "",
     isHovered = false,
     onClick,
 }: HexagonLogoProps) {
-    const sizeClasses = {
-        sm: "text-lg",
-        md: "text-2xl",
-        lg: "text-4xl",
-        xl: "text-6xl",
-    };
-
-    const iconSizes = {
-        sm: "w-6 h-6",
-        md: "w-8 h-8",
-        lg: "w-12 h-12",
-        xl: "w-16 h-16",
-    };
-
-    const iconTextSizes = {
-        sm: "text-xs",
-        md: "text-sm",
-        lg: "text-base",
-        xl: "text-lg",
-    };
-
-    const subtitleSizes = {
-        sm: "text-xs",
-        md: "text-sm",
-        lg: "text-base",
-        xl: "text-lg",
-    };
+    const isMobile = useIsMobile();
 
     // Smart split: after first word, or 60% through single word for gradient effect
     const calculateSplitAt = () => {
@@ -77,8 +50,8 @@ export function HexagonLogo({
             )}
             onClick={onClick}
         >
-            {/* Hexagon with code brackets */}
-            <div className={cn("relative", iconSizes[size])}>
+            {/* Simplified hexagon with responsive sizing */}
+            <div className={cn("relative", isMobile ? "w-8 h-8" : "w-12 h-12")}>
                 {/* Outer hexagon with gradient */}
                 <div
                     className={cn(
@@ -110,7 +83,7 @@ export function HexagonLogo({
                 <div
                     className={cn(
                         "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary font-bold font-mono",
-                        iconTextSizes[size]
+                        isMobile ? "text-xs" : "text-base"
                     )}
                 >
                     &lt;/&gt;
@@ -121,7 +94,7 @@ export function HexagonLogo({
             <div className="flex flex-col">
                 <div
                     className={cn(
-                        sizeClasses[size],
+                        createResponsiveText("subheading", isMobile),
                         "font-semibold leading-none"
                     )}
                 >
@@ -140,7 +113,7 @@ export function HexagonLogo({
                 <span
                     className={cn(
                         "text-muted-foreground font-medium leading-none mt-1",
-                        subtitleSizes[size]
+                        isMobile ? "text-xs" : "text-sm"
                     )}
                 >
                     {subtitle}

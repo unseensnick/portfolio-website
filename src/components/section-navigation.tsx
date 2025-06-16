@@ -38,7 +38,7 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
     return (
         <nav
             className="fixed right-8 top-1/2 -translate-y-1/2 z-30 hidden lg:block"
-            data-tour="side-navigation"
+            data-tour="section-navigation"
         >
             <div className="flex flex-col gap-4">
                 {sections.map((section) => {

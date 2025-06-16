@@ -98,7 +98,12 @@ export function IconCard({
         : "#";
 
     const renderContent = () => (
-        <div className="text-center space-y-3 sm:space-y-4">
+        <div
+            className={cn(
+                "text-center",
+                createResponsiveSpacing("cardContent", isMobile)
+            )}
+        >
             <div
                 className={cn(
                     createIconContainer(isMobile ? "sm" : "lg"),

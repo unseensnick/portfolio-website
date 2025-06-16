@@ -132,15 +132,3 @@ export function safeString(value?: any, fallback: string = ""): string {
     const validString = validateAndTrimString(value);
     return validString || fallback;
 }
-
-/**
- * Type guard to check if object has required properties
- */
-export function hasRequiredProps(obj: any, requiredProps: string[]): boolean {
-    if (!obj || typeof obj !== "object") return false;
-    
-    return requiredProps.every(prop => {
-        const value = obj[prop];
-        return value !== null && value !== undefined && value !== "";
-    });
-}

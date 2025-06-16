@@ -111,7 +111,7 @@ function ProjectItem({
                 <h3
                     className={cn(
                         "font-bold text-foreground",
-                        isMobile ? "text-xl" : "text-2xl lg:text-3xl"
+                        createResponsiveText("heading", isMobile)
                     )}
                 >
                     {title}
@@ -264,7 +264,9 @@ export function Projects({
 
         return (
             <div className={cn("text-center", !isMobile && "mt-24")}>
-                <div className="space-y-4 sm:space-y-6">
+                <div
+                    className={createResponsiveSpacing("cardContent", isMobile)}
+                >
                     <p
                         className={cn(
                             "text-muted-foreground",

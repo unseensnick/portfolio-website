@@ -4,7 +4,12 @@ import { ButtonGroup } from "@/components/shared/button-group";
 import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, commonClasses, createResponsiveLayout } from "@/lib/utils";
+import {
+    cn,
+    commonClasses,
+    createResponsiveLayout,
+    createResponsiveText,
+} from "@/lib/utils";
 import { ExternalLink, Github } from "lucide-react";
 
 interface HeroProps {
@@ -71,7 +76,8 @@ export function Hero({
                     </p>
                     <h1
                         className={cn(
-                            "text-3xl font-bold leading-tight",
+                            createResponsiveText("heroTitle", isMobile),
+                            "font-bold leading-tight",
                             commonClasses.gradientText
                         )}
                     >
@@ -101,7 +107,8 @@ export function Hero({
                     </p>
                     <h1
                         className={cn(
-                            "text-5xl lg:text-6xl font-bold leading-tight",
+                            createResponsiveText("heroTitle", isMobile),
+                            "font-bold leading-tight",
                             commonClasses.gradientText
                         )}
                     >

@@ -68,7 +68,6 @@ export function SiteHeader({
                             <HexagonLogo
                                 logoText={logo}
                                 subtitle={subtitle}
-                                size={isMobile ? "sm" : "md"}
                                 splitAt={logoSplitAt}
                                 isHovered={isLogoHovered}
                                 onClick={handleLogoClick}

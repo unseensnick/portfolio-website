@@ -77,12 +77,11 @@ export function TourControls({
         }
     }, [onMobileToggle]);
 
-    const handleManualTour = () => {
-        setIsRunning(true);
-        const driverObj = tourControls.start();
+    // Helper to setup driver object with cleanup (eliminates duplication)
+    const setupDriverWithCleanup = (driverObj: any) => {
         if (!driverObj) {
             setIsRunning(false);
-            return;
+            return null;
         }
 
         const originalDestroy = driverObj.destroy;
@@ -91,22 +90,17 @@ export function TourControls({
             originalDestroy.call(this);
         };
         setShowMobileModal(false);
+        return driverObj;
+    };
+
+    const handleManualTour = () => {
+        setIsRunning(true);
+        setupDriverWithCleanup(tourControls.start());
     };
 
     const handleAutomatedTour = () => {
         setIsRunning(true);
-        const driverObj = tourControls.startAutomated(3000);
-        if (!driverObj) {
-            setIsRunning(false);
-            return;
-        }
-
-        const originalDestroy = driverObj.destroy;
-        driverObj.destroy = function () {
-            setIsRunning(false);
-            originalDestroy.call(this);
-        };
-        setShowMobileModal(false);
+        setupDriverWithCleanup(tourControls.startAutomated(3000));
     };
 
     const handleReset = () => {
@@ -179,8 +173,6 @@ export function TourControls({
                                                 }
                                                 size="sm"
                                                 variant={createResponsiveButtonVariant(
-                                                    "toggle",
-                                                    isMobile,
                                                     !currentMobileView
                                                 )}
                                                 className="flex-1 justify-center gap-2"
@@ -201,8 +193,6 @@ export function TourControls({
                                                 }
                                                 size="sm"
                                                 variant={createResponsiveButtonVariant(
-                                                    "toggle",
-                                                    isMobile,
                                                     currentMobileView
                                                 )}
                                                 className="flex-1 justify-center gap-2"
@@ -322,11 +312,7 @@ export function TourControls({
                 <Button
                     onClick={() => handleMobileToggleClick(false)}
                     size="sm"
-                    variant={createResponsiveButtonVariant(
-                        "toggle",
-                        isMobile,
-                        !currentMobileView
-                    )}
+                    variant={createResponsiveButtonVariant(!currentMobileView)}
                     className="h-8 px-3 text-xs"
                 >
                     <Monitor
@@ -340,11 +326,7 @@ export function TourControls({
                 <Button
                     onClick={() => handleMobileToggleClick(true)}
                     size="sm"
-                    variant={createResponsiveButtonVariant(
-                        "toggle",
-                        isMobile,
-                        currentMobileView
-                    )}
+                    variant={createResponsiveButtonVariant(currentMobileView)}
                     className="h-8 px-3 text-xs"
                 >
                     <Smartphone

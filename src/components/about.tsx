@@ -4,7 +4,12 @@ import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, createContentWrapper, createResponsiveText } from "@/lib/utils";
+import {
+    cn,
+    createContentWrapper,
+    createResponsiveLayout,
+    createResponsiveText,
+} from "@/lib/utils";
 
 function InterestItem({ text }: { text: string }) {
     return (
@@ -96,9 +101,7 @@ export function About({
                 <div
                     className={cn(
                         "gap-3",
-                        isMobile
-                            ? "grid grid-cols-1"
-                            : "grid grid-cols-1 sm:grid-cols-2"
+                        createResponsiveLayout("simpleGrid", isMobile)
                     )}
                 >
                     {interests.map((interest, index) => (

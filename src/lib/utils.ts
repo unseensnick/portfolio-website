@@ -40,7 +40,6 @@ export const commonClasses = {
     
     // Icon containers
     iconContainer: "rounded-full flex items-center justify-center",
-    iconContainerPrimary: "rounded-full bg-primary/10 flex items-center justify-center",
     
     // Backdrop blur
     backdropBlur: "backdrop-blur-sm bg-background/80",
@@ -77,30 +76,6 @@ export const responsiveSizes = {
         lg: "size-16",
         xl: "size-20",
     },
-    spacing: {
-        mobile: "px-6 py-16",
-        desktop: "px-8 py-24 lg:py-32",
-        section: {
-            mobile: "space-y-1",
-            desktop: "space-y-2",
-        },
-        content: {
-            mobile: "space-y-3",
-            desktop: "space-y-4",
-        },
-        layout: {
-            mobile: "space-y-4",
-            desktop: "space-y-6",
-        },
-        projectGrid: {
-            mobile: "space-y-6 mb-12",
-            desktop: "space-y-32",
-        },
-        sectionPadding: {
-            mobile: "py-16",
-            desktop: "py-24 lg:py-32",
-        },
-    },
     text: {
         heading: {
             mobile: "text-xl",
@@ -108,7 +83,11 @@ export const responsiveSizes = {
         },
         subheading: {
             mobile: "text-lg",
-            desktop: "text-xl",
+            desktop: "text-xl lg:text-2xl",
+        },
+        heroTitle: {
+            mobile: "text-3xl",
+            desktop: "text-5xl lg:text-6xl",
         },
         body: {
             mobile: "text-sm",
@@ -119,8 +98,8 @@ export const responsiveSizes = {
             desktop: "text-lg max-w-2xl mx-auto leading-relaxed",
         },
         cardTitle: {
-            mobile: "text-lg",
-            desktop: "text-xl",
+            mobile: "text-base",
+            desktop: "text-lg",
         },
         cardSubtitle: {
             mobile: "text-sm",
@@ -170,6 +149,11 @@ export const responsiveLayouts = {
         mobile: "space-y-6",
         desktop: "space-y-12",
     },
+    // Common grid patterns
+    simpleGrid: {
+        mobile: "grid grid-cols-1",
+        desktop: "grid grid-cols-1 sm:grid-cols-2",
+    },
 } as const;
 
 /**
@@ -212,17 +196,40 @@ export function createResponsiveText(
 }
 
 /**
- * Creates responsive spacing classes
+ * Creates responsive spacing classes - simplified approach following YAGNI
  */
 export function createResponsiveSpacing(
-    spacingType: keyof typeof responsiveSizes.spacing,
+    spacingType: "section" | "content" | "layout" | "cardContent" | "sectionPadding" | "projectGrid",
     isMobile: boolean
 ): string {
-    if (spacingType === "mobile" || spacingType === "desktop") {
-        return isMobile ? responsiveSizes.spacing.mobile : responsiveSizes.spacing.desktop;
-    }
+    const spacingMap = {
+        section: {
+            mobile: "space-y-3",
+            desktop: "space-y-4",
+        },
+        content: {
+            mobile: "space-y-4",
+            desktop: "space-y-6",
+        },
+        layout: {
+            mobile: "space-y-8",
+            desktop: "space-y-6",
+        },
+        cardContent: {
+            mobile: "space-y-3 sm:space-y-4",
+            desktop: "space-y-4 sm:space-y-6",
+        },
+        sectionPadding: {
+            mobile: "py-16",
+            desktop: "py-24 lg:py-32",
+        },
+        projectGrid: {
+            mobile: "space-y-6 mb-12",
+            desktop: "space-y-16 mb-24",
+        },
+    };
     
-    const spacingConfig = responsiveSizes.spacing[spacingType];
+    const spacingConfig = spacingMap[spacingType];
     return createResponsiveClasses(
         spacingConfig.mobile,
         spacingConfig.desktop,
@@ -517,40 +524,6 @@ export function createResponsiveContainer(
 }
 
 /**
- * Responsive button variant patterns for tour controls
- */
-export const responsiveButtonVariants = {
-    primary: { mobile: "default", desktop: "default" },
-    secondary: { mobile: "outline", desktop: "outline" },
-    ghost: { mobile: "ghost", desktop: "ghost" },
-    toggle: (isActive: boolean) => ({
-        mobile: isActive ? "default" : "outline",
-        desktop: isActive ? "default" : "outline",
-    }),
-} as const;
-
-/**
- * Creates responsive button variant
- */
-export function createResponsiveButtonVariant(
-    type: keyof typeof responsiveButtonVariants | "toggle",
-    isMobile: boolean,
-    isActive?: boolean
-): "default" | "outline" | "ghost" {
-    if (type === "toggle" && typeof isActive === "boolean") {
-        const variants = responsiveButtonVariants.toggle(isActive);
-        return (isMobile ? variants.mobile : variants.desktop) as "default" | "outline" | "ghost";
-    }
-    
-    if (type in responsiveButtonVariants && type !== "toggle") {
-        const variants = responsiveButtonVariants[type as keyof Omit<typeof responsiveButtonVariants, "toggle">];
-        return (isMobile ? variants.mobile : variants.desktop) as "default" | "outline" | "ghost";
-    }
-    
-    return "default";
-}
-
-/**
  * Responsive conditional rendering helper
  */
 export function createConditionalClasses(
@@ -562,12 +535,10 @@ export function createConditionalClasses(
 }
 
 /**
- * Creates responsive layout wrapper with consistent patterns
+ * Creates responsive button variant for toggle functionality (simplified YAGNI approach)
  */
-export function createResponsiveLayoutWrapper(isMobile: boolean): string {
-    return createResponsiveClasses(
-        "space-y-10",
-        "space-y-12",
-        isMobile
-    );
+export function createResponsiveButtonVariant(
+    isActive: boolean
+): "default" | "outline" {
+    return isActive ? "default" : "outline";
 }
