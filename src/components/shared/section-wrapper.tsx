@@ -4,6 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import {
     cn,
     commonClasses,
+    createResponsiveClasses,
     createResponsiveSpacing,
     createResponsiveText,
 } from "@/lib/utils";
@@ -38,7 +39,11 @@ export function SectionWrapper({
     const titleClasses = cn(
         "font-bold",
         commonClasses.gradientText,
-        isMobile ? "text-3xl mb-4" : "text-4xl lg:text-5xl mb-6",
+        createResponsiveClasses(
+            "text-3xl mb-4",
+            "text-4xl lg:text-5xl mb-6",
+            isMobile
+        ),
         titleClassName
     );
 
@@ -59,14 +64,22 @@ export function SectionWrapper({
         >
             <div
                 className={cn(
-                    isMobile ? "px-6" : "max-w-7xl mx-auto px-8 w-full"
+                    createResponsiveClasses(
+                        "px-6",
+                        "max-w-7xl mx-auto px-8 w-full",
+                        isMobile
+                    )
                 )}
             >
                 {(title || description) && (
                     <div
                         className={cn(
                             "text-center",
-                            isMobile ? "mb-12" : "mb-16 lg:mb-20"
+                            createResponsiveClasses(
+                                "mb-12",
+                                "mb-16 lg:mb-20",
+                                isMobile
+                            )
                         )}
                     >
                         {title && <h2 className={titleClasses}>{title}</h2>}

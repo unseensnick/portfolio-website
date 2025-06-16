@@ -26,6 +26,9 @@ export const commonClasses = {
     // Primary gradient text pattern
     primaryGradientText: "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent",
     
+    // Background gradient patterns
+    backgroundGradient: "bg-gradient-to-r from-primary/10 via-transparent to-primary/10",
+    
     // Common transitions
     transition: "transition-all duration-300",
     transitionFast: "transition-all duration-200",
@@ -120,6 +123,10 @@ export const responsiveSizes = {
             desktop: "text-xl",
         },
         cardSubtitle: {
+            mobile: "text-sm",
+            desktop: "text-base",
+        },
+        link: {
             mobile: "text-sm",
             desktop: "text-base",
         },
@@ -300,6 +307,80 @@ export function createContentWrapper(isMobile: boolean): {
 }
 
 /**
+ * Creates full-screen centered layout for forms and modals
+ * Eliminates duplicate layout patterns in auth pages
+ */
+export function createFullScreenCenteredLayout(): string {
+    return `min-h-screen ${commonClasses.flexCenter} bg-muted/50 p-4`;
+}
+
+/**
+ * Logging utilities to eliminate repeated console logging patterns
+ */
+export const logger = {
+    /**
+     * Creates a prefixed logger for consistent API logging
+     */
+    createApiLogger: (service: string, requestId: string) => ({
+        error: (message: string, ...args: any[]) => 
+            console.error(`[${service} API ${requestId}] ${message}`, ...args),
+        warn: (message: string, ...args: any[]) => 
+            console.warn(`[${service} API ${requestId}] ${message}`, ...args),
+        log: (message: string, ...args: any[]) => 
+            console.log(`[${service} API ${requestId}] ${message}`, ...args),
+    }),
+    
+    /**
+     * Creates a prefixed logger for feature logging
+     */
+    createFeatureLogger: (feature: string) => ({
+        error: (message: string, ...args: any[]) => 
+            console.error(`[${feature}] ${message}`, ...args),
+        warn: (message: string, ...args: any[]) => 
+            console.warn(`[${feature}] ${message}`, ...args),
+        log: (message: string, ...args: any[]) => 
+            console.log(`[${feature}] ${message}`, ...args),
+    }),
+} as const;
+
+/**
+ * Common validation utilities to eliminate repeated validation logic
+ */
+export const validators = {
+    /**
+     * Validates required field
+     */
+    required: (value: string, fieldName: string): string | null => {
+        return !value ? `${fieldName} is required` : null;
+    },
+    
+    /**
+     * Validates minimum length
+     */
+    minLength: (value: string, min: number, fieldName: string): string | null => {
+        return value.length < min ? `${fieldName} must be at least ${min} characters long` : null;
+    },
+    
+    /**
+     * Validates password confirmation
+     */
+    passwordMatch: (password: string, confirmPassword: string): string | null => {
+        return password !== confirmPassword ? "Passwords do not match" : null;
+    },
+    
+    /**
+     * Combines multiple validators for a field
+     */
+    validateField: (value: string, validations: Array<() => string | null>): string | null => {
+        for (const validation of validations) {
+            const error = validation();
+            if (error) return error;
+        }
+        return null;
+    },
+} as const;
+
+/**
  * Creates password input field configuration with visibility toggle
  * Eliminates duplicate password field patterns in forms
  */
@@ -357,4 +438,136 @@ export const sectionIconMap: Record<string, LucideIcon> = {
  */
 export function getSectionIcon(sectionId: string): LucideIcon {
     return sectionIconMap[sectionId] || Home;
+}
+
+/**
+ * Responsive icon size patterns
+ */
+export const responsiveIconSizes = {
+    xs: { mobile: "size-3", desktop: "size-4" },
+    sm: { mobile: "size-4", desktop: "size-5" },
+    md: { mobile: "size-6", desktop: "size-8" },
+    lg: { mobile: "size-8", desktop: "size-10" },
+    xl: { mobile: "size-10", desktop: "size-12" },
+} as const;
+
+/**
+ * Creates responsive icon size classes
+ */
+export function createResponsiveIconSize(
+    size: keyof typeof responsiveIconSizes,
+    isMobile: boolean
+): string {
+    return createResponsiveClasses(
+        responsiveIconSizes[size].mobile,
+        responsiveIconSizes[size].desktop,
+        isMobile
+    );
+}
+
+/**
+ * Aspect ratio mapping utility
+ */
+export const aspectRatioMap = {
+    square: "aspect-square",
+    landscape: "aspect-[16/10]",
+    portrait: "aspect-[3/4]",
+} as const;
+
+/**
+ * Maps aspect ratio prop to Tailwind CSS class
+ */
+export function getAspectRatioClass(aspectRatio: string): string {
+    if (aspectRatio in aspectRatioMap) {
+        return aspectRatioMap[aspectRatio as keyof typeof aspectRatioMap];
+    }
+    return aspectRatio; // Return as-is for custom aspect ratios
+}
+
+/**
+ * Responsive container patterns for different layouts
+ */
+export const responsiveContainers = {
+    image: {
+        mobile: "rounded-2xl shadow-xl",
+        desktop: "rounded-xl shadow-2xl shadow-black/5",
+    },
+    card: {
+        mobile: "rounded-2xl",
+        desktop: "rounded-xl transition-transform duration-700 group-hover:scale-105",
+    },
+    modal: {
+        mobile: "rounded-t-3xl",
+        desktop: "rounded-2xl",
+    },
+} as const;
+
+/**
+ * Creates responsive container classes
+ */
+export function createResponsiveContainer(
+    type: keyof typeof responsiveContainers,
+    isMobile: boolean
+): string {
+    return createResponsiveClasses(
+        responsiveContainers[type].mobile,
+        responsiveContainers[type].desktop,
+        isMobile
+    );
+}
+
+/**
+ * Responsive button variant patterns for tour controls
+ */
+export const responsiveButtonVariants = {
+    primary: { mobile: "default", desktop: "default" },
+    secondary: { mobile: "outline", desktop: "outline" },
+    ghost: { mobile: "ghost", desktop: "ghost" },
+    toggle: (isActive: boolean) => ({
+        mobile: isActive ? "default" : "outline",
+        desktop: isActive ? "default" : "outline",
+    }),
+} as const;
+
+/**
+ * Creates responsive button variant
+ */
+export function createResponsiveButtonVariant(
+    type: keyof typeof responsiveButtonVariants | "toggle",
+    isMobile: boolean,
+    isActive?: boolean
+): "default" | "outline" | "ghost" {
+    if (type === "toggle" && typeof isActive === "boolean") {
+        const variants = responsiveButtonVariants.toggle(isActive);
+        return (isMobile ? variants.mobile : variants.desktop) as "default" | "outline" | "ghost";
+    }
+    
+    if (type in responsiveButtonVariants && type !== "toggle") {
+        const variants = responsiveButtonVariants[type as keyof Omit<typeof responsiveButtonVariants, "toggle">];
+        return (isMobile ? variants.mobile : variants.desktop) as "default" | "outline" | "ghost";
+    }
+    
+    return "default";
+}
+
+/**
+ * Responsive conditional rendering helper
+ */
+export function createConditionalClasses(
+    condition: boolean,
+    trueClasses: string,
+    falseClasses: string = ""
+): string {
+    return condition ? trueClasses : falseClasses;
+}
+
+/**
+ * Creates responsive layout wrapper with consistent patterns
+ */
+export function createResponsiveLayoutWrapper(isMobile: boolean): string {
+    return createResponsiveClasses(
+        "space-y-10",
+        "space-y-12",
+        isMobile
+    );
 }

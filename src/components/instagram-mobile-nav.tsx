@@ -3,7 +3,7 @@
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection } from "@/lib/navigation-utils";
-import { cn } from "@/lib/utils";
+import { cn, commonClasses } from "@/lib/utils";
 
 interface NavLink {
     href: string;
@@ -52,7 +52,7 @@ export function InstagramMobileNav({ navLinks = [] }: InstagramMobileNavProps) {
                             key={section.id}
                             onClick={() => handleNavigationClick(section.id)}
                             className={cn(
-                                "relative flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300",
+                                `relative flex flex-col items-center gap-1 px-3 py-2 rounded-lg ${commonClasses.transition}`,
                                 "min-w-0 flex-1 max-w-20",
                                 isActive
                                     ? "text-primary bg-primary/10"
@@ -62,13 +62,13 @@ export function InstagramMobileNav({ navLinks = [] }: InstagramMobileNavProps) {
                         >
                             <Icon
                                 className={cn(
-                                    "transition-all duration-300",
+                                    commonClasses.transition,
                                     isActive ? "size-6" : "size-5"
                                 )}
                             />
                             <span
                                 className={cn(
-                                    "text-xs font-medium transition-all duration-300 truncate w-full text-center",
+                                    `text-xs font-medium ${commonClasses.transition} truncate w-full text-center`,
                                     isActive ? "opacity-100" : "opacity-70"
                                 )}
                             >
@@ -78,7 +78,7 @@ export function InstagramMobileNav({ navLinks = [] }: InstagramMobileNavProps) {
                             {/* Active indicator */}
                             <div
                                 className={cn(
-                                    "absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-primary rounded-full transition-all duration-300",
+                                    `absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-primary rounded-full ${commonClasses.transition}`,
                                     isActive
                                         ? "w-8 opacity-100"
                                         : "w-0 opacity-0"

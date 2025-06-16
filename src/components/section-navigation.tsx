@@ -3,6 +3,7 @@
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection } from "@/lib/navigation-utils";
+import { commonClasses } from "@/lib/utils";
 
 interface NavLink {
     href: string;
@@ -52,7 +53,7 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
                         >
                             {/* Dot indicator */}
                             <div
-                                className={`size-3 rounded-full border-2 transition-all duration-300 ${
+                                className={`size-3 rounded-full border-2 ${commonClasses.transition} ${
                                     isActive
                                         ? "bg-primary border-primary scale-125"
                                         : "bg-transparent border-muted-foreground/40 group-hover:border-primary group-hover:scale-110"
@@ -61,7 +62,7 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
 
                             {/* Tooltip */}
                             <div
-                                className={`absolute right-6 px-3 py-1.5 bg-background border border-border rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-300 ${
+                                className={`absolute right-6 px-3 py-1.5 bg-background border border-border rounded-lg text-sm font-medium whitespace-nowrap ${commonClasses.transition} ${
                                     isActive
                                         ? "opacity-100 translate-x-0"
                                         : "opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"

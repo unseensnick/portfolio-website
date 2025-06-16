@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMounted } from "@/hooks/use-mounted";
 import { tourControls } from "@/lib/guided-tour";
-import { cn, commonClasses } from "@/lib/utils";
+import {
+    cn,
+    commonClasses,
+    createResponsiveButtonVariant,
+    createResponsiveIconSize,
+} from "@/lib/utils";
 import {
     Monitor,
     Play,
@@ -38,7 +43,6 @@ export function TourControls({
     const [isRunning, setIsRunning] = useState(false);
     const [showMobileModal, setShowMobileModal] = useState(false);
     const [globalMobileState, setGlobalMobileState] = useState(false);
-    const isDemoMode = tourControls.isDemoMode();
     const isMobile = useIsMobile();
     const mounted = useMounted();
 
@@ -174,14 +178,19 @@ export function TourControls({
                                                     )
                                                 }
                                                 size="sm"
-                                                variant={
+                                                variant={createResponsiveButtonVariant(
+                                                    "toggle",
+                                                    isMobile,
                                                     !currentMobileView
-                                                        ? "default"
-                                                        : "outline"
-                                                }
+                                                )}
                                                 className="flex-1 justify-center gap-2"
                                             >
-                                                <Monitor className="size-4" />
+                                                <Monitor
+                                                    className={createResponsiveIconSize(
+                                                        "xs",
+                                                        isMobile
+                                                    )}
+                                                />
                                                 Desktop
                                             </Button>
                                             <Button
@@ -191,14 +200,19 @@ export function TourControls({
                                                     )
                                                 }
                                                 size="sm"
-                                                variant={
+                                                variant={createResponsiveButtonVariant(
+                                                    "toggle",
+                                                    isMobile,
                                                     currentMobileView
-                                                        ? "default"
-                                                        : "outline"
-                                                }
+                                                )}
                                                 className="flex-1 justify-center gap-2"
                                             >
-                                                <Smartphone className="size-4" />
+                                                <Smartphone
+                                                    className={createResponsiveIconSize(
+                                                        "xs",
+                                                        isMobile
+                                                    )}
+                                                />
                                                 Mobile
                                             </Button>
                                         </div>
@@ -308,19 +322,37 @@ export function TourControls({
                 <Button
                     onClick={() => handleMobileToggleClick(false)}
                     size="sm"
-                    variant={!currentMobileView ? "default" : "outline"}
+                    variant={createResponsiveButtonVariant(
+                        "toggle",
+                        isMobile,
+                        !currentMobileView
+                    )}
                     className="h-8 px-3 text-xs"
                 >
-                    <Monitor className="size-3 mr-1" />
+                    <Monitor
+                        className={cn(
+                            createResponsiveIconSize("xs", isMobile),
+                            "mr-1"
+                        )}
+                    />
                     Desktop
                 </Button>
                 <Button
                     onClick={() => handleMobileToggleClick(true)}
                     size="sm"
-                    variant={currentMobileView ? "default" : "outline"}
+                    variant={createResponsiveButtonVariant(
+                        "toggle",
+                        isMobile,
+                        currentMobileView
+                    )}
                     className="h-8 px-3 text-xs"
                 >
-                    <Smartphone className="size-3 mr-1" />
+                    <Smartphone
+                        className={cn(
+                            createResponsiveIconSize("xs", isMobile),
+                            "mr-1"
+                        )}
+                    />
                     Mobile
                 </Button>
             </div>

@@ -8,6 +8,7 @@ import {
     safelyProcessTechnologies,
     safeString
 } from "@/lib/payload-safe-helpers";
+import { logger } from "@/lib/utils";
 import type { PortfolioData } from "@/types/portfolio";
 
 /**
@@ -103,6 +104,54 @@ function safeNumber(value: any, min?: number, max?: number): number | undefined 
 }
 
 /**
+ * Processes media data structure for projects (eliminates duplication)
+ * Handles both new consolidated media structure and legacy fields
+ */
+function processProjectMediaData(project: any): {
+    media?: {
+        image?: { url: string | null; alt: string };
+        video?: {
+            src: string;
+            file?: { url: string | null };
+            title: string;
+            description: string;
+        };
+    };
+    // Legacy fields for backward compatibility
+    image: string;
+    videoSrc: string;
+    videoTitle: string;
+    videoDescription: string;
+} {
+    // Extract media data (new consolidated structure)
+    const mediaData = project.media ? {
+        media: {
+            image: project.media.image ? {
+                url: safelyExtractImageUrl(project.media.image),
+                alt: project.media.image?.alt || project.title || "Project image"
+            } : undefined,
+            video: project.media.video ? {
+                src: safeString(project.media.video.src),
+                file: project.media.video.file ? {
+                    url: safelyExtractImageUrl(project.media.video.file)
+                } : undefined,
+                title: safeString(project.media.video.title),
+                description: safeString(project.media.video.description)
+            } : undefined
+        }
+    } : {};
+
+    return {
+        ...mediaData,
+        // Legacy fields for backward compatibility
+        image: safelyExtractImageUrl(project.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+        videoSrc: safeString(project.videoSrc),
+        videoTitle: safeString(project.videoTitle),
+        videoDescription: safeString(project.videoDescription),
+    };
+}
+
+/**
  * Transforms raw PayloadCMS data into the format expected by components
  */
 export function adaptPortfolioData(data: any) {
@@ -166,81 +215,37 @@ export function adaptPortfolioData(data: any) {
             title: safeString(data.projects.title, "My Projects"),
             featured: (() => {
                 const featured = data.projects.featured;
-                if (!featured) return {
-                    title: "Featured Project",
-                    description: "A showcase of my best work",
-                    projectUrl: undefined,
-                    codeUrl: undefined,
-                    image: "/placeholder-image.svg",
-                    technologies: [],
-                };
+                if (!featured) {
+                    return {
+                        title: "Featured Project",
+                        description: "A showcase of my best work",
+                        projectUrl: undefined,
+                        codeUrl: undefined,
+                        image: "/placeholder-image.svg",
+                        technologies: [],
+                    };
+                }
 
-                // Extract media data (new consolidated structure)
-                const mediaData = featured.media ? {
-                    media: {
-                        image: featured.media.image ? {
-                            url: safelyExtractImageUrl(featured.media.image),
-                            alt: featured.media.image?.alt || featured.title
-                        } : undefined,
-                        video: featured.media.video ? {
-                            src: safeString(featured.media.video.src),
-                            file: featured.media.video.file ? {
-                                url: safelyExtractImageUrl(featured.media.video.file)
-                            } : undefined,
-                            title: safeString(featured.media.video.title),
-                            description: safeString(featured.media.video.description)
-                        } : undefined
-                    }
-                } : {};
+                const mediaData = processProjectMediaData(featured);
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
                     description: safeString(featured.description, "A showcase of my best work"),
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
-                    // Legacy image field for backward compatibility
-                    image: safelyExtractImageUrl(featured.image, "/placeholder-image.svg") || "/placeholder-image.svg",
-                    // Legacy video fields for backward compatibility
-                    videoSrc: safeString(featured.videoSrc),
-                    videoTitle: safeString(featured.videoTitle),
-                    videoDescription: safeString(featured.videoDescription),
                     technologies: safelyProcessTechnologies(featured.technologies),
-                    // New consolidated media structure
                     ...mediaData
                 };
             })(),
             items: (data.projects.items || []).map((project: any) => {
-                // Extract media data (new consolidated structure)
-                const mediaData = project.media ? {
-                    media: {
-                        image: project.media.image ? {
-                            url: safelyExtractImageUrl(project.media.image),
-                            alt: project.media.image?.alt || project.title
-                        } : undefined,
-                        video: project.media.video ? {
-                            src: safeString(project.media.video.src),
-                            file: project.media.video.file ? {
-                                url: safelyExtractImageUrl(project.media.video.file)
-                            } : undefined,
-                            title: safeString(project.media.video.title),
-                            description: safeString(project.media.video.description)
-                        } : undefined
-                    }
-                } : {};
+                const mediaData = processProjectMediaData(project);
 
                 return {
                     title: safeString(project.title, "Project"),
                     description: safeString(project.description, "Project description"),
                     projectUrl: safeString(project.projectUrl),
                     codeUrl: safeString(project.codeUrl),
-                    // Legacy image field for backward compatibility
-                    image: safelyExtractImageUrl(project.image, "/placeholder-image.svg") || "/placeholder-image.svg",
-                    // Legacy video fields for backward compatibility
-                    videoSrc: safeString(project.videoSrc),
-                    videoTitle: safeString(project.videoTitle),
-                    videoDescription: safeString(project.videoDescription),
                     technologies: safelyProcessTechnologies(project.technologies),
-                    // New consolidated media structure
                     ...mediaData
                 };
             }),
@@ -280,6 +285,7 @@ export async function getPortfolioData(
         return demoData;
     }
     const requestId = Math.random().toString(36).substr(2, 9);
+    const apiLogger = logger.createApiLogger("Portfolio", requestId);
     
     try {
         const baseUrl =
@@ -317,15 +323,13 @@ export async function getPortfolioData(
             clearTimeout(timeoutId);
 
             if (!response.ok) {
-                console.error(
-                    `[Portfolio API ${requestId}] HTTP Error: ${response.status} ${response.statusText}`
-                );
+                apiLogger.error(`HTTP Error: ${response.status} ${response.statusText}`);
 
                 try {
                     const errorText = await response.text();
-                    console.error(`[Portfolio API ${requestId}] Error body:`, errorText);
+                    apiLogger.error("Error body:", errorText);
                 } catch {
-                    console.error(`[Portfolio API ${requestId}] Could not read error body`);
+                    apiLogger.error("Could not read error body");
                 }
 
                 // Try published content if draft request fails
@@ -343,9 +347,7 @@ export async function getPortfolioData(
             const portfolioDoc = result.docs?.[0];
 
             if (!portfolioDoc) {
-                console.error(
-                    `[Portfolio API ${requestId}] No portfolio documents found. Total docs: ${result.totalDocs}`
-                );
+                apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
 
                 // Try draft mode if no published docs found
                 if (!draft && result.totalDocs === 0) {
@@ -366,7 +368,7 @@ export async function getPortfolioData(
         }
 
     } catch (error) {
-        console.error(`[Portfolio API ${requestId}] Error fetching portfolio data:`, error);
+        apiLogger.error("Error fetching portfolio data:", error);
 
         // Fallback from draft to published on network errors
         if (draft && (error instanceof Error && (
@@ -379,7 +381,7 @@ export async function getPortfolioData(
             return getPortfolioData(false);
         }
 
-        console.warn(`[Portfolio API ${requestId}] Using fallback data due to error:`, error);
+        apiLogger.warn("Using fallback data due to error:", error);
         logDemoModeStatus(false, "disabled");
         return fallbackData;
     }

@@ -1,7 +1,14 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, commonClasses, createIconContainer } from "@/lib/utils";
+import {
+    cn,
+    commonClasses,
+    createIconContainer,
+    createResponsiveContainer,
+    createResponsiveIconSize,
+    getAspectRatioClass,
+} from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -30,28 +37,10 @@ export function ResponsiveImage({
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
-    // Map aspect ratio prop to Tailwind CSS classes
-    let aspectRatioClass = "";
-    switch (aspectRatio) {
-        case "square":
-            aspectRatioClass = "aspect-square";
-            break;
-        case "landscape":
-            aspectRatioClass = "aspect-[16/10]";
-            break;
-        case "portrait":
-            aspectRatioClass = "aspect-[3/4]";
-            break;
-        default:
-            aspectRatioClass = aspectRatio;
-    }
-
     const containerClasses = cn(
-        aspectRatioClass,
+        getAspectRatioClass(aspectRatio),
         "bg-gradient-to-br from-muted via-muted to-muted/50 relative overflow-hidden border border-border/50",
-        isMobile
-            ? "rounded-2xl shadow-xl"
-            : "rounded-xl shadow-2xl shadow-black/5",
+        createResponsiveContainer("image", isMobile),
         className
     );
 
@@ -74,7 +63,7 @@ export function ResponsiveImage({
                 <div
                     className={cn(
                         "rounded-full bg-primary/20",
-                        isMobile ? "size-6" : "size-8"
+                        createResponsiveIconSize("md", isMobile)
                     )}
                 ></div>
             </div>
@@ -116,9 +105,7 @@ export function ResponsiveImage({
                 fill={fillContainer}
                 className={cn(
                     "object-cover transition-opacity duration-300",
-                    isMobile
-                        ? "rounded-2xl"
-                        : "rounded-xl transition-transform duration-700 group-hover:scale-105",
+                    createResponsiveContainer("card", isMobile),
                     imageLoading ? "opacity-0" : "opacity-100"
                 )}
                 priority={priority}

@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn, createPasswordField } from "@/lib/utils";
+import {
+    cn,
+    createFullScreenCenteredLayout,
+    createPasswordField,
+    validators,
+} from "@/lib/utils";
 import { AlertCircle, CheckCircle, Eye, EyeOff, Lock } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -27,17 +32,24 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const validateForm = () => {
         const newErrors: { [key: string]: string } = {};
 
-        if (!password) {
-            newErrors.password = "Password is required";
-        } else if (password.length < 8) {
-            newErrors.password = "Password must be at least 8 characters long";
-        }
+        // Validate password
+        const passwordError = validators.validateField(password, [
+            () => validators.required(password, "Password"),
+            () => validators.minLength(password, 8, "Password"),
+        ]);
+        if (passwordError) newErrors.password = passwordError;
 
-        if (!confirmPassword) {
-            newErrors.confirmPassword = "Please confirm your password";
-        } else if (password !== confirmPassword) {
-            newErrors.confirmPassword = "Passwords do not match";
-        }
+        // Validate confirm password
+        const confirmPasswordError = validators.validateField(confirmPassword, [
+            () =>
+                validators.required(
+                    confirmPassword,
+                    "Please confirm your password"
+                ),
+            () => validators.passwordMatch(password, confirmPassword),
+        ]);
+        if (confirmPasswordError)
+            newErrors.confirmPassword = confirmPasswordError;
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -112,7 +124,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
     if (!token) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
+            <div className={createFullScreenCenteredLayout()}>
                 <Card className="w-full max-w-md p-8 text-center">
                     <AlertCircle className="mx-auto h-12 w-12 text-destructive mb-4" />
                     <h1 className="text-2xl font-bold mb-2">
@@ -134,7 +146,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
     if (isSuccess) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
+            <div className={createFullScreenCenteredLayout()}>
                 <Card className="w-full max-w-md p-8 text-center">
                     <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-4" />
                     <h1 className="text-2xl font-bold mb-2">
@@ -150,7 +162,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
+        <div className={createFullScreenCenteredLayout()}>
             <Card className="w-full max-w-md p-8">
                 <div className="text-center mb-8">
                     <Lock className="mx-auto h-12 w-12 text-primary mb-4" />

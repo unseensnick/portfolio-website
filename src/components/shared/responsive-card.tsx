@@ -9,6 +9,7 @@ import {
     createIconContainer,
     createResponsiveCardHover,
     createResponsiveCardPadding,
+    createResponsiveIconSize,
     createResponsiveSpacing,
     createResponsiveText,
 } from "@/lib/utils";
@@ -107,7 +108,7 @@ export function IconCard({
                 <Icon
                     className={cn(
                         "text-primary",
-                        isMobile ? "size-6" : "size-8"
+                        createResponsiveIconSize("lg", isMobile)
                     )}
                 />
             </div>
@@ -132,17 +133,21 @@ export function IconCard({
             </div>
 
             {linkText && textLinkHref && (
-                <Link
-                    href={formattedTextLinkHref}
-                    target={isEmailLink || isExternal ? "_blank" : undefined}
-                    className={cn(
-                        "inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium group-hover:underline",
-                        commonClasses.transition
-                    )}
-                >
-                    {linkText}
-                    {!isEmailLink && <ExternalLink className="size-4" />}
-                </Link>
+                <div className="pt-2">
+                    <Link
+                        href={formattedTextLinkHref}
+                        target={isExternal ? "_blank" : undefined}
+                        className={cn(
+                            "inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors duration-200",
+                            createResponsiveText("link", isMobile)
+                        )}
+                    >
+                        <span>{linkText}</span>
+                        {isExternal && !isEmailLink && (
+                            <ExternalLink className="size-3" />
+                        )}
+                    </Link>
+                </div>
             )}
         </div>
     );

@@ -7,6 +7,7 @@ import { TourControls } from "@/components/tour-controls";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection } from "@/lib/navigation-utils";
+import { commonClasses } from "@/lib/utils";
 import { useState } from "react";
 
 interface NavLink {
@@ -96,7 +97,7 @@ export function SiteHeader({
                                             onClick={(e) =>
                                                 handleNavClick(e, link.href)
                                             }
-                                            className={`text-sm font-medium transition-all duration-300 relative group ${
+                                            className={`text-sm font-medium ${commonClasses.transition} relative group ${
                                                 isActive
                                                     ? "text-primary"
                                                     : "text-foreground/80 hover:text-primary"
@@ -104,7 +105,7 @@ export function SiteHeader({
                                         >
                                             {link.label}
                                             <span
-                                                className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                                                className={`absolute -bottom-1 left-0 h-0.5 bg-primary ${commonClasses.transition} ${
                                                     isActive
                                                         ? "w-full"
                                                         : "w-0 group-hover:w-full"

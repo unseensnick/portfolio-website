@@ -1,3 +1,4 @@
+import { commonClasses } from "@/lib/utils";
 import Video, { VideoProps } from "next-video";
 
 interface VideoPlayerProps extends Omit<VideoProps, "src"> {
@@ -62,7 +63,9 @@ export default function VideoPlayer({
                     const videoId = getYouTubeVideoId(srcString);
                     if (!videoId) {
                         return (
-                            <div className="w-full aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
+                            <div
+                                className={`w-full aspect-video bg-gray-200 rounded-lg ${commonClasses.flexCenter}`}
+                            >
                                 <p className="text-gray-500">
                                     Invalid YouTube URL
                                 </p>

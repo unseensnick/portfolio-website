@@ -2,7 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import {
+    cn,
+    createConditionalClasses,
+    createResponsiveClasses,
+} from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -39,18 +43,21 @@ export function ButtonGroup({
 
     if (!buttons.length) return null;
 
+    const containerClasses = cn(
+        createResponsiveClasses(
+            createConditionalClasses(
+                fullWidthMobile,
+                "flex flex-col gap-3 pt-4",
+                "flex flex-wrap gap-3 pt-4"
+            ),
+            "flex flex-col sm:flex-row gap-4 pt-4",
+            isMobile
+        ),
+        className
+    );
+
     return (
-        <div
-            className={cn(
-                isMobile
-                    ? fullWidthMobile
-                        ? "flex flex-col gap-3 pt-4"
-                        : "flex flex-wrap gap-3 pt-4"
-                    : "flex flex-col sm:flex-row gap-4 pt-4",
-                className
-            )}
-            {...props}
-        >
+        <div className={containerClasses} {...props}>
             {buttons.map((button, index) => {
                 const IconComponent = button.icon;
 
@@ -60,7 +67,10 @@ export function ButtonGroup({
                         variant={button.variant || "default"}
                         size="lg"
                         className={cn(
-                            isMobile && fullWidthMobile ? "w-full" : "",
+                            createConditionalClasses(
+                                isMobile && fullWidthMobile,
+                                "w-full"
+                            ),
                             button.className
                         )}
                         asChild

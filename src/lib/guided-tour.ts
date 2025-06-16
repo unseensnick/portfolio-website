@@ -7,12 +7,6 @@ import 'driver.js/dist/driver.css';
 /** Duration to show the Instagram navigation step (in milliseconds) */
 const INSTAGRAM_STEP_DURATION = 4000; // 5 seconds
 
-/** Delay after desktop resize before continuing tour (in milliseconds) */
-const DESKTOP_RESIZE_DELAY = 100; // 100ms - minimal delay to reduce dimming time
-
-/** Mobile breakpoint width for responsive behavior */
-const MOBILE_BREAKPOINT = 765; // pixels
-
 /** Default step duration for automated tours (in milliseconds) */
 const DEFAULT_AUTOMATED_STEP_DURATION = 4000; // 4 seconds
 

@@ -59,7 +59,9 @@ export function Hero({
                     aspectRatio="square"
                     priority={true}
                 />
-                <div className="absolute -inset-3 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-2xl -z-10 opacity-50 blur-lg"></div>
+                <div
+                    className={`absolute -inset-3 ${commonClasses.backgroundGradient} rounded-2xl -z-10 opacity-50 blur-lg`}
+                ></div>
             </div>
 
             <div className="text-center space-y-6">
@@ -124,7 +126,9 @@ export function Hero({
                     aspectRatio="landscape"
                     priority={true}
                 />
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-3xl -z-10 opacity-50 blur-xl"></div>
+                <div
+                    className={`absolute -inset-4 ${commonClasses.backgroundGradient} rounded-3xl -z-10 opacity-50 blur-xl`}
+                ></div>
             </div>
         </div>
     );

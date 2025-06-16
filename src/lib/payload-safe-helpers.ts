@@ -7,6 +7,29 @@
  */
 
 /**
+ * Generic utility for safely validating and trimming strings
+ * Eliminates repeated string validation logic across functions
+ */
+function validateAndTrimString(value: any): string | null {
+    if (typeof value === "string") {
+        const trimmed = value.trim();
+        return trimmed.length > 0 ? trimmed : null;
+    }
+    return null;
+}
+
+/**
+ * Generic utility for extracting string from object with name property
+ * Eliminates repeated object property extraction logic
+ */
+function extractNameFromObject(item: any): string | null {
+    if (item && typeof item === "object" && item.name) {
+        return validateAndTrimString(item.name);
+    }
+    return null;
+}
+
+/**
  * Generic utility for safely mapping arrays with filtering
  */
 export function safeArrayMap<T, R>(
@@ -26,17 +49,7 @@ export function safeArrayMap<T, R>(
  */
 export function safelyExtractNames(items?: any[]): string[] {
     return safeArrayMap(items, (item) => {
-        if (typeof item === "string") {
-            const trimmed = item.trim();
-            return trimmed.length > 0 ? trimmed : null;
-        }
-        
-        if (item && typeof item === "object" && item.name && typeof item.name === "string") {
-            const trimmed = item.name.trim();
-            return trimmed.length > 0 ? trimmed : null;
-        }
-        
-        return null;
+        return validateAndTrimString(item) || extractNameFromObject(item);
     });
 }
 
@@ -45,9 +58,8 @@ export function safelyExtractNames(items?: any[]): string[] {
  */
 export function safelyExtractParagraphs(paragraphs?: any[]): string[] {
     return safeArrayMap(paragraphs, (paragraph) => {
-        if (paragraph && typeof paragraph === "object" && paragraph.text && typeof paragraph.text === "string") {
-            const trimmed = paragraph.text.trim();
-            return trimmed.length > 0 ? trimmed : null;
+        if (paragraph && typeof paragraph === "object" && paragraph.text) {
+            return validateAndTrimString(paragraph.text);
         }
         return null;
     });
@@ -59,17 +71,8 @@ export function safelyExtractParagraphs(paragraphs?: any[]): string[] {
  */
 export function safelyProcessTechnologies(technologies?: any[]): { name: string }[] {
     return safeArrayMap(technologies, (tech) => {
-        if (typeof tech === "string") {
-            const trimmed = tech.trim();
-            return trimmed.length > 0 ? { name: trimmed } : null;
-        }
-        
-        if (tech && typeof tech === "object" && tech.name && typeof tech.name === "string") {
-            const trimmed = tech.name.trim();
-            return trimmed.length > 0 ? { name: trimmed } : null;
-        }
-        
-        return null;
+        const name = validateAndTrimString(tech) || extractNameFromObject(tech);
+        return name ? { name } : null;
     });
 }
 
@@ -86,15 +89,14 @@ export function safelyExtractTechnologyNames(technologies?: any[]): string[] {
 export function safelyProcessNavLinks(links?: any[]): Array<{ href: string; label: string; icon?: string }> {
     return safeArrayMap(links, (link) => {
         if (link && typeof link === "object") {
-            const href = link.href && typeof link.href === "string" ? link.href.trim() : null;
-            const label = link.label && typeof link.label === "string" ? link.label.trim() : null;
+            const href = validateAndTrimString(link.href);
+            const label = validateAndTrimString(link.label);
             
-            if (href && label && href.length > 0 && label.length > 0) {
-                return {
-                    href,
-                    label,
-                    ...(link.icon && typeof link.icon === "string" && { icon: link.icon.trim() })
-                };
+            if (href && label) {
+                const result: { href: string; label: string; icon?: string } = { href, label };
+                const icon = validateAndTrimString(link.icon);
+                if (icon) result.icon = icon;
+                return result;
             }
         }
         return null;
@@ -107,29 +109,16 @@ export function safelyProcessNavLinks(links?: any[]): Array<{ href: string; labe
 export function safelyExtractImageUrl(image?: any, fallback?: string): string | null {
     if (!image) return fallback || null;
     
-    if (typeof image === "string") {
-        const trimmed = image.trim();
-        if (trimmed.length > 0) {
-            return trimmed;
-        }
-    }
+    const directUrl = validateAndTrimString(image);
+    if (directUrl) return directUrl;
     
     // Try common PayloadCMS image properties
     if (typeof image === "object") {
-        const possibleUrls = [
-            image.url,
-            image.filename,
-            image.src,
-            image.path
-        ];
+        const possibleUrls = [image.url, image.filename, image.src, image.path];
         
         for (const url of possibleUrls) {
-            if (url && typeof url === "string") {
-                const trimmed = url.trim();
-                if (trimmed.length > 0) {
-                    return trimmed;
-                }
-            }
+            const validUrl = validateAndTrimString(url);
+            if (validUrl) return validUrl;
         }
     }
     
@@ -140,11 +129,8 @@ export function safelyExtractImageUrl(image?: any, fallback?: string): string | 
  * Safe string extraction with fallback
  */
 export function safeString(value?: any, fallback: string = ""): string {
-    if (value && typeof value === "string") {
-        const trimmed = value.trim();
-        return trimmed.length > 0 ? trimmed : fallback;
-    }
-    return fallback;
+    const validString = validateAndTrimString(value);
+    return validString || fallback;
 }
 
 /**
