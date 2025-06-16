@@ -1,6 +1,7 @@
 /**
  * Utility functions for demo mode detection and configuration
  */
+import { logger } from "@/lib/utils";
 
 /**
  * Checks if demo mode is enabled via environment variable
@@ -48,6 +49,7 @@ export function getDemoModeIndicator(): string {
  */
 export function logDemoModeStatus(isDemo: boolean, source: "env" | "url" | "disabled"): void {
     if (process.env.NODE_ENV === "development") {
-        console.log(`[Demo Mode] ${isDemo ? "Enabled" : "Disabled"} (source: ${source})`);
+        const demoLogger = logger.createFeatureLogger("Demo Mode");
+        demoLogger.log(`${isDemo ? "Enabled" : "Disabled"} (source: ${source})`);
     }
 } 

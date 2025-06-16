@@ -165,7 +165,8 @@ export function adaptPortfolioData(data: any) {
         !data.contact ||
         !data.footer
     ) {
-        console.warn("[Portfolio] Using fallback data due to missing sections:", {
+        const portfolioLogger = logger.createFeatureLogger("Portfolio");
+        portfolioLogger.warn("Using fallback data due to missing sections:", {
             hasData: !!data,
             hasNav: !!data?.nav,
             hasHero: !!data?.hero,

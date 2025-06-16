@@ -1,3 +1,4 @@
+import { logger } from "@/lib/utils";
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -19,7 +20,8 @@ export async function GET(request: NextRequest) {
     
   } catch (error) {
     // Only log actual errors, not regular requests
-    console.error('Video API error:', error instanceof Error ? error.message : 'Unknown error');
+    const videoLogger = logger.createApiLogger("Video", Math.random().toString(36).substr(2, 9));
+    videoLogger.error('Video API error:', error instanceof Error ? error.message : 'Unknown error');
     return NextResponse.json({ 
       error: 'Video API handler error',
       details: error instanceof Error ? error.message : 'Unknown error'

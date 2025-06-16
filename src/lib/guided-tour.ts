@@ -1,80 +1,20 @@
+import { shouldUseDemoMode } from "@/lib/demo-utils";
+import { logger } from "@/lib/utils";
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 
 // ===== TOUR TIMING CONSTANTS =====
 // These constants control various timing aspects of the guided tour for easy tweaking
 
-/** Duration to show the Instagram navigation step (in milliseconds) */
-const INSTAGRAM_STEP_DURATION = 4000; // 5 seconds
+
 
 /** Default step duration for automated tours (in milliseconds) */
 const DEFAULT_AUTOMATED_STEP_DURATION = 4000; // 4 seconds
 
-/**
- * Calculates the scroll distance and estimated time needed for smooth scrolling
- */
-function calculateScrollTime(element: Element): number {
-    const rect = element.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const elementCenter = rect.top + rect.height / 2;
-    const viewportCenter = viewportHeight / 2;
-    
-    // Calculate distance to scroll
-    const scrollDistance = Math.abs(elementCenter - viewportCenter);
-    
-    // Base time calculation: ~1ms per pixel, with min/max bounds
-    const baseTime = Math.min(Math.max(scrollDistance * 1.2, 300), 1500);
-    
-    // Add extra time for elements that are far off-screen
-    const isVisible = isElementProperlyVisible(element);
-    const extraTime = isVisible ? 0 : 200;
-    
-    return baseTime + extraTime;
-}
+// Create tour logger instance
+const tourLogger = logger.createFeatureLogger("Tour");
 
-/**
- * Waits for scroll to complete using scroll event detection
- */
-function waitForScrollComplete(element: Element): Promise<void> {
-    return new Promise((resolve) => {
-        if (isElementProperlyVisible(element)) {
-            resolve();
-            return;
-        }
-        
-        let scrollTimeout: NodeJS.Timeout;
-        const maxWaitTime = 2000; // Maximum wait time
-        const scrollEndDelay = 100; // Time to wait after last scroll event
-        
-        const handleScroll = () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                window.removeEventListener('scroll', handleScroll);
-                resolve();
-            }, scrollEndDelay);
-        };
-        
-        // Set maximum wait time
-        setTimeout(() => {
-            window.removeEventListener('scroll', handleScroll);
-            clearTimeout(scrollTimeout);
-            resolve();
-        }, maxWaitTime);
-        
-        // Listen for scroll events
-        window.addEventListener('scroll', handleScroll);
-        
-        // Start scrolling
-        element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'nearest'
-        });
-        
-        // Trigger initial scroll check
-        handleScroll();
-    });
-}
+
 
 /**
  * Improved viewport detection with margin for better UX
@@ -103,57 +43,29 @@ function isElementProperlyVisible(element: Element): boolean {
  */
 async function handleScrollingWithDelay(element: Element, step: any): Promise<void> {
     const isVisible = isElementProperlyVisible(element);
+    const extraTime = isVisible ? 0 : 200;
     
     if (!isVisible) {
-        // Element needs scrolling - handle the entire transition smoothly
-        console.log(`[Tour] Scrolling to element: ${step.popover?.title}`);
-        
-        // First, hide any existing popover immediately
-        const existingPopover = document.querySelector('.driver-popover');
-        if (existingPopover) {
-            (existingPopover as HTMLElement).style.display = 'none';
-        }
+        tourLogger.log(`Scrolling to element: ${step.popover?.title}`);
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+        });
         
         // Wait for scroll to complete
-        await waitForScrollComplete(element);
-        
-        // Add small delay for visual stability
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Now show the popover smoothly
-        const popover = document.querySelector('.driver-popover');
-        if (popover) {
-            (popover as HTMLElement).style.display = 'block';
-            (popover as HTMLElement).style.opacity = '0';
-            (popover as HTMLElement).style.transition = 'opacity 0.3s ease';
-            
-            // Force reflow then fade in
-            void (popover as HTMLElement).offsetHeight;
-            (popover as HTMLElement).style.opacity = '1';
-        }
+        await new Promise(resolve => setTimeout(resolve, 800 + extraTime));
     } else {
-        // Element is already visible - show popover immediately without any delays
-        console.log(`[Tour] Element already visible: ${step.popover?.title}`);
-        
-        // Small delay to prevent conflicts with driver.js internal timing
-        await new Promise(resolve => setTimeout(resolve, 50));
-        
-        const popover = document.querySelector('.driver-popover');
-        if (popover) {
-            (popover as HTMLElement).style.display = 'block';
-            (popover as HTMLElement).style.opacity = '1';
-            (popover as HTMLElement).style.transition = 'opacity 0.2s ease';
-        }
+        tourLogger.log(`Element already visible: ${step.popover?.title}`);
+        await new Promise(resolve => setTimeout(resolve, 100));
     }
 }
-
-
 
 /**
  * Temporarily shows navigation elements for tour demonstration
  */
 function showNavigationForTour(stepTitle: string): () => void {
-    console.log(`[Tour] Attempting to show navigation for: ${stepTitle}`);
+    tourLogger.log(`Attempting to show navigation for: ${stepTitle}`);
     
     if (stepTitle === 'Section Navigation Dots') {
         return showSectionNavForTour();
@@ -163,36 +75,35 @@ function showNavigationForTour(stepTitle: string): () => void {
 }
 
 /**
- * Temporarily shows section navigation for tour demonstration
+ * Shows section navigation for tour step
  */
 function showSectionNavForTour(): () => void {
-    console.log('[Tour] Attempting to show section navigation...');
+    tourLogger.log('[Tour] Attempting to show section navigation...');
     
     const sectionNav = document.querySelector('[data-tour="section-navigation"]') as HTMLElement;
-    
     if (!sectionNav) {
-        console.log('[Tour] Section navigation not found in DOM');
+        tourLogger.log('[Tour] Section navigation not found in DOM');
         return () => {};
     }
     
-    console.log('[Tour] Section navigation found, making it visible');
+    tourLogger.log('[Tour] Section navigation found, making it visible');
     
-    // Store original classes and styles
-    const originalClasses = sectionNav.className;
+    // Store original styles
     const originalDisplay = sectionNav.style.display;
-    const originalZIndex = sectionNav.style.zIndex;
+    const originalOpacity = sectionNav.style.opacity;
+    const originalPointerEvents = sectionNav.style.pointerEvents;
     
-    // Force show the section nav by removing the hidden class and ensuring visibility
-    sectionNav.className = originalClasses.replace('hidden lg:block', 'block');
-    sectionNav.style.display = 'block';
-    sectionNav.style.zIndex = '60'; // Higher than tour overlay
+    // Make visible for tour
+    sectionNav.style.display = 'flex';
+    sectionNav.style.opacity = '1';
+    sectionNav.style.pointerEvents = 'auto';
     
     // Return cleanup function
     return () => {
-        console.log('[Tour] Restoring section navigation original state');
-        sectionNav.className = originalClasses;
+        tourLogger.log('[Tour] Restoring section navigation original state');
         sectionNav.style.display = originalDisplay;
-        sectionNav.style.zIndex = originalZIndex;
+        sectionNav.style.opacity = originalOpacity;
+        sectionNav.style.pointerEvents = originalPointerEvents;
     };
 }
 
@@ -383,7 +294,7 @@ export function createGuidedTour(automated: boolean = false) {
         }),
         // Add hooks to control the highlighting and popover timing
         onBeforeHighlight: (element: Element | undefined, step: any) => {
-            console.log(`[Tour] Before highlight: ${step.popover?.title}`);
+            tourLogger.log(`Before highlight: ${step.popover?.title}`);
             
             // Hide popover immediately to prevent blinking
             const popover = document.querySelector('.driver-popover');
@@ -393,93 +304,95 @@ export function createGuidedTour(automated: boolean = false) {
             
             // Handle special mobile navigation step
             if (step.special === 'mobile-navigation') {
-                console.log('[Tour] Handling special mobile navigation step');
+                tourLogger.log('Handling special mobile navigation step');
                 return; // Don't show navigation elements for this step
             }
             
             // Show navigation elements for specific steps
             if (step.popover?.title === 'Section Navigation Dots') {
-                console.log(`[Tour] Showing navigation for tour step: ${step.popover?.title}`);
+                tourLogger.log(`Showing navigation for tour step: ${step.popover?.title}`);
                 sectionNavCleanup = showNavigationForTour(step.popover?.title);
             }
         },
         
         onHighlighted: async (element: Element | undefined, step: any) => {
-            console.log(`[Tour] Highlighted step: ${step.popover?.title}`);
-            console.log(`[Tour] Element found:`, element);
+            tourLogger.log(`Highlighted step: ${step.popover?.title}`);
+            tourLogger.log(`Element found:`, element);
             
             // Handle special mobile navigation step
             if (step.special === 'mobile-navigation') {
-                console.log(`[Tour] Handling special mobile navigation step with wrapper (automated: ${automated})`);
+                tourLogger.log(`Handling special mobile navigation step with wrapper (automated: ${automated})`);
                 
                 // Pause automated tour if running (only for automated tours)
                 if (automated && (window as any).pauseAutomatedTour) {
-                    console.log('[Tour] Pausing automated tour for mobile demo');
+                    tourLogger.log('Pausing automated tour for mobile demo');
                     (window as any).pauseAutomatedTour();
                 } else if (!automated) {
-                    console.log('[Tour] Manual tour - no need to pause automated progression');
+                    tourLogger.log('Manual tour - no need to pause automated progression');
                 }
                 
                 // Switch to mobile view using the wrapper
                 if ((window as any).toggleMobileDemo) {
-                    console.log('[Tour] Switching to mobile view via wrapper');
+                    tourLogger.log('Switching to mobile view via wrapper');
                     (window as any).toggleMobileDemo(true);
                     
                     // Wait a moment for the mobile view to activate
                     setTimeout(() => {
                         // Find the Instagram navigation element
                         const instagramNav = document.querySelector('[data-tour="instagram-navigation"]');
-                        console.log('[Tour] Instagram navigation element found:', instagramNav);
-                        console.log('[Tour] All elements with data-tour attribute:', document.querySelectorAll('[data-tour]'));
+                        tourLogger.log('Instagram navigation element found:', instagramNav);
+                        tourLogger.log('All elements with data-tour attribute:', document.querySelectorAll('[data-tour]'));
                         
                         if (instagramNav && driverInstance) {
-                            console.log('[Tour] Instagram navigation found, mobile view is active');
-                            // Update the step element to point to the actual Instagram nav
-                            step.element = '[data-tour="instagram-navigation"]';
+                            tourLogger.log('Instagram navigation found, mobile view is active');
                             
-                            // Update the popover configuration for better positioning
-                            step.popover = {
-                                ...step.popover,
-                                side: 'top' as const,
-                                align: 'center' as const,
-                                popoverClass: 'tour-popover instagram-nav-popover',
-                            };
+                            // Highlight the Instagram navigation element
+                            driverInstance.highlight({
+                                element: instagramNav,
+                                popover: {
+                                    ...step.popover,
+                                    popoverClass: 'tour-popover instagram-nav-popover'
+                                }
+                            });
                             
-                            console.log('[Tour] Instagram navigation configured with custom popover positioning');
+                            tourLogger.log('Instagram navigation configured with custom popover positioning');
                             
                             if (automated) {
-                                console.log('[Tour] Automated tour - will switch back after duration');
-                                // For automated tours, switch back after duration (accounting for the 100ms re-highlight delay)
+                                tourLogger.log('Automated tour - will switch back after duration');
                                 setTimeout(() => {
-                                    console.log('[Tour] Switching back to desktop view');
-                                    
-                                    // Hide popover before switching back
-                                    const popover = document.querySelector('.driver-popover');
-                                    if (popover) {
-                                        (popover as HTMLElement).style.display = 'none';
-                                    }
-                                    
-                                    // Switch back to desktop view
+                                    tourLogger.log('Switching back to desktop view');
                                     if ((window as any).toggleMobileDemo) {
                                         (window as any).toggleMobileDemo(false);
                                     }
                                     
-                                    // Resume automated tour after a brief delay
+                                    // Wait for desktop view to activate, then continue tour
                                     setTimeout(() => {
-                                        console.log('[Tour] Resuming automated tour after mobile demo');
-                                        if ((window as any).resumeAutomatedTour) {
-                                            (window as any).resumeAutomatedTour();
-                                        } else if (driverInstance) {
+                                        tourLogger.log('Mobile demo completed, continuing automated tour');
+                                        if (driverInstance) {
                                             driverInstance.moveNext();
+                                            // Resume automated tour progression
+                                            if ((window as any).resumeAutomatedTourAfterMobile) {
+                                                (window as any).resumeAutomatedTourAfterMobile();
+                                            }
                                         }
-                                    }, 100); // 100ms delay as requested
-                                }, INSTAGRAM_STEP_DURATION); // Back to original timing
+                                    }, 500);
+                                }, 3000);
                             } else {
-                                console.log('[Tour] Manual tour - user controls mobile/desktop mode');
-                                console.log('[Tour] Mobile view will remain active until user toggles or tour ends');
+                                tourLogger.log('Manual tour - user controls mobile/desktop mode');
+                                tourLogger.log('Mobile view will remain active until user toggles or tour ends');
+                                
+                                // For manual tours, add a note to the popover about mobile controls
+                                const popover = document.querySelector('.driver-popover');
+                                if (popover) {
+                                    const description = popover.querySelector('.driver-popover-description');
+                                    if (description) {
+                                        const originalText = description.textContent;
+                                        description.innerHTML = `${originalText}<br><br><small><em>💡 Tip: You can toggle between mobile and desktop views using the demo controls while exploring the navigation.</em></small>`;
+                                    }
+                                }
                             }
                         } else {
-                            console.log('[Tour] Instagram navigation not found or driver not available');
+                            tourLogger.log('Instagram navigation not found or driver not available');
                             // Resume tour if something went wrong
                             if (automated) {
                                 // For automated tours, continue automatically
@@ -490,12 +403,12 @@ export function createGuidedTour(automated: boolean = false) {
                                 }
                             } else {
                                 // For manual tours, show a fallback message but don't auto-advance
-                                console.log('[Tour] Manual tour - Instagram navigation not found, continuing with body element');
+                                tourLogger.log('Manual tour - Instagram navigation not found, continuing with body element');
                             }
                         }
                     }, 300); // Wait for mobile view to activate
                 } else {
-                    console.log('[Tour] Mobile demo wrapper not available, skipping mobile step');
+                    tourLogger.log('Mobile demo wrapper not available, skipping mobile step');
                     // Resume tour if wrapper not available
                     if (automated) {
                         // For automated tours, continue automatically
@@ -506,7 +419,7 @@ export function createGuidedTour(automated: boolean = false) {
                         }
                     } else {
                         // For manual tours, show a fallback message but don't auto-advance
-                        console.log('[Tour] Manual tour - mobile demo wrapper not available, continuing with body element');
+                        tourLogger.log('Manual tour - mobile demo wrapper not available, continuing with body element');
                     }
                 }
                 return; // Don't continue with normal flow
@@ -515,27 +428,27 @@ export function createGuidedTour(automated: boolean = false) {
             // Calculate and handle scrolling with delayed popover
             if (element) {
                 const isVisible = isElementProperlyVisible(element);
-                console.log(`[Tour] Element "${step.popover?.title}" is ${isVisible ? 'visible' : 'not visible'} - ${isVisible ? 'no scroll needed' : 'scrolling required'}`);
+                tourLogger.log(`Element "${step.popover?.title}" is ${isVisible ? 'visible' : 'not visible'} - ${isVisible ? 'no scroll needed' : 'scrolling required'}`);
                 await handleScrollingWithDelay(element, step);
             } else {
-                console.log(`[Tour] No element found for step: ${step.popover?.title}`);
+                tourLogger.log(`No element found for step: ${step.popover?.title}`);
             }
         },
         
         onDeselected: (element: Element | undefined, step: any) => {
-            console.log(`[Tour] Deselected step: ${step.popover?.title} (automated: ${automated})`);
-            console.log(`[Tour] Step special flag:`, step.special);
+            tourLogger.log(`Deselected step: ${step.popover?.title} (automated: ${automated})`);
+            tourLogger.log(`Step special flag:`, step.special);
             
             // Clean up navigation when leaving navigation steps
             if (step.popover?.title === 'Section Navigation Dots' && sectionNavCleanup) {
-                console.log(`[Tour] Cleaning up navigation for: ${step.popover?.title}`);
+                tourLogger.log(`Cleaning up navigation for: ${step.popover?.title}`);
                 sectionNavCleanup();
                 sectionNavCleanup = null;
             }
             
             // Switch back to desktop when leaving mobile navigation step
             if (step.special === 'mobile-navigation') {
-                console.log(`[Tour] Leaving mobile navigation step (automated: ${automated}) - switching back to desktop`);
+                tourLogger.log(`Leaving mobile navigation step (automated: ${automated})`);
                 
                 // Hide popover immediately to prevent it from staying visible
                 const popover = document.querySelector('.driver-popover');
@@ -543,12 +456,26 @@ export function createGuidedTour(automated: boolean = false) {
                     (popover as HTMLElement).style.display = 'none';
                 }
                 
-                // Switch back to desktop view
-                setTimeout(() => {
-                    if ((window as any).toggleMobileDemo) {
-                        (window as any).toggleMobileDemo(false);
-                    }
-                }, 50);
+                // For manual tours, switch back to desktop when user progresses
+                // For automated tours, do nothing - timing is handled in onHighlighted
+                if (!automated) {
+                    tourLogger.log('Manual tour - switching back to desktop as user progressed');
+                    setTimeout(() => {
+                        if ((window as any).toggleMobileDemo) {
+                            (window as any).toggleMobileDemo(false);
+                        }
+                        // Move to next step after switching back to desktop
+                        setTimeout(() => {
+                            if (driverInstance) {
+                                tourLogger.log('Moving to next step after desktop switch');
+                                driverInstance.moveNext();
+                            }
+                        }, 200); // Small delay to ensure desktop view is active
+                    }, 4000); // 4 second delay to view mobile navigation
+                } else {
+                    tourLogger.log('Automated tour - desktop switch timing handled by onHighlighted, not interfering');
+                    // Do nothing - let the automated tour handle its own progression
+                }
             }
         },
         
@@ -561,7 +488,7 @@ export function createGuidedTour(automated: boolean = false) {
             
             // Switch back to desktop view if tour is destroyed while in mobile mode
             if ((window as any).toggleMobileDemo && (window as any).getMobileDemoState && (window as any).getMobileDemoState()) {
-                console.log('[Tour] Tour destroyed while in mobile mode - switching back to desktop');
+                tourLogger.log('Tour destroyed while in mobile mode - switching back to desktop');
                 (window as any).toggleMobileDemo(false);
             }
             
@@ -576,7 +503,7 @@ export function createGuidedTour(automated: boolean = false) {
     
     // Store driver instance globally as well for compatibility
     (window as any).currentTourDriver = driverInstance;
-    console.log('[Tour] Driver instance created and stored:', driverInstance);
+    tourLogger.log('Driver instance created and stored:', driverInstance);
     
     return driverInstance;
 }
@@ -589,13 +516,13 @@ export function startGuidedTour(automated: boolean = false) {
     
     // Store driver instance globally for resize callbacks
     (window as any).currentTourDriver = driverObj;
-    console.log('[Tour] Driver instance stored globally:', driverObj);
+    tourLogger.log('Driver instance stored globally:', driverObj);
     
     if (automated) {
         return startAutomatedTour(driverObj);
     } else {
         // For manual tours, clear any leftover automated tour functions
-        console.log('[Tour] Starting manual tour - clearing automated tour functions');
+        tourLogger.log('Starting manual tour - clearing automated tour functions');
         delete (window as any).pauseAutomatedTour;
         delete (window as any).resumeAutomatedTour;
         
@@ -618,19 +545,26 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAUL
         if (progressTimeout) {
             clearTimeout(progressTimeout);
             progressTimeout = null;
-            console.log('[Tour] Automated tour paused for resize interaction');
+            tourLogger.log('Automated tour paused for resize interaction');
         }
     };
     
     (window as any).resumeAutomatedTour = () => {
-        console.log('[Tour] Attempting to resume automated tour');
+        tourLogger.log('Attempting to resume automated tour');
         if (!progressTimeout) {
-            console.log('[Tour] Automated tour resumed after resize interaction');
+            tourLogger.log('Automated tour resumed after resize interaction');
             // Schedule next step with normal timing
             progressTimeout = setTimeout(progressToNextStep, stepDuration);
         } else {
-            console.log('[Tour] Automated tour was already running');
+            tourLogger.log('Automated tour was already running');
         }
+    };
+    
+    // Function to resume automated tour after mobile step
+    (window as any).resumeAutomatedTourAfterMobile = () => {
+        tourLogger.log('Resuming automated tour progression after mobile step');
+        // Continue with the normal progression from current step
+        progressTimeout = setTimeout(progressToNextStep, stepDuration);
     };
     
     // Start the tour
@@ -642,12 +576,13 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAUL
             
             // Check if this is the special mobile navigation step
             if (tourSteps[currentStep].special === 'mobile-navigation') {
-                console.log('[Tour] Reached mobile navigation step - automated progression will be paused');
-                // Don't schedule next step - it will be handled by mobile demo wrapper
+                tourLogger.log('Reached mobile navigation step - automated progression will be paused');
+                // Move to the mobile step
                 setTimeout(() => {
                     driverObj.moveTo(currentStep);
+                    // The mobile step will handle its own timing and resume the tour
                 }, 50);
-                return;
+                return; // Don't schedule next step - it will be handled by mobile demo wrapper
             }
             
             // Calculate dynamic delay based on next element's scroll requirements
@@ -660,8 +595,8 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAUL
                 isVisible = isElementProperlyVisible(nextStepElement);
                 
                 if (!isVisible) {
-                    // Add calculated scroll time to the delay
-                    dynamicDelay += calculateScrollTime(nextStepElement);
+                    // Add fixed scroll time for non-visible elements
+                    dynamicDelay += 800;
                 } else {
                     // Element is visible, use minimal delay
                     dynamicDelay = 50;
@@ -680,7 +615,7 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAUL
             // Tour completed
             setTimeout(() => {
                 driverObj.destroy();
-                console.log('[Tour] Automated tour completed');
+                tourLogger.log('Automated tour completed');
             }, stepDuration);
         }
     };
@@ -698,13 +633,12 @@ function isDemoMode(): boolean {
     if (typeof window === 'undefined') return false;
     
     const urlParams = new URLSearchParams(window.location.search);
-    const hasDemo = urlParams.has('demo');
-    const isDemoEnv = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+    const searchParams = Object.fromEntries(urlParams.entries());
     
-    const isDemo = hasDemo || isDemoEnv;
+    const isDemo = shouldUseDemoMode(searchParams);
     
     if (isDemo) {
-        console.log('[Tour] Demo mode active - guided tour available');
+        tourLogger.log('Demo mode active - guided tour available');
     }
     
     return isDemo;
@@ -751,14 +685,14 @@ export function resetTourStatus(): void {
 export const tourControls = {
     start: () => {
         if (!isDemoMode()) {
-            console.warn('[Tour] Tour is only available in demo mode. Add ?demo to URL or run npm run demo');
+            tourLogger.warn('Tour is only available in demo mode. Add ?demo to URL or run npm run demo');
             return null;
         }
         return startGuidedTour(false);
     },
     startAutomated: (duration?: number) => {
         if (!isDemoMode()) {
-            console.warn('[Tour] Tour is only available in demo mode. Add ?demo to URL or run npm run demo');
+            tourLogger.warn('Tour is only available in demo mode. Add ?demo to URL or run npm run demo');
             return null;
         }
         const driverObj = createGuidedTour(true);

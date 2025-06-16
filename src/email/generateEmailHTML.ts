@@ -1,3 +1,4 @@
+import { logger } from "@/lib/utils";
 import ejs from "ejs";
 import fs from "fs";
 import juice from "juice";
@@ -23,7 +24,8 @@ export const generateEmailHTML = async (data: EmailData): Promise<string> => {
         const templatePath = path.join(process.cwd(), "src/email/template.ejs");
 
         if (!fs.existsSync(templatePath)) {
-            console.error(`Email template not found at: ${templatePath}`);
+            const emailLogger = logger.createFeatureLogger("Email");
+            emailLogger.error(`Email template not found at: ${templatePath}`);
             throw new Error("Email template file not found");
         }
 
@@ -42,7 +44,8 @@ export const generateEmailHTML = async (data: EmailData): Promise<string> => {
 
         return Promise.resolve(html);
     } catch (error) {
-        console.error("Error generating email HTML:", error);
+        const emailLogger = logger.createFeatureLogger("Email");
+        emailLogger.error("Error generating email HTML:", error);
 
         // Fallback HTML email
         const fallbackHtml = `
