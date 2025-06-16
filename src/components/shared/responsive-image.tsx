@@ -1,7 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import { cn, commonClasses, createIconContainer } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -59,11 +59,16 @@ export function ResponsiveImage({
         !src || imageError || src === "/placeholder-image.svg";
 
     const renderPlaceholder = () => (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+        <div
+            className={cn(
+                "absolute inset-0 text-center p-4",
+                commonClasses.flexCenterCol
+            )}
+        >
             <div
                 className={cn(
-                    "rounded-full bg-primary/10 flex items-center justify-center mb-3",
-                    isMobile ? "size-12" : "size-16"
+                    createIconContainer(isMobile ? "sm" : "md", "primary"),
+                    "mb-3"
                 )}
             >
                 <div
@@ -87,11 +92,19 @@ export function ResponsiveImage({
     const renderImage = () => (
         <>
             {imageLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted/50 animate-pulse">
+                <div
+                    className={cn(
+                        "absolute inset-0 bg-muted/50",
+                        commonClasses.flexCenter,
+                        commonClasses.loadingPulse
+                    )}
+                >
                     <div
                         className={cn(
-                            "rounded-full bg-primary/10",
-                            isMobile ? "size-8" : "size-12"
+                            createIconContainer(
+                                isMobile ? "sm" : "md",
+                                "primary"
+                            )
                         )}
                     ></div>
                 </div>

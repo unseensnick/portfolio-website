@@ -4,6 +4,7 @@ import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn, createContentWrapper, createResponsiveText } from "@/lib/utils";
 
 function InterestItem({ text }: { text: string }) {
     return (
@@ -25,7 +26,8 @@ interface AboutProps {
 }
 
 /**
- * About section with different layouts for mobile (stacked) and desktop (two-column)
+ * About section with responsive layout using utility patterns
+ * Mobile: stacked layout, Desktop: two-column grid
  */
 export function About({
     title = "About Me",
@@ -39,103 +41,80 @@ export function About({
     interestsHeading = "Interests",
 }: AboutProps) {
     const isMobile = useIsMobile();
+    const { container, content, spacing } = createContentWrapper(isMobile);
 
-    const renderContent = () => {
-        if (isMobile) {
-            return (
-                <div className="space-y-10">
-                    <div className="mx-auto max-w-sm">
-                        <ResponsiveImage
-                            src={image}
-                            alt="About"
-                            aspectRatio="square"
-                        />
-                    </div>
+    const renderImage = () => (
+        <div className={isMobile ? "mx-auto max-w-sm" : "lg:col-span-2"}>
+            <ResponsiveImage
+                src={image}
+                alt="About"
+                aspectRatio={isMobile ? "square" : "portrait"}
+            />
+        </div>
+    );
 
-                    <div className="space-y-8">
-                        <div className="space-y-4" data-tour="about-paragraphs">
-                            {paragraphs.map((paragraph, index) => (
-                                <p
-                                    key={index}
-                                    className="text-base text-muted-foreground leading-relaxed"
-                                >
-                                    {paragraph}
-                                </p>
-                            ))}
-                        </div>
+    const renderContent = () => (
+        <div className={cn(content, spacing)}>
+            <div className="space-y-4" data-tour="about-paragraphs">
+                {paragraphs.map((paragraph, index) => (
+                    <p
+                        key={index}
+                        className={cn(
+                            "text-muted-foreground leading-relaxed",
+                            createResponsiveText("body", isMobile)
+                        )}
+                    >
+                        {paragraph}
+                    </p>
+                ))}
+            </div>
 
-                        <div className="space-y-4" data-tour="technologies">
-                            <h3 className="text-lg font-semibold text-foreground">
-                                {technologiesHeading}
-                            </h3>
-                            <TechBadgeGroup
-                                technologies={technologies}
-                                size="sm"
-                            />
-                        </div>
+            <div className="space-y-4" data-tour="technologies">
+                <h3
+                    className={cn(
+                        "font-semibold text-foreground",
+                        createResponsiveText("subheading", isMobile)
+                    )}
+                >
+                    {technologiesHeading}
+                </h3>
+                <TechBadgeGroup
+                    technologies={technologies}
+                    size={isMobile ? "sm" : "lg"}
+                />
+            </div>
 
-                        <div className="space-y-4" data-tour="interests">
-                            <h3 className="text-lg font-semibold text-foreground">
-                                {interestsHeading}
-                            </h3>
-                            <div className="grid grid-cols-1 gap-3">
-                                {interests.map((interest, index) => (
-                                    <InterestItem key={index} text={interest} />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-20">
-                <div className="lg:col-span-2">
-                    <ResponsiveImage
-                        src={image}
-                        alt="About"
-                        aspectRatio="portrait"
-                    />
-                </div>
-
-                <div className="lg:col-span-3 space-y-12">
-                    <div className="space-y-6" data-tour="about-paragraphs">
-                        {paragraphs.map((paragraph, index) => (
-                            <p
-                                key={index}
-                                className="text-lg text-muted-foreground leading-relaxed"
-                            >
-                                {paragraph}
-                            </p>
-                        ))}
-                    </div>
-
-                    <div className="space-y-6" data-tour="technologies">
-                        <h3 className="text-xl font-semibold text-foreground">
-                            {technologiesHeading}
-                        </h3>
-                        <TechBadgeGroup technologies={technologies} size="lg" />
-                    </div>
-
-                    <div className="space-y-6" data-tour="interests">
-                        <h3 className="text-xl font-semibold text-foreground">
-                            {interestsHeading}
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {interests.map((interest, index) => (
-                                <InterestItem key={index} text={interest} />
-                            ))}
-                        </div>
-                    </div>
+            <div className="space-y-4" data-tour="interests">
+                <h3
+                    className={cn(
+                        "font-semibold text-foreground",
+                        createResponsiveText("subheading", isMobile)
+                    )}
+                >
+                    {interestsHeading}
+                </h3>
+                <div
+                    className={cn(
+                        "gap-3",
+                        isMobile
+                            ? "grid grid-cols-1"
+                            : "grid grid-cols-1 sm:grid-cols-2"
+                    )}
+                >
+                    {interests.map((interest, index) => (
+                        <InterestItem key={index} text={interest} />
+                    ))}
                 </div>
             </div>
-        );
-    };
+        </div>
+    );
 
     return (
         <SectionWrapper id="about" title={title} data-tour="about-section">
-            {renderContent()}
+            <div className={container}>
+                {renderImage()}
+                {renderContent()}
+            </div>
         </SectionWrapper>
     );
 }

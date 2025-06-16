@@ -1,7 +1,8 @@
 "use client";
 
 import { useTheme } from "@/components/theme-provider";
-import { cn } from "@/lib/utils";
+import { useMounted } from "@/hooks/use-mounted";
+import { cn, commonClasses } from "@/lib/utils";
 import { Moon, Sun } from "lucide-react";
 import * as React from "react";
 
@@ -16,11 +17,7 @@ interface ThemeToggleProps
  */
 export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
     const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = React.useState<boolean>(false);
-
-    React.useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useMounted();
 
     // Resolve actual theme considering system preference
     const resolvedTheme = React.useMemo(() => {
@@ -41,7 +38,12 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
 
     if (!mounted) {
         return (
-            <div className="size-9 md:size-8 rounded-full bg-muted/50 animate-pulse" />
+            <div
+                className={cn(
+                    "size-9 md:size-8 rounded-full",
+                    commonClasses.loadingPulse
+                )}
+            />
         );
     }
 
@@ -51,7 +53,9 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
         <button
             onClick={handleToggle}
             className={cn(
-                "group relative size-9 md:size-8 rounded-full bg-muted/50 hover:bg-muted transition-all duration-300 flex items-center justify-center",
+                "group relative size-9 md:size-8 rounded-full bg-muted/50 hover:bg-muted",
+                commonClasses.flexCenter,
+                commonClasses.transition,
                 "hover:shadow-lg hover:shadow-black/5 hover:scale-105",
                 "focus:outline-none focus:ring-0 focus:ring-primary/30 focus:ring-offset-0",
                 className
@@ -61,7 +65,12 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
             {...props}
         >
             {/* Background transition effect */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div
+                className={cn(
+                    "absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-primary/10 opacity-0 group-hover:opacity-100",
+                    commonClasses.transition
+                )}
+            />
 
             {/* Icon with rotation */}
             <div className="relative transition-transform duration-500 group-hover:scale-110">
@@ -73,7 +82,12 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
             </div>
 
             {/* Subtle glow effect */}
-            <div className="absolute inset-0 rounded-full bg-primary/10 opacity-0 group-hover:opacity-50 transition-opacity duration-300 blur-xl" />
+            <div
+                className={cn(
+                    "absolute inset-0 rounded-full bg-primary/10 opacity-0 group-hover:opacity-50 blur-xl",
+                    commonClasses.transition
+                )}
+            />
         </button>
     );
 }

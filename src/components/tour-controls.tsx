@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useMounted } from "@/hooks/use-mounted";
 import { tourControls } from "@/lib/guided-tour";
+import { cn, commonClasses } from "@/lib/utils";
 import {
     Monitor,
     Play,
@@ -35,10 +37,10 @@ export function TourControls({
 }: TourControlsProps) {
     const [isRunning, setIsRunning] = useState(false);
     const [showMobileModal, setShowMobileModal] = useState(false);
-    const [mounted, setMounted] = useState(false);
     const [globalMobileState, setGlobalMobileState] = useState(false);
     const isDemoMode = tourControls.isDemoMode();
     const isMobile = useIsMobile();
+    const mounted = useMounted();
 
     // Use global mobile state if no props provided (when used in site header)
     const currentMobileView = onMobileToggle
@@ -53,8 +55,6 @@ export function TourControls({
         });
 
     useEffect(() => {
-        setMounted(true);
-
         // Sync with global mobile state if no props provided
         if (!onMobileToggle) {
             const syncGlobalState = () => {
@@ -74,10 +74,7 @@ export function TourControls({
     }, [onMobileToggle]);
 
     const handleManualTour = () => {
-        if (isRunning || !isDemoMode) return;
         setIsRunning(true);
-        setShowMobileModal(false);
-
         const driverObj = tourControls.start();
         if (!driverObj) {
             setIsRunning(false);
@@ -89,13 +86,11 @@ export function TourControls({
             setIsRunning(false);
             originalDestroy.call(this);
         };
+        setShowMobileModal(false);
     };
 
     const handleAutomatedTour = () => {
-        if (isRunning || !isDemoMode) return;
         setIsRunning(true);
-        setShowMobileModal(false);
-
         const driverObj = tourControls.startAutomated(3000);
         if (!driverObj) {
             setIsRunning(false);
@@ -107,41 +102,37 @@ export function TourControls({
             setIsRunning(false);
             originalDestroy.call(this);
         };
+        setShowMobileModal(false);
     };
 
     const handleReset = () => {
         tourControls.reset();
         setShowMobileModal(false);
-        alert("Tour status reset! The tour will show again for new visitors.");
     };
 
-    if (!isDemoMode) {
-        return null;
-    }
-
-    // Compact variant for mobile header integration
+    // Compact variant for mobile header
     if (variant === "compact") {
         return (
             <>
-                <div className={`flex items-center gap-1 ${className}`}>
-                    <Button
-                        onClick={() => setShowMobileModal(true)}
-                        disabled={isRunning}
-                        size="sm"
-                        variant="ghost"
-                        className="h-9 w-9 p-0 hover:bg-muted/50"
-                        title="Demo Controls"
-                    >
-                        <Zap className="size-4" />
-                    </Button>
-                </div>
+                <Button
+                    onClick={() => setShowMobileModal(true)}
+                    size="sm"
+                    variant="outline"
+                    className="h-8 px-3 text-xs"
+                >
+                    <Settings className="size-3 mr-1" />
+                    Demo
+                </Button>
 
-                {/* Mobile Modal - Rendered via Portal */}
                 {mounted &&
                     showMobileModal &&
                     createPortal(
                         <div
-                            className="fixed inset-0 z-[9999] flex flex-col items-center justify-start p-4 bg-black/50 backdrop-blur-sm"
+                            className={cn(
+                                "fixed inset-0 z-[9999] bg-black/50 p-4",
+                                commonClasses.flexCenterCol,
+                                commonClasses.backdropBlur
+                            )}
                             onClick={() => setShowMobileModal(false)}
                         >
                             <div
@@ -306,7 +297,11 @@ export function TourControls({
     // Desktop variant with mobile toggle
     return (
         <div
-            className={`bg-background/95 backdrop-blur-sm border border-border/60 rounded-xl p-3 shadow-xl ${className}`}
+            className={cn(
+                "border border-border/60 rounded-xl p-3 shadow-xl",
+                commonClasses.backdropBlur,
+                className
+            )}
         >
             {/* Mobile/Desktop Toggle - Compact horizontal layout */}
             <div className="flex items-center gap-1 mb-3">

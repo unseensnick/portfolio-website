@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, commonClasses } from "@/lib/utils";
 
 interface HexagonLogoProps {
     logoText?: string;
@@ -70,7 +70,8 @@ export function HexagonLogo({
     return (
         <div
             className={cn(
-                "flex items-center gap-3 transition-transform duration-300",
+                "flex items-center gap-3",
+                commonClasses.transition,
                 onClick && "cursor-pointer hover:scale-105",
                 className
             )}
@@ -81,7 +82,8 @@ export function HexagonLogo({
                 {/* Outer hexagon with gradient */}
                 <div
                     className={cn(
-                        "absolute inset-0 bg-gradient-to-br from-primary to-primary/80 transition-all duration-300",
+                        "absolute inset-0 bg-gradient-to-br from-primary to-primary/80",
+                        commonClasses.transition,
                         isHovered &&
                             "scale-110 rotate-12 from-primary/90 to-primary"
                     )}
@@ -94,7 +96,8 @@ export function HexagonLogo({
                 {/* Inner white hexagon */}
                 <div
                     className={cn(
-                        "absolute inset-1 bg-background transition-transform duration-300",
+                        "absolute inset-1 bg-background",
+                        commonClasses.transition,
                         isHovered && "scale-95"
                     )}
                     style={{
@@ -125,7 +128,8 @@ export function HexagonLogo({
                     <span className="text-muted-foreground">{firstPart}</span>
                     <span
                         className={cn(
-                            "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent transition-all duration-300",
+                            commonClasses.primaryGradientText,
+                            commonClasses.transition,
                             isHovered && "from-primary/90 to-primary"
                         )}
                     >

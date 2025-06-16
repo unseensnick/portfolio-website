@@ -1,7 +1,12 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import {
+    cn,
+    commonClasses,
+    createResponsiveSpacing,
+    createResponsiveText,
+} from "@/lib/utils";
 import { ReactNode } from "react";
 
 interface SectionWrapperProps {
@@ -16,7 +21,7 @@ interface SectionWrapperProps {
 }
 
 /**
- * Standardized section container with responsive spacing and gradient titles
+ * Standardized section container with responsive spacing and gradient titles using utility patterns
  */
 export function SectionWrapper({
     id,
@@ -31,23 +36,25 @@ export function SectionWrapper({
     const isMobile = useIsMobile();
 
     const titleClasses = cn(
-        "font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent",
+        "font-bold",
+        commonClasses.gradientText,
         isMobile ? "text-3xl mb-4" : "text-4xl lg:text-5xl mb-6",
         titleClassName
     );
 
     const descriptionClasses = cn(
         "text-muted-foreground",
-        isMobile
-            ? "text-base px-4 leading-relaxed"
-            : "text-lg max-w-2xl mx-auto leading-relaxed",
+        createResponsiveText("description", isMobile),
         descriptionClassName
     );
 
     return (
         <section
             id={id}
-            className={cn(isMobile ? "py-16" : "py-24 lg:py-32", className)}
+            className={cn(
+                createResponsiveSpacing("sectionPadding", isMobile),
+                className
+            )}
             {...props}
         >
             <div

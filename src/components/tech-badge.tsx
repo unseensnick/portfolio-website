@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { safelyExtractTechnologyNames } from "@/lib/payload-safe-helpers";
-import { cn } from "@/lib/utils";
+import { cn, createResponsiveBadge, createResponsiveGap } from "@/lib/utils";
 
 interface TechBadgeProps {
     text: string;
@@ -13,7 +13,7 @@ interface TechBadgeProps {
 }
 
 /**
- * Technology badge with responsive sizing
+ * Technology badge with responsive sizing using utility patterns
  */
 export function TechBadge({
     text,
@@ -21,12 +21,6 @@ export function TechBadge({
     size = "md",
     isMobile = false,
 }: TechBadgeProps) {
-    const sizeClasses = {
-        sm: isMobile ? "px-1.5 py-0.5 text-xs" : "px-2 py-0.5 text-xs",
-        md: isMobile ? "px-2 py-0.5 text-xs" : "px-2.5 py-1 text-[0.8125rem]",
-        lg: isMobile ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm",
-    };
-
     return (
         <Badge
             variant="secondary"
@@ -35,7 +29,7 @@ export function TechBadge({
                 "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary",
                 "dark:bg-primary/25 dark:text-foreground",
                 "dark:hover:bg-primary/35 dark:hover:text-foreground",
-                sizeClasses[size],
+                createResponsiveBadge(size, isMobile),
                 className
             )}
         >
@@ -68,10 +62,9 @@ export function TechBadgeGroup({
 
     if (validTechnologies.length === 0) return null;
 
-    const gapClass = isMobile ? "gap-1.5" : "gap-2.5";
     const containerClass = cn(
         "flex flex-wrap items-start justify-start",
-        gapClass,
+        createResponsiveGap(isMobile),
         className
     );
 
@@ -107,9 +100,7 @@ export function TechBadgeGroup({
                         "rounded-full font-medium transition-colors duration-300 flex-shrink-0",
                         "text-muted-foreground border-muted-foreground/30 hover:bg-muted/50",
                         "dark:text-foreground/70 dark:bg-muted/50 dark:hover:bg-muted/70 dark:hover:text-foreground dark:border-none",
-                        isMobile
-                            ? "px-2 py-0.5 text-xs"
-                            : "px-2.5 py-1 text-[0.8125rem]"
+                        createResponsiveBadge("md", isMobile)
                     )}
                 >
                     +{hiddenCount} more

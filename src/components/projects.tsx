@@ -2,13 +2,12 @@
 
 import { ButtonGroup } from "@/components/shared/button-group";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
-import { ResponsiveImage } from "@/components/shared/responsive-image";
 import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
-import { cn } from "@/lib/utils";
+import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
 import { ExternalLink, Github } from "lucide-react";
 
 interface Technology {
@@ -22,14 +21,12 @@ interface ProjectItemProps {
     codeUrl?: string;
     technologies?: Technology[];
 
-    // Legacy props for backward compatibility
     image?: string;
     videoSrc?: string;
     videoFile?: any;
     videoTitle?: string;
     videoDescription?: string;
 
-    // New consolidated media structure
     media?: {
         image?:
             | {
@@ -51,87 +48,9 @@ interface ProjectItemProps {
 }
 
 /**
- * Mobile project card with stacked image and content
+ * Unified project item component that adapts to mobile/desktop layouts
  */
-function MobileProjectItem({
-    title,
-    description,
-    projectUrl,
-    codeUrl,
-    technologies,
-    image,
-    videoSrc,
-    videoFile,
-    videoTitle,
-    videoDescription,
-    media,
-}: ProjectItemProps) {
-    const buttons = [];
-
-    if (projectUrl) {
-        buttons.push({
-            text: "Live Demo",
-            href: formatExternalUrl(projectUrl),
-            icon: ExternalLink,
-            external: true,
-        });
-    }
-
-    if (codeUrl) {
-        buttons.push({
-            text: "Source Code",
-            href: formatExternalUrl(codeUrl),
-            icon: Github,
-            external: true,
-            variant: "outline" as const,
-        });
-    }
-
-    return (
-        <ResponsiveCard className="overflow-hidden p-0">
-            <div>
-                <ResponsiveMedia
-                    src={image}
-                    videoSrc={videoSrc}
-                    videoFile={videoFile}
-                    alt={title}
-                    aspectRatio="landscape"
-                    videoTitle={videoTitle}
-                    videoDescription={videoDescription}
-                    media={media}
-                />
-            </div>
-
-            <div className="p-6 space-y-4">
-                <div className="space-y-3">
-                    <h3 className="text-xl font-bold text-foreground">
-                        {title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                        {description}
-                    </p>
-
-                    {technologies && technologies.length > 0 && (
-                        <TechBadgeGroup technologies={technologies} size="sm" />
-                    )}
-                </div>
-
-                {buttons.length > 0 && (
-                    <ButtonGroup
-                        buttons={buttons}
-                        fullWidthMobile={true}
-                        className="pt-2"
-                    />
-                )}
-            </div>
-        </ResponsiveCard>
-    );
-}
-
-/**
- * Desktop project card with side-by-side layout
- */
-function DesktopProjectItem({
+function ProjectItem({
     title,
     description,
     projectUrl,
@@ -144,8 +63,15 @@ function DesktopProjectItem({
     videoDescription,
     media,
     reverse = false,
-}: ProjectItemProps & { reverse?: boolean }) {
-    const buttons = [];
+    isMobile,
+}: ProjectItemProps & { reverse?: boolean; isMobile: boolean }) {
+    const buttons: Array<{
+        text: string;
+        href: string;
+        icon: any;
+        external: boolean;
+        variant?: "outline";
+    }> = [];
 
     if (projectUrl) {
         buttons.push({
@@ -158,7 +84,7 @@ function DesktopProjectItem({
 
     if (codeUrl) {
         buttons.push({
-            text: "Source",
+            text: isMobile ? "Source Code" : "Source",
             href: formatExternalUrl(codeUrl),
             icon: Github,
             external: true,
@@ -166,6 +92,68 @@ function DesktopProjectItem({
         });
     }
 
+    const renderMedia = () => (
+        <ResponsiveMedia
+            src={image}
+            videoSrc={videoSrc}
+            videoFile={videoFile}
+            alt={title}
+            aspectRatio="landscape"
+            videoTitle={videoTitle}
+            videoDescription={videoDescription}
+            media={media}
+        />
+    );
+
+    const renderContent = () => (
+        <div className={createResponsiveSpacing("layout", isMobile)}>
+            <div className={createResponsiveSpacing("content", isMobile)}>
+                <h3
+                    className={cn(
+                        "font-bold text-foreground",
+                        isMobile ? "text-xl" : "text-2xl lg:text-3xl"
+                    )}
+                >
+                    {title}
+                </h3>
+                <p
+                    className={cn(
+                        "text-muted-foreground leading-relaxed",
+                        createResponsiveText("body", isMobile)
+                    )}
+                >
+                    {description}
+                </p>
+
+                {technologies && technologies.length > 0 && (
+                    <TechBadgeGroup
+                        technologies={technologies}
+                        size={isMobile ? "sm" : "md"}
+                    />
+                )}
+            </div>
+
+            {buttons.length > 0 && (
+                <ButtonGroup
+                    buttons={buttons}
+                    fullWidthMobile={isMobile}
+                    className={isMobile ? "pt-2" : ""}
+                />
+            )}
+        </div>
+    );
+
+    // Mobile layout: stacked card
+    if (isMobile) {
+        return (
+            <ResponsiveCard className="overflow-hidden p-0">
+                <div>{renderMedia()}</div>
+                <div className="p-6">{renderContent()}</div>
+            </ResponsiveCard>
+        );
+    }
+
+    // Desktop layout: side-by-side
     return (
         <div className="relative">
             <div
@@ -180,46 +168,11 @@ function DesktopProjectItem({
                         reverse && "lg:col-start-2"
                     )}
                 >
-                    <ResponsiveMedia
-                        src={image}
-                        videoSrc={videoSrc}
-                        videoFile={videoFile}
-                        alt={title}
-                        aspectRatio="landscape"
-                        videoTitle={videoTitle}
-                        videoDescription={videoDescription}
-                        media={media}
-                    />
+                    {renderMedia()}
                 </div>
 
-                <div
-                    className={cn(
-                        "space-y-6",
-                        reverse && "lg:col-start-1 lg:row-start-1"
-                    )}
-                >
-                    <div className="space-y-4">
-                        <h3 className="text-2xl lg:text-3xl font-bold text-foreground">
-                            {title}
-                        </h3>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
-                            {description}
-                        </p>
-
-                        {technologies && technologies.length > 0 && (
-                            <TechBadgeGroup
-                                technologies={technologies}
-                                size="md"
-                            />
-                        )}
-                    </div>
-
-                    {buttons.length > 0 && (
-                        <ButtonGroup
-                            buttons={buttons}
-                            fullWidthMobile={false}
-                        />
-                    )}
+                <div className={cn(reverse && "lg:col-start-1 lg:row-start-1")}>
+                    {renderContent()}
                 </div>
             </div>
         </div>
@@ -271,7 +224,7 @@ interface ProjectsProps {
 }
 
 /**
- * Projects section with featured project and project grid
+ * Projects section with responsive layout using utility patterns
  */
 export function Projects({
     title = "Projects",
@@ -310,12 +263,13 @@ export function Projects({
         if (!viewAllLink) return null;
 
         return (
-            <div className={cn("text-center", isMobile ? "" : "mt-24")}>
+            <div className={cn("text-center", !isMobile && "mt-24")}>
                 <div className="space-y-4 sm:space-y-6">
                     <p
                         className={cn(
                             "text-muted-foreground",
-                            isMobile ? "text-sm px-4" : "text-lg"
+                            createResponsiveText("body", isMobile),
+                            isMobile && "px-4"
                         )}
                     >
                         {viewMoreText}
@@ -340,22 +294,29 @@ export function Projects({
             data-tour="projects-section"
         >
             <div data-tour="featured-project">
-                {!isMobile && featured && <DesktopProjectItem {...featured} />}
+                {!isMobile && featured && (
+                    <ProjectItem {...featured} isMobile={isMobile} />
+                )}
             </div>
             <div data-tour="project-grid">
                 <div
-                    className={cn(isMobile ? "space-y-6 mb-12" : "space-y-32")}
+                    className={createResponsiveSpacing("projectGrid", isMobile)}
                 >
                     {/* Project list */}
                     {isMobile
                         ? allProjects.map((project, index) => (
-                              <MobileProjectItem key={index} {...project} />
+                              <ProjectItem
+                                  key={index}
+                                  {...project}
+                                  isMobile={isMobile}
+                              />
                           ))
                         : items.map((project, index) => (
-                              <DesktopProjectItem
+                              <ProjectItem
                                   key={index}
                                   {...project}
                                   reverse={index % 2 === 0}
+                                  isMobile={isMobile}
                               />
                           ))}
                 </div>

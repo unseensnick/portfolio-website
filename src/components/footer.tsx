@@ -1,6 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface FooterProps {
     copyright?: string;
@@ -14,26 +15,21 @@ export function Footer({
 }: FooterProps) {
     const isMobile = useIsMobile();
 
-    if (isMobile) {
-        return (
-            <footer
-                className="border-t border-border bg-background/50 backdrop-blur-sm"
-                data-tour="footer"
-            >
-                <div className="px-6 py-8 text-center text-xs text-muted-foreground">
-                    {copyright}
-                </div>
-                {/* Extra padding for mobile navigation bar */}
-                <div className="h-24 pb-safe"></div>
-            </footer>
-        );
-    }
+    const footerClasses = cn(
+        "border-t border-border",
+        isMobile ? "bg-background/50 backdrop-blur-sm" : ""
+    );
+
+    const contentClasses = cn(
+        "text-center text-muted-foreground",
+        isMobile ? "px-6 py-8 text-xs" : "max-w-6xl mx-auto px-8 py-12 text-sm"
+    );
 
     return (
-        <footer className="border-t border-border" data-tour="footer">
-            <div className="max-w-6xl mx-auto px-8 py-12 text-center text-sm text-muted-foreground">
-                {copyright}
-            </div>
+        <footer className={footerClasses} data-tour="footer">
+            <div className={contentClasses}>{copyright}</div>
+            {/* Extra padding for mobile navigation bar */}
+            {isMobile && <div className="h-24 pb-safe"></div>}
         </footer>
     );
 }

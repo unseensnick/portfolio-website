@@ -5,7 +5,12 @@ import { IconCard, ResponsiveCard } from "@/components/shared/responsive-card";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
-import { cn } from "@/lib/utils";
+import {
+    cn,
+    createResponsiveLayout,
+    createResponsiveSpacing,
+    createResponsiveText,
+} from "@/lib/utils";
 import { Github, Mail } from "lucide-react";
 
 interface ContactProps {
@@ -20,7 +25,7 @@ interface ContactProps {
 }
 
 /**
- * Contact section with contact cards and call-to-action
+ * Contact section with responsive layout using utility patterns
  */
 export function Contact({
     title = "Get in Touch",
@@ -52,9 +57,8 @@ export function Contact({
     const renderContactCards = () => (
         <div
             className={cn(
-                isMobile
-                    ? "space-y-4 mb-12"
-                    : "grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
+                createResponsiveLayout("grid", isMobile),
+                isMobile ? "mb-12" : "mb-16"
             )}
         >
             <IconCard
@@ -81,15 +85,17 @@ export function Contact({
             <ResponsiveCard className="bg-gradient-to-br from-muted/50 via-muted/30 to-transparent">
                 <div
                     className={cn(
-                        "space-y-4 text-center",
-                        isMobile ? "" : "space-y-6"
+                        "text-center",
+                        createResponsiveSpacing("layout", isMobile)
                     )}
                 >
-                    <div className={cn("space-y-", isMobile ? "3" : "4")}>
+                    <div
+                        className={createResponsiveSpacing("content", isMobile)}
+                    >
                         <h3
                             className={cn(
                                 "font-bold text-foreground",
-                                isMobile ? "text-xl" : "text-2xl lg:text-3xl"
+                                createResponsiveText("heading", isMobile)
                             )}
                         >
                             {ctaTitle}
@@ -97,9 +103,7 @@ export function Contact({
                         <p
                             className={cn(
                                 "text-muted-foreground",
-                                isMobile
-                                    ? "text-sm leading-relaxed"
-                                    : "text-lg max-w-md mx-auto"
+                                createResponsiveText("description", isMobile)
                             )}
                         >
                             {ctaDescription}

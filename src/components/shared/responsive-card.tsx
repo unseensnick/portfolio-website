@@ -3,7 +3,15 @@
 import { Card } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
-import { cn } from "@/lib/utils";
+import {
+    cn,
+    commonClasses,
+    createIconContainer,
+    createResponsiveCardHover,
+    createResponsiveCardPadding,
+    createResponsiveSpacing,
+    createResponsiveText,
+} from "@/lib/utils";
 import { ExternalLink, LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -30,12 +38,10 @@ export function ResponsiveCard({
 
     const cardClasses = cn(
         "group",
-        isMobile ? "p-6" : "p-8",
+        createResponsiveCardPadding(isMobile),
         hoverEffect && [
-            "transition-all duration-500",
-            isMobile
-                ? "hover:bg-muted/50 hover:shadow-lg hover:shadow-black/5"
-                : "hover:bg-muted/50 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1",
+            commonClasses.transitionSlow,
+            createResponsiveCardHover(isMobile),
         ],
         className
     );
@@ -69,7 +75,7 @@ interface IconCardProps {
 }
 
 /**
- * Card with centered icon, title, subtitle and optional link
+ * Card with centered icon, title, subtitle and optional link using responsive utilities
  */
 export function IconCard({
     icon: Icon,
@@ -94,8 +100,8 @@ export function IconCard({
         <div className="text-center space-y-3 sm:space-y-4">
             <div
                 className={cn(
-                    "mx-auto flex items-center justify-center bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300",
-                    isMobile ? "size-12 rounded-xl" : "size-16 rounded-2xl"
+                    createIconContainer(isMobile ? "sm" : "lg"),
+                    "mx-auto bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300"
                 )}
             >
                 <Icon
@@ -106,11 +112,11 @@ export function IconCard({
                 />
             </div>
 
-            <div className={cn("space-y-", isMobile ? "1" : "2")}>
+            <div className={createResponsiveSpacing("section", isMobile)}>
                 <h3
                     className={cn(
                         "font-bold text-foreground group-hover:text-primary transition-colors duration-300",
-                        isMobile ? "text-lg" : "text-xl"
+                        createResponsiveText("cardTitle", isMobile)
                     )}
                 >
                     {title}
@@ -118,68 +124,36 @@ export function IconCard({
                 <p
                     className={cn(
                         "text-muted-foreground",
-                        isMobile ? "text-sm" : "text-base"
+                        createResponsiveText("cardSubtitle", isMobile)
                     )}
                 >
                     {subtitle}
                 </p>
             </div>
 
-            {linkText &&
-                renderLinkText(
-                    linkText,
-                    formattedTextLinkHref,
-                    !!isExternal,
-                    !!isEmailLink
-                )}
+            {linkText && textLinkHref && (
+                <Link
+                    href={formattedTextLinkHref}
+                    target={isEmailLink || isExternal ? "_blank" : undefined}
+                    className={cn(
+                        "inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium group-hover:underline",
+                        commonClasses.transition
+                    )}
+                >
+                    {linkText}
+                    {!isEmailLink && <ExternalLink className="size-4" />}
+                </Link>
+            )}
         </div>
     );
 
-    const renderLinkText = (
-        text: string,
-        href: string,
-        isExternal: boolean,
-        isEmailLink: boolean
-    ) => {
-        if (href && href !== "#") {
-            return (
-                <Link
-                    href={href}
-                    target={isExternal && !isEmailLink ? "_blank" : "_self"}
-                    className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-all duration-300 group-hover:underline"
-                >
-                    {text}
-                    {isExternal && !isEmailLink && (
-                        <ExternalLink className="size-3.5" />
-                    )}
-                </Link>
-            );
-        }
-
-        return (
-            <span className="inline-flex items-center gap-2 text-primary font-medium">
-                {text}
-                {isExternal && !isEmailLink && (
-                    <ExternalLink className="size-3.5" />
-                )}
-            </span>
-        );
-    };
-
-    // Make whole card clickable if no separate link
-    if (href && !linkHref) {
-        return (
-            <ResponsiveCard
-                href={formatExternalUrl(href)}
-                isExternal={isExternal && !href.startsWith("mailto:")}
-                className={className}
-            >
-                {renderContent()}
-            </ResponsiveCard>
-        );
-    }
-
     return (
-        <ResponsiveCard className={className}>{renderContent()}</ResponsiveCard>
+        <ResponsiveCard
+            href={href}
+            isExternal={isExternal}
+            className={className}
+        >
+            {renderContent()}
+        </ResponsiveCard>
     );
 }

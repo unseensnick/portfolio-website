@@ -1,6 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useMounted } from "@/hooks/use-mounted";
 import * as React from "react";
 
 interface ThemeProviderProps {
@@ -27,16 +28,13 @@ const ThemeContext = React.createContext<ThemeContextType | null>(null);
 export function ThemeProvider({
     children,
     defaultTheme = "system",
-
     enableSystem = true,
     disableTransitionOnChange = false,
     ...props
 }: ThemeProviderProps) {
     const [theme, setTheme] = React.useState<string>(defaultTheme);
-    const [mounted, setMounted] = React.useState<boolean>(false);
+    const mounted = useMounted();
     const isMobile = useIsMobile();
-
-    React.useEffect(() => setMounted(true), []);
 
     // Update DOM classes when theme changes (with smooth transitions)
     React.useEffect(() => {

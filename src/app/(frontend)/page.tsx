@@ -9,6 +9,7 @@ import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
 import { getDemoModeIndicator, shouldUseDemoMode } from "@/lib/demo-utils";
 import { getPortfolioData } from "@/lib/payload-utils";
+import { commonClasses } from "@/lib/utils";
 import { draftMode } from "next/headers";
 import React from "react";
 
@@ -38,8 +39,7 @@ export default async function Home({
     const params = await searchParams;
     const data = await getPortfolioData(isDraft, params);
     const isDemo = shouldUseDemoMode(params);
-    const showTourControls =
-        process.env.NODE_ENV === "development" || params.tour === "true";
+    const showTourControls = isDemo;
 
     return (
         <MobileDemoWrapper showTourControls={showTourControls}>
@@ -75,7 +75,7 @@ export default async function Home({
 
                         {/* Section divider */}
                         <div className="max-w-7xl mx-auto px-8">
-                            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+                            <div className={commonClasses.sectionDivider}></div>
                         </div>
 
                         <div id="projects" className="relative z-10">
@@ -88,7 +88,7 @@ export default async function Home({
                         </div>
 
                         <div className="max-w-7xl mx-auto px-8">
-                            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+                            <div className={commonClasses.sectionDivider}></div>
                         </div>
 
                         <div id="contact" className="relative z-10">
