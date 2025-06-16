@@ -52,6 +52,17 @@ export default function VideoPlayer({
     // Convert src to string if it's an object (imported video)
     const srcString = typeof src === "string" ? src : src?.src || "";
 
+    // Early return if no valid source
+    if (!srcString) {
+        return (
+            <div
+                className={`w-full aspect-video bg-gray-200 rounded-lg ${commonClasses.flexCenter} ${className}`}
+            >
+                <p className="text-gray-500">No video source provided</p>
+            </div>
+        );
+    }
+
     return (
         <div className={`video-container ${className}`}>
             {title && <h3 className="text-xl font-semibold mb-2">{title}</h3>}
@@ -61,6 +72,7 @@ export default function VideoPlayer({
                 // YouTube iframe embed
                 (() => {
                     const videoId = getYouTubeVideoId(srcString);
+
                     if (!videoId) {
                         return (
                             <div

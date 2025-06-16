@@ -42,7 +42,30 @@ export interface ProjectItem {
     description: string;
     projectUrl?: string;
     codeUrl?: string;
+    
+    // Legacy props for backward compatibility
     image?: string;
+    videoSrc?: string;
+    videoFile?: any;
+    videoTitle?: string;
+    videoDescription?: string;
+    
+    // New consolidated media structure
+    media?: {
+        image?: {
+            url?: string;
+            alt?: string;
+        } | any;
+        video?: {
+            src?: string;
+            file?: {
+                url?: string;
+            } | any;
+            title?: string;
+            description?: string;
+        };
+    };
+    
     technologies?: Technology[];
 }
 

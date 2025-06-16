@@ -172,23 +172,63 @@ export function adaptPortfolioData(data: any) {
                     };
                 }
 
+                // Process media structure
+                const processedMedia = featured.media ? {
+                    image: featured.media.image ? {
+                        url: safelyExtractImageUrl(featured.media.image),
+                        alt: featured.title || "Project image"
+                    } : undefined,
+                    video: featured.media.video ? {
+                        src: safeString(featured.media.video.src),
+                        file: featured.media.video.file ? {
+                            url: safelyExtractImageUrl(featured.media.video.file)
+                        } : undefined,
+                        title: safeString(featured.media.video.title),
+                        description: safeString(featured.media.video.description)
+                    } : undefined
+                } : undefined;
+
                 return {
                     title: safeString(featured.title, "Featured Project"),
                     description: safeString(featured.description, "A showcase of my best work"),
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
                     technologies: safelyProcessTechnologies(featured.technologies),
+                    // Legacy image support
                     image: safelyExtractImageUrl(featured.image) || "/placeholder-image.svg",
+                    // New media structure
+                    media: processedMedia,
                 };
             })(),
-            items: (data.projects.items || []).map((project: any) => ({
-                title: safeString(project.title, "Project"),
-                description: safeString(project.description, "Project description"),
-                projectUrl: safeString(project.projectUrl),
-                codeUrl: safeString(project.codeUrl),
-                technologies: safelyProcessTechnologies(project.technologies),
-                image: safelyExtractImageUrl(project.image) || "/placeholder-image.svg",
-            })),
+            items: (data.projects.items || []).map((project: any) => {
+                // Process media structure
+                const processedMedia = project.media ? {
+                    image: project.media.image ? {
+                        url: safelyExtractImageUrl(project.media.image),
+                        alt: project.title || "Project image"
+                    } : undefined,
+                    video: project.media.video ? {
+                        src: safeString(project.media.video.src),
+                        file: project.media.video.file ? {
+                            url: safelyExtractImageUrl(project.media.video.file)
+                        } : undefined,
+                        title: safeString(project.media.video.title),
+                        description: safeString(project.media.video.description)
+                    } : undefined
+                } : undefined;
+
+                return {
+                    title: safeString(project.title, "Project"),
+                    description: safeString(project.description, "Project description"),
+                    projectUrl: safeString(project.projectUrl),
+                    codeUrl: safeString(project.codeUrl),
+                    technologies: safelyProcessTechnologies(project.technologies),
+                    // Legacy image support
+                    image: safelyExtractImageUrl(project.image) || "/placeholder-image.svg",
+                    // New media structure
+                    media: processedMedia,
+                };
+            }),
             description: safeString(data.projects.description, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
             viewAllLink: safeString(data.projects.viewAllLink),
