@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -44,9 +42,3 @@ next-env.d.ts
 # Misc
 /legacy code
 src/app/debug-portfolio
-# next-video
-media/*
-!media/*.json
-!media/*.js
-!media/*.ts
-public/_next-video

@@ -1,0 +1,809 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Theme variable mapping for consistent styling */
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Light theme - OKLCH colors for better perception */
+:root {
+    --radius: 0.75rem;
+    --background: oklch(0.97 0.008 285);
+    --foreground: oklch(0.18 0.02 285);
+    --card: oklch(0.995 0.003 285);
+    --card-foreground: oklch(0.18 0.02 285);
+    --popover: oklch(0.995 0.003 285);
+    --popover-foreground: oklch(0.18 0.02 285);
+    --primary: oklch(0.5 0.22 285);
+    --primary-foreground: oklch(0.97 0.008 285);
+    --secondary: oklch(0.92 0.01 285);
+    --secondary-foreground: oklch(0.25 0.02 285);
+    --muted: oklch(0.92 0.01 285);
+    --muted-foreground: oklch(0.45 0.02 285);
+    --accent: oklch(0.89 0.02 285);
+    --accent-foreground: oklch(0.25 0.02 285);
+    --destructive: oklch(0.65 0.2 25);
+    --border: oklch(0.84 0.02 285);
+    --input: oklch(0.84 0.02 285);
+    --ring: oklch(0.5 0.22 285);
+    --chart-1: oklch(0.5 0.22 285);
+    --chart-2: oklch(0.55 0.2 300);
+    --chart-3: oklch(0.45 0.18 270);
+    --chart-4: oklch(0.6 0.16 320);
+    --chart-5: oklch(0.65 0.14 260);
+    --sidebar: oklch(0.94 0.01 285);
+    --sidebar-foreground: oklch(0.18 0.02 285);
+    --sidebar-primary: oklch(0.5 0.22 285);
+    --sidebar-primary-foreground: oklch(0.97 0.008 285);
+    --sidebar-accent: oklch(0.92 0.01 285);
+    --sidebar-accent-foreground: oklch(0.25 0.02 285);
+    --sidebar-border: oklch(0.84 0.02 285);
+    --sidebar-ring: oklch(0.5 0.22 285);
+
+    --scrollbar-track: oklch(0.92 0.01 285);
+    --scrollbar-thumb: oklch(0.84 0.02 285);
+    --scrollbar-thumb-hover: oklch(0.5 0.22 285);
+    --scrollbar-thumb-active: oklch(0.45 0.22 285);
+    --scrollbar-width: 8px;
+    --scrollbar-width-thin: 6px;
+    --scrollbar-border-radius: 4px;
+}
+
+/* Dark theme - Strategic card separation while maintaining Solo Leveling aesthetic */
+.dark {
+    --background: oklch(0.06 0.02 285);
+    --foreground: oklch(0.94 0.01 280);
+    --card: oklch(0.13 0.04 285); /* Strategic increase for card separation */
+    --card-foreground: oklch(0.94 0.01 280);
+    --popover: oklch(0.13 0.04 285);
+    --popover-foreground: oklch(0.94 0.01 280);
+    --primary: oklch(0.65 0.26 285);
+    --primary-foreground: oklch(0.06 0.02 285);
+    --secondary: oklch(0.09 0.03 285);
+    --secondary-foreground: oklch(0.85 0.01 280);
+    --muted: oklch(
+        0.16 0.03 285
+    ); /* Strategic increase for section separation */
+    --muted-foreground: oklch(0.6 0.02 285);
+    --accent: oklch(0.19 0.04 285);
+    --accent-foreground: oklch(0.85 0.01 280);
+    --destructive: oklch(0.65 0.22 15);
+    --border: oklch(0.18 0.03 285);
+    --input: oklch(0.14 0.04 285);
+    --ring: oklch(0.65 0.26 285);
+    --chart-1: oklch(0.65 0.26 285);
+    --chart-2: oklch(0.6 0.22 300);
+    --chart-3: oklch(0.55 0.2 270);
+    --chart-4: oklch(0.7 0.18 320);
+    --chart-5: oklch(0.75 0.16 260);
+    --sidebar: oklch(0.08 0.03 285);
+    --sidebar-foreground: oklch(0.94 0.01 280);
+    --sidebar-primary: oklch(0.65 0.26 285);
+    --sidebar-primary-foreground: oklch(0.06 0.02 285);
+    --sidebar-accent: oklch(0.12 0.03 285);
+    --sidebar-accent-foreground: oklch(0.85 0.01 280);
+    --sidebar-border: oklch(0.16 0.03 285);
+    --sidebar-ring: oklch(0.65 0.26 285);
+
+    --scrollbar-track: oklch(0.08 0.03 285);
+    --scrollbar-thumb: oklch(0.18 0.03 285);
+    --scrollbar-thumb-hover: oklch(0.65 0.26 285);
+    --scrollbar-thumb-active: oklch(0.7 0.26 285);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+        /* Smooth transitions for theme switching */
+        transition:
+            background-color 0.08s ease-out,
+            color 0.08s ease-out,
+            border-color 0.08s ease-out,
+            box-shadow 0.08s ease-out;
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans text-base leading-relaxed;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-semibold leading-tight;
+    }
+
+    h1 {
+        @apply text-4xl lg:text-5xl;
+    }
+    h2 {
+        @apply text-3xl;
+    }
+    h3 {
+        @apply text-xl;
+    }
+
+    p {
+        @apply leading-relaxed;
+    }
+
+    /* Disable transitions during page load */
+    .preload * {
+        transition: none !important;
+    }
+}
+
+/* Modern scrollbar that matches theme colors */
+
+/* Webkit browsers */
+::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: var(--scrollbar-border-radius);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: var(--scrollbar-border-radius);
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    transition:
+        background-color 0.2s ease-out,
+        transform 0.2s ease-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    transform: scale(1.1);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--scrollbar-thumb-active);
+    transform: scale(1.2);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--scrollbar-track);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Utility classes */
+.scrollbar-thin {
+    scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: var(--scrollbar-width-thin);
+    height: var(--scrollbar-width-thin);
+}
+
+.scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+/* Overlay scrollbar that appears on hover */
+.scrollbar-overlay {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.2s ease-out;
+}
+
+.scrollbar-overlay:hover {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.scrollbar-overlay::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+}
+
+.scrollbar-overlay::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: var(--scrollbar-border-radius);
+}
+
+.scrollbar-overlay::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: var(--scrollbar-border-radius);
+    transition: background-color 0.2s ease-out;
+}
+
+.scrollbar-overlay:hover::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+.scrollbar-overlay:hover::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+}
+
+.scrollbar-overlay:hover::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Code block scrollbars */
+pre,
+code {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+pre::-webkit-scrollbar,
+code::-webkit-scrollbar {
+    width: var(--scrollbar-width-thin);
+    height: var(--scrollbar-width-thin);
+}
+
+pre::-webkit-scrollbar-track,
+code::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: var(--scrollbar-border-radius);
+}
+
+pre::-webkit-scrollbar-thumb,
+code::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--scrollbar-border-radius);
+    transition: background-color 0.2s ease-out;
+}
+
+pre::-webkit-scrollbar-thumb:hover,
+code::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    :root {
+        --scrollbar-width: 6px;
+        --scrollbar-width-thin: 4px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-contrast: high) {
+    :root {
+        --scrollbar-thumb: var(--foreground);
+        --scrollbar-thumb-hover: var(--primary);
+    }
+
+    .dark {
+        --scrollbar-thumb: var(--foreground);
+        --scrollbar-thumb-hover: var(--primary);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::-webkit-scrollbar-thumb {
+        transition: none;
+    }
+
+    .scrollbar-overlay::-webkit-scrollbar-thumb {
+        transition: none;
+    }
+}
+
+/* Safe area for mobile devices with notches/home indicators */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .h-safe {
+        height: env(safe-area-inset-bottom);
+    }
+}
+
+/* Fallback for devices without safe areas */
+.pb-safe {
+    padding-bottom: 0.5rem;
+}
+
+.h-safe {
+    height: 0;
+}
+
+/* ===== TOUR RESIZE INSTRUCTION OVERLAY ===== */
+/* Styles for the resize instruction overlay that appears during mobile navigation step */
+
+.tour-resize-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+}
+
+.tour-resize-overlay-content {
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    max-width: 500px;
+    text-align: center;
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .tour-resize-overlay-content {
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.4),
+        0 10px 10px -5px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.tour-resize-overlay-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.3;
+}
+
+.tour-resize-overlay-description {
+    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+}
+
+.tour-resize-overlay-current-width {
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    margin: 1rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+}
+
+/* Responsive adjustments for resize overlay */
+@media (max-width: 640px) {
+    .tour-resize-overlay-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-width: none;
+    }
+
+    .tour-resize-overlay-title {
+        font-size: 1.25rem;
+    }
+
+    .tour-resize-overlay-description {
+        font-size: 0.875rem;
+    }
+}
+
+/* ===== DRIVER.JS THEMING ===== */
+/* Enhanced popover styling with improved readability and design system integration */
+
+/* Main popover container with enhanced visual design */
+.tour-popover.driver-popover {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(16px) saturate(180%);
+    max-width: 420px;
+    min-width: 320px;
+    font-family: var(--font-sans);
+    color: var(--card-foreground);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Enhanced dark theme with better contrast and depth */
+.dark .tour-popover.driver-popover {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.8),
+        0 10px 20px -5px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Popover arrow with enhanced styling */
+.tour-popover .driver-popover-arrow {
+    border-color: var(--card);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.dark .tour-popover .driver-popover-arrow {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+}
+
+/* Title with improved typography and spacing */
+.tour-popover .driver-popover-title {
+    color: var(--card-foreground);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.025em;
+}
+
+/* Description with enhanced readability */
+.tour-popover .driver-popover-description {
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+}
+
+/* Close button with improved design */
+.tour-popover .driver-popover-close-btn {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-out;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tour-popover .driver-popover-close-btn:hover {
+    background: var(--accent);
+    color: var(--accent-foreground);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer with improved spacing and design */
+.tour-popover .driver-popover-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Progress text with enhanced styling */
+.tour-popover .driver-popover-progress-text {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Navigation buttons with improved design and interactions */
+.tour-popover .driver-popover-prev-btn,
+.tour-popover .driver-popover-next-btn {
+    background: var(--primary);
+    color: var(--primary-foreground) !important;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 40px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tour-popover .driver-popover-prev-btn:hover,
+.tour-popover .driver-popover-next-btn:hover {
+    background: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1);
+}
+
+.tour-popover .driver-popover-prev-btn:active,
+.tour-popover .driver-popover-next-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Previous button with secondary styling */
+.tour-popover .driver-popover-prev-btn {
+    background: var(--secondary);
+    color: var(--secondary-foreground) !important;
+    border: 1px solid var(--border);
+}
+
+.tour-popover .driver-popover-prev-btn:hover {
+    background: var(--accent);
+    color: var(--accent-foreground) !important;
+    filter: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced button text visibility with maximum specificity */
+.tour-popover.driver-popover .driver-popover-prev-btn,
+.tour-popover.driver-popover .driver-popover-prev-btn:link,
+.tour-popover.driver-popover .driver-popover-prev-btn:visited {
+    font-weight: 600 !important;
+    color: #374151 !important; /* Dark gray for light theme */
+    text-shadow: none !important;
+}
+
+.tour-popover.driver-popover .driver-popover-next-btn,
+.tour-popover.driver-popover .driver-popover-next-btn:link,
+.tour-popover.driver-popover .driver-popover-next-btn:visited {
+    font-weight: 600 !important;
+    color: #ffffff !important; /* Always white */
+    text-shadow: none !important;
+}
+
+/* Dark theme specific button improvements with high specificity */
+.dark .tour-popover.driver-popover .driver-popover-prev-btn,
+.dark .tour-popover.driver-popover .driver-popover-prev-btn:link,
+.dark .tour-popover.driver-popover .driver-popover-prev-btn:visited {
+    background: var(--secondary) !important;
+    color: #e5e7eb !important; /* Light gray for dark theme */
+    border: 1px solid var(--border) !important;
+    text-shadow: none !important;
+}
+
+.dark .tour-popover.driver-popover .driver-popover-next-btn,
+.dark .tour-popover.driver-popover .driver-popover-next-btn:link,
+.dark .tour-popover.driver-popover .driver-popover-next-btn:visited {
+    background: var(--primary) !important;
+    color: #ffffff !important; /* Always white */
+    text-shadow: none !important;
+}
+
+/* Light theme specific button improvements with high specificity */
+html:not(.dark) .tour-popover.driver-popover .driver-popover-prev-btn,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-prev-btn:link,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-prev-btn:visited {
+    background: var(--secondary) !important;
+    color: #374151 !important; /* Dark gray for light theme */
+    text-shadow: none !important;
+}
+
+html:not(.dark) .tour-popover.driver-popover .driver-popover-next-btn,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-next-btn:link,
+html:not(.dark) .tour-popover.driver-popover .driver-popover-next-btn:visited {
+    background: var(--primary) !important;
+    color: #ffffff !important; /* Always white */
+    text-shadow: none !important;
+}
+
+/* Disabled button states with clear visual feedback */
+.tour-popover .driver-popover-prev-btn:disabled,
+.tour-popover .driver-popover-next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+.tour-popover .driver-popover-prev-btn:disabled:hover,
+.tour-popover .driver-popover-next-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+    background: var(--secondary);
+    color: var(--secondary-foreground) !important;
+}
+
+/* Special positioning for theme toggle popover */
+.tour-popover.driver-popover.theme-toggle-popover {
+    transform: translateY(10px) !important;
+    max-width: 450px;
+    min-width: 350px;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    .tour-popover.driver-popover {
+        max-width: 320px;
+        min-width: 260px;
+        margin: 0.75rem;
+        padding: 1.25rem;
+    }
+
+    /* Adjust theme toggle positioning for mobile */
+    .tour-popover.driver-popover.theme-toggle-popover {
+        transform: translateY(8px) !important;
+        max-width: 340px;
+        min-width: 280px;
+    }
+
+    .tour-popover .driver-popover-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .tour-popover .driver-popover-description {
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .tour-popover .driver-popover-prev-btn,
+    .tour-popover .driver-popover-next-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        min-height: 36px;
+    }
+
+    .tour-popover .driver-popover-footer {
+        gap: 0.75rem;
+        padding-top: 0.875rem;
+        margin-top: 0.875rem;
+    }
+}
+
+/* Smooth entrance animation */
+.tour-popover.driver-popover {
+    animation: tourPopoverFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tourPopoverFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* High contrast mode support for accessibility */
+@media (prefers-contrast: high) {
+    .tour-popover.driver-popover {
+        border-width: 2px;
+        box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.5),
+            0 0 0 2px var(--foreground);
+    }
+
+    .tour-popover .driver-popover-prev-btn,
+    .tour-popover .driver-popover-next-btn,
+    .tour-popover .driver-popover-close-btn {
+        border-width: 2px;
+    }
+
+    .tour-popover .driver-popover-title {
+        font-weight: 700;
+    }
+
+    .tour-popover .driver-popover-description {
+        font-weight: 500;
+    }
+}
+
+/* Enhanced highlighting - preserve cutout while improving visibility */
+
+/* Clean, subtle enhancement for highlighted elements in dark mode */
+.dark .driver-active-element {
+    /* Subtle inner border that doesn't interfere with cutout */
+    box-shadow: inset 0 0 0 2px rgba(167, 139, 250, 0.6) !important;
+    /* Very light background tint for better visibility */
+    background-color: rgba(167, 139, 250, 0.05) !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease-out !important;
+}
+
+/* Clean enhancement for light mode */
+html:not(.dark) .driver-active-element {
+    /* Subtle inner border for definition */
+    box-shadow: inset 0 0 0 2px rgba(139, 92, 246, 0.4) !important;
+    background-color: rgba(139, 92, 246, 0.03) !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease-out !important;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .tour-popover.driver-popover {
+        animation: none;
+        transition: none;
+    }
+
+    .tour-popover .driver-popover-prev-btn,
+    .tour-popover .driver-popover-next-btn,
+    .tour-popover .driver-popover-close-btn {
+        transition: none;
+    }
+
+    .tour-popover .driver-popover-prev-btn:hover,
+    .tour-popover .driver-popover-next-btn:hover,
+    .tour-popover .driver-popover-close-btn:hover {
+        transform: none;
+    }
+
+    .driver-active-element {
+        transition: none !important;
+    }
+}
+
+/* Special positioning for Instagram navigation popover - offset up to avoid blocking nav */
+.tour-popover.driver-popover.instagram-nav-popover {
+    transform: translateY(-80px) !important;
+}
+
+/* Responsive adjustment for mobile Instagram nav popover */
+@media (max-width: 768px) {
+    .tour-popover.driver-popover.instagram-nav-popover {
+        transform: translateY(-60px) !important;
+    }
+}
