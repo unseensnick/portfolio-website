@@ -4,17 +4,13 @@ import { HexagonLogo } from "@/components/hexagon-logo";
 import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TourControls } from "@/components/tour-controls";
+import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { scrollToSection, setupScrollListener } from "@/lib/navigation-utils";
-import { useEffect, useState } from "react";
+import { scrollToSection } from "@/lib/navigation-utils";
+import { useState } from "react";
 
 interface NavLink {
     href: string;
-    label: string;
-}
-
-interface Section {
-    id: string;
     label: string;
 }
 
@@ -26,7 +22,7 @@ interface SiteHeaderProps {
 }
 
 /**
- * Main site header with hexagon logo and navigation
+ * Main site header with hexagon logo and navigation using custom hooks
  */
 export function SiteHeader({
     logo = "YourName",
@@ -35,22 +31,15 @@ export function SiteHeader({
     logoSplitAt,
 }: SiteHeaderProps) {
     const isMobile = useIsMobile();
-    const [activeSection, setActiveSection] = useState<string>(
-        navLinks[0]?.href?.replace("#", "") || "home"
-    );
     const [isLogoHovered, setIsLogoHovered] = useState(false);
 
-    const sections: Section[] = navLinks.map((link) => ({
-        id: link.href.replace("#", ""),
-        label: link.label,
-    }));
-
-    // Track active section on desktop
-    useEffect(() => {
-        if (isMobile) return;
-        const cleanup = setupScrollListener(sections, setActiveSection, 100);
-        return cleanup;
-    }, [isMobile, sections]);
+    // Use custom hook for active section management
+    const { activeSection } = useActiveSection({
+        navLinks,
+        offset: 100,
+        isMobile: false,
+        enabled: !isMobile, // Only track on desktop
+    });
 
     const handleNavClick = (e: React.MouseEvent, href: string) => {
         e.preventDefault();

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { FolderOpen, Home, LucideIcon, Mail, User } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 /**
@@ -296,4 +297,64 @@ export function createContentWrapper(isMobile: boolean): {
         content: isMobile ? "" : "lg:col-span-3 space-y-12",
         spacing: isMobile ? "space-y-8" : "space-y-6",
     };
+}
+
+/**
+ * Creates password input field configuration with visibility toggle
+ * Eliminates duplicate password field patterns in forms
+ */
+export function createPasswordField(
+    value: string,
+    onChange: (value: string) => void,
+    showPassword: boolean,
+    toggleShowPassword: () => void,
+    options: {
+        id: string;
+        placeholder: string;
+        error?: string;
+        disabled?: boolean;
+    }
+) {
+    return {
+        inputProps: {
+            id: options.id,
+            type: showPassword ? "text" : "password",
+            value,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value),
+            placeholder: options.placeholder,
+            className: cn(
+                "pr-10",
+                options.error && "border-destructive focus:border-destructive"
+            ),
+            disabled: options.disabled,
+        },
+        toggleButtonProps: {
+            type: "button" as const,
+            variant: "ghost" as const,
+            size: "sm" as const,
+            className: "absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent",
+            onClick: toggleShowPassword,
+            disabled: options.disabled,
+        },
+        showPassword,
+        error: options.error,
+    };
+}
+
+/**
+ * Icon mapping for navigation sections
+ * Maps section IDs to their corresponding Lucide icons
+ */
+export const sectionIconMap: Record<string, LucideIcon> = {
+    home: Home,
+    about: User,
+    projects: FolderOpen,
+    contact: Mail,
+};
+
+/**
+ * Get icon for a section, with fallback to Home icon
+ */
+export function getSectionIcon(sectionId: string): LucideIcon {
+    return sectionIconMap[sectionId] || Home;
 }

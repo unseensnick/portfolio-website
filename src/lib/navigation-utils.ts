@@ -93,7 +93,7 @@ export function setupScrollListener(
         }
 
         // Determine which section is currently in view
-        const scrollPosition = currentScrollY + (isMobile ? 150 : offset + 100);
+        const scrollPosition = currentScrollY + (isMobile ? 200 : offset + 100);
 
         for (let i = sections.length - 1; i >= 0; i--) {
             const section = document.getElementById(sections[i].id);
@@ -103,9 +103,13 @@ export function setupScrollListener(
                 const sectionHeight = section.offsetHeight;
 
                 if (isMobile) {
+                    // Special handling for the last section (usually contact)
+                    const isLastSection = i === sections.length - 1;
+                    const threshold = isLastSection ? 50 : 100;
+                    
                     if (
                         scrollPosition >= sectionTop &&
-                        scrollPosition < sectionTop + sectionHeight + 100
+                        scrollPosition < sectionTop + sectionHeight + threshold
                     ) {
                         setActiveSection(sections[i].id);
                         break;

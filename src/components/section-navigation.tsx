@@ -1,12 +1,8 @@
 "use client";
 
+import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-    Section,
-    scrollToSection,
-    setupScrollListener,
-} from "@/lib/navigation-utils";
-import { useEffect, useState } from "react";
+import { scrollToSection } from "@/lib/navigation-utils";
 
 interface NavLink {
     href: string;
@@ -18,31 +14,19 @@ interface SectionNavigationProps {
 }
 
 /**
- * Desktop-only side navigation with animated dots and tooltips
+ * Desktop-only side navigation with animated dots and tooltips using custom hooks
  * Fixed position on right side, hidden completely on mobile
  */
 export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
-    const [activeSection, setActiveSection] = useState<string>(
-        navLinks[0]?.href?.replace("#", "") || "home"
-    );
     const isMobile = useIsMobile();
 
-    const sections: Section[] = navLinks.map((link) => ({
-        id: link.href.replace("#", ""),
-        label: link.label,
-    }));
-
-    useEffect(() => {
-        if (isMobile) return;
-
-        const cleanup = setupScrollListener(
-            sections,
-            setActiveSection,
-            100,
-            false
-        );
-        return cleanup;
-    }, [isMobile, sections]);
+    // Use custom hook for active section management
+    const { activeSection, sections } = useActiveSection({
+        navLinks,
+        offset: 100,
+        isMobile: false,
+        enabled: !isMobile, // Only track on desktop
+    });
 
     if (isMobile) return null;
 
@@ -51,11 +35,11 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
     };
 
     return (
-        <div
-            className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:block"
-            data-tour="section-navigation"
+        <nav
+            className="fixed right-8 top-1/2 -translate-y-1/2 z-30 hidden lg:block"
+            data-tour="side-navigation"
         >
-            <nav className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
                 {sections.map((section) => {
                     const isActive = activeSection === section.id;
 
@@ -66,34 +50,29 @@ export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
                             className="group relative flex items-center"
                             aria-label={`Navigate to ${section.label}`}
                         >
-                            {/* Navigation dot */}
+                            {/* Dot indicator */}
                             <div
-                                className={`size-3 rounded-full transition-all duration-300 ${
+                                className={`size-3 rounded-full border-2 transition-all duration-300 ${
                                     isActive
-                                        ? "bg-primary scale-125"
-                                        : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:scale-110"
+                                        ? "bg-primary border-primary scale-125"
+                                        : "bg-transparent border-muted-foreground/40 group-hover:border-primary group-hover:scale-110"
                                 }`}
                             />
 
                             {/* Tooltip */}
                             <div
-                                className={`absolute right-6 px-3 py-1.5 bg-card border border-border rounded-lg shadow-lg transition-all duration-300 whitespace-nowrap ${
+                                className={`absolute right-6 px-3 py-1.5 bg-background border border-border rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-300 ${
                                     isActive
                                         ? "opacity-100 translate-x-0"
-                                        : "opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
+                                        : "opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
                                 }`}
                             >
-                                <span className="text-sm font-medium text-foreground">
-                                    {section.label}
-                                </span>
-
-                                {/* Tooltip arrow */}
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 size-2 bg-card border-l border-b border-border rotate-45" />
+                                {section.label}
                             </div>
                         </button>
                     );
                 })}
-            </nav>
-        </div>
+            </div>
+        </nav>
     );
 }
