@@ -1,25 +1,24 @@
 # Modern Portfolio Website
 
-A sleek, responsive portfolio website built with Next.js and PayloadCMS for developers to showcase their skills and projects.
+Sleek, responsive portfolio website built with Next.js and PayloadCMS for developers to showcase their skills and projects.
 
 ## Features
 
-- **Responsive Design**: Fully optimized for mobile, tablet, and desktop
-- **Dark/Light Mode**: Built-in theme switching with user preference detection
-- **CMS Integration**: Edit all content through PayloadCMS admin panel
-- **Live Preview**: Real-time content preview with multiple device breakpoints in the admin panel
+- **Responsive Design**: Optimized for mobile, tablet, and desktop
+- **Dark/Light Mode**: Theme switching with user preference detection
+- **CMS Integration**: Edit content through PayloadCMS admin panel
+- **Live Preview**: Real-time content preview with device breakpoints
 - **TypeScript**: Type-safe codebase with enhanced developer experience
 - **Modular Components**: Reusable UI components with Tailwind CSS
-- **Animation Effects**: Subtle animations and transitions for modern UX
-- **Guided Tour**: Interactive tour system for user onboarding and demos
-- **Demo Mode**: Showcase mode with sample data for presentations
+- **Guided Tour**: Interactive tour system for demos and onboarding
+- **Demo Mode**: Showcase mode with sample data
 
 ## Technology Stack
 
 - [Next.js](https://nextjs.org) - React framework with App Router
 - [PayloadCMS](https://payloadcms.com) - Headless CMS for content management
 - [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com) - Component library for styled components
+- [shadcn/ui](https://ui.shadcn.com) - Component library
 - [TypeScript](https://www.typescriptlang.org) - Static type checking
 - [PostgreSQL](https://www.postgresql.org) - Database for CMS content
 
@@ -27,17 +26,17 @@ A sleek, responsive portfolio website built with Next.js and PayloadCMS for deve
 
 ### Environment Setup
 
-Create a `.env` file in the root directory:
+Create a `.env` file:
 
 ```bash
 PAYLOAD_SECRET=your-secret-key-change-me
 DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
 NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
 
-# Demo Mode Configuration (optional - for showcasing)
+# Demo Mode (optional)
 NEXT_PUBLIC_DEMO_MODE=false
 
-# Email Configuration (for password resets and notifications)
+# Email Configuration
 EMAIL_FROM=noreply@yourportfolio.com
 EMAIL_FROM_NAME=Portfolio Website
 SMTP_HOST=smtp.example.com
@@ -46,56 +45,46 @@ SMTP_USER=your_smtp_username
 SMTP_PASS=your_smtp_password
 ```
 
-For detailed email setup instructions, see [Email Configuration](./docs/email-setup.md).
+See documentation for detailed setup:
 
-For demo mode and showcasing features, see [Demo Mode Guide](./docs/DEMO_MODE.md).
-
-For interactive tours and video creation, see [Guided Tour Guide](./docs/GUIDED_TOUR.md).
+- [Email Configuration](./docs/email-setup.md)
+- [Demo Mode Guide](./docs/DEMO_MODE.md)
+- [Guided Tour Guide](./docs/GUIDED_TOUR.md)
 
 ### Development
 
-1. Install dependencies:
-
-    ```bash
-    npm install
-    ```
-
-2. Start the development server:
-
-    ```bash
-    npm run dev
-    ```
-
-3. Open [http://localhost:3000](http://localhost:3000) to view the website
-4. Access the CMS at [http://localhost:3000/admin](http://localhost:3000/admin)
-
-### Demo Mode (Guided Tour)
-
-The guided tour feature is only available in demo mode for security and user experience reasons:
-
-**Option 1: URL Parameter**
-
 ```bash
-http://localhost:3000?demo
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Open http://localhost:3000
+# Access CMS at http://localhost:3000/admin
 ```
 
-**Option 2: Demo Script**
+### Demo Mode
+
+Enable guided tour and demo features:
 
 ```bash
+# URL parameter
+http://localhost:3000?demo=true
+
+# NPM script
 npm run demo
 ```
 
-This enables the interactive guided tour controls in the bottom-right corner of the page.
-
 ### Content Management
 
-Edit all website sections through the PayloadCMS admin panel:
+Edit website sections through PayloadCMS admin:
 
-- **Navigation**: Logo, subtitle, and navigation links
-- **Hero**: Greeting, title, description, and main image
-- **Projects**: Featured project, project grid, and technologies
-- **About**: Bio paragraphs, skills, interests, and profile image
-- **Contact**: Email, GitHub, and call-to-action text
+- **Navigation**: Logo, subtitle, navigation links
+- **Hero**: Greeting, title, description, main image
+- **Projects**: Featured project, project grid, technologies
+- **About**: Bio paragraphs, skills, interests, profile image
+- **Contact**: Email, GitHub, call-to-action text
 - **Footer**: Copyright information
 
 ## Project Structure
@@ -103,13 +92,10 @@ Edit all website sections through the PayloadCMS admin panel:
 ```
 src/
 ├── app/             # Next.js app router pages and API routes
-│   ├── (frontend)/  # Main website pages using frontend layout
+│   ├── (frontend)/  # Main website pages
 │   └── (payload)/   # PayloadCMS admin routes and API
-├── components/      # Reusable React components (flattened structure)
+├── components/      # Reusable React components
 ├── collections/     # PayloadCMS collection definitions
-│   ├── Media.ts     # Media collection for images and files
-│   ├── Portfolio.ts # Portfolio content collection
-│   └── Users.ts     # User authentication collection
 ├── hooks/           # Custom React hooks
 ├── lib/             # Utility functions and helpers
 └── types/           # TypeScript type definitions
@@ -118,69 +104,24 @@ src/
 ## Customization
 
 - **Theme**: Modify colors in `src/app/(frontend)/styles.css`
-- **Layout**: Adjust responsive breakpoints in the useIsMobile hook
-- **Components**: Extend or modify components in the components directory
-- **Content Model**: Update PayloadCMS collections to add new fields
+- **Layout**: Adjust responsive breakpoints in useIsMobile hook
+- **Components**: Extend components in the components directory
+- **Content Model**: Update PayloadCMS collections for new fields
 
 ## Deployment
 
-### Vercel Deployment
+### Vercel
 
-1. **Connect your repository**:
+1. Connect your repository to [Vercel](https://vercel.com)
+2. Set Framework Preset to "Next.js"
+3. Add environment variables from your `.env` file
+4. Deploy automatically
 
-    - Create a [Vercel account](https://vercel.com/signup) if you don't have one
-    - Go to the [Vercel dashboard](https://vercel.com/dashboard)
-    - Click "Add New" → "Project"
-    - Import your GitHub/GitLab/Bitbucket repository
+### Coolify
 
-2. **Configure project settings**:
+1. Set up [Coolify instance](https://coolify.io/)
+2. Create new service and connect repository
+3. Configure environment variables
+4. Set port to 3000 and deploy
 
-    - Set the Framework Preset to "Next.js"
-    - Add environment variables from your `.env` file
-    - Configure the build settings:
-        - Build Command: `npm run build`
-        - Output Directory: `.next`
-
-3. **Deploy**:
-
-    - Click "Deploy"
-    - Vercel will build and deploy your project automatically
-    - Once deployed, you'll get a production URL
-
-4. **Connect custom domain** (optional):
-    - From your project dashboard, go to "Settings" → "Domains"
-    - Add your custom domain and follow verification steps
-
-### Coolify Deployment
-
-1. **Setup Coolify server**:
-
-    - Set up a [Coolify instance](https://coolify.io/) on your server
-    - Login to your Coolify dashboard
-
-2. **Create a new service**:
-
-    - Navigate to your Coolify dashboard
-    - Click "Project" → "Add" and give your project a name
-    - Select "Production" → "Add New Resource"
-    - Select repository access type:
-        - "Public Repository" (for open source projects)
-        - "Private Repository with Github App" (requires Github App setup)
-        - "Private Repository with Deploy Key" (manual SSH key setup)
-    - For Github App option: select your connected Github App
-    - Select your repository and click "Load Repository"
-    - Configure deployment settings:
-        - Branch: Select the branch to deploy (e.g., "main")
-        - Port: Enter the port number (default: 3000)
-    - Click "Continue"
-    - Configure service settings:
-        - Domain: Enter your domain (e.g., `portfolio.example.com`)
-        - Ports: Set both "Exposed" and "Mappings" to match your port (e.g., 3000)
-        - Name: (Optional) Set a custom service name
-        - Environment Variables: (Optional) Add your .env variables
-    - Click "Deploy" to create and deploy your service
-
-3. **Configure environment variables**:
-
-    - Add all variables from your `.env` file are added in the "Production Environment Variables"
-    - Configure the database connection string to your production database
+For detailed deployment instructions, see the full documentation in each platform's setup guide.

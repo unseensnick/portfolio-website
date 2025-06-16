@@ -13,7 +13,7 @@ interface MobileDemoWrapperProps {
 
 /**
  * Wrapper component that provides mobile override context and tour controls
- * This allows toggling mobile view for demo purposes, especially for the Instagram tour step
+ * This allows toggling mobile view for demo purposes, especially for the mobile navigation tour step
  * When mobile view is active, constrains content to 764px max-width and centers it
  */
 export function MobileDemoWrapper({
@@ -51,33 +51,33 @@ export function MobileDemoWrapper({
         onMobileToggle?.(mobile);
     };
 
-    // Apply custom styles to Instagram navigation when mobile view is active
+    // Apply custom styles to mobile navigation when mobile view is active
     useEffect(() => {
-        const instagramNav = document.querySelector(
-            '[data-tour="instagram-navigation"]'
+        const mobileNav = document.querySelector(
+            '[data-tour="mobile-navigation"]'
         ) as HTMLElement;
 
-        if (instagramNav) {
+        if (mobileNav) {
             if (forceMobileView) {
                 // Store original styles
-                const originalLeft = instagramNav.style.left;
-                const originalRight = instagramNav.style.right;
-                const originalTransform = instagramNav.style.transform;
-                const originalMaxWidth = instagramNav.style.maxWidth;
+                const originalLeft = mobileNav.style.left;
+                const originalRight = mobileNav.style.right;
+                const originalTransform = mobileNav.style.transform;
+                const originalMaxWidth = mobileNav.style.maxWidth;
 
                 // Apply constrained styles
-                instagramNav.style.left = "50%";
-                instagramNav.style.right = "auto";
-                instagramNav.style.transform = "translateX(-50%)";
-                instagramNav.style.maxWidth = "764px";
-                instagramNav.style.width = "100%";
+                mobileNav.style.left = "50%";
+                mobileNav.style.right = "auto";
+                mobileNav.style.transform = "translateX(-50%)";
+                mobileNav.style.maxWidth = "764px";
+                mobileNav.style.width = "100%";
 
                 // Cleanup function to restore original styles
                 return () => {
-                    instagramNav.style.left = originalLeft;
-                    instagramNav.style.right = originalRight;
-                    instagramNav.style.transform = originalTransform;
-                    instagramNav.style.maxWidth = originalMaxWidth;
+                    mobileNav.style.left = originalLeft;
+                    mobileNav.style.right = originalRight;
+                    mobileNav.style.transform = originalTransform;
+                    mobileNav.style.maxWidth = originalMaxWidth;
                 };
             }
         }

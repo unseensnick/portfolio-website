@@ -50,8 +50,7 @@ const fallbackData = {
         title: "My Projects",
         featured: {
             title: "Featured Project",
-            description:
-                "Placeholder Image Add content via PayloadCMS",
+            description: "Please add content through the PayloadCMS admin panel",
             projectUrl: "#",
             codeUrl: "#",
             image: "/placeholder-image.svg",
@@ -64,8 +63,7 @@ const fallbackData = {
         items: [
             {
                 title: "Sample Project",
-                description:
-                    "Placeholder Image Add content via PayloadCMS",
+                description: "Please add content through the PayloadCMS admin panel",
                 projectUrl: "#",
                 codeUrl: "#",
                 image: "/placeholder-image.svg",
@@ -87,7 +85,7 @@ const fallbackData = {
         ctaDescription: "I'm open to new opportunities and collaborations",
     },
     footer: {
-        copyright: "© 2025 All Rights Reserved",
+        copyright: "© 2024 Portfolio. All rights reserved.",
     },
 };
 
@@ -103,53 +101,7 @@ function safeNumber(value: any, min?: number, max?: number): number | undefined 
     return num;
 }
 
-/**
- * Processes media data structure for projects (eliminates duplication)
- * Handles both new consolidated media structure and legacy fields
- */
-function processProjectMediaData(project: any): {
-    media?: {
-        image?: { url: string | null; alt: string };
-        video?: {
-            src: string;
-            file?: { url: string | null };
-            title: string;
-            description: string;
-        };
-    };
-    // Legacy fields for backward compatibility
-    image: string;
-    videoSrc: string;
-    videoTitle: string;
-    videoDescription: string;
-} {
-    // Extract media data (new consolidated structure)
-    const mediaData = project.media ? {
-        media: {
-            image: project.media.image ? {
-                url: safelyExtractImageUrl(project.media.image),
-                alt: project.media.image?.alt || project.title || "Project image"
-            } : undefined,
-            video: project.media.video ? {
-                src: safeString(project.media.video.src),
-                file: project.media.video.file ? {
-                    url: safelyExtractImageUrl(project.media.video.file)
-                } : undefined,
-                title: safeString(project.media.video.title),
-                description: safeString(project.media.video.description)
-            } : undefined
-        }
-    } : {};
 
-    return {
-        ...mediaData,
-        // Legacy fields for backward compatibility
-        image: safelyExtractImageUrl(project.image, "/placeholder-image.svg") || "/placeholder-image.svg",
-        videoSrc: safeString(project.videoSrc),
-        videoTitle: safeString(project.videoTitle),
-        videoDescription: safeString(project.videoDescription),
-    };
-}
 
 /**
  * Transforms raw PayloadCMS data into the format expected by components
@@ -188,27 +140,20 @@ export function adaptPortfolioData(data: any) {
         hero: {
             greeting: safeString(data.hero.greeting, "Hello, I'm"),
             title: safeString(data.hero.title, "A Developer"),
-            description: safeString(data.hero.description, "Please add content through the PayloadCMS admin panel"),
+            description: safeString(data.hero.description, "Welcome to my portfolio"),
             githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
-            image: safelyExtractImageUrl(data.hero.image, "/placeholder-image.svg") || "/placeholder-image.svg",
-            ctaText: "View GitHub",
-            ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
-            secondaryCtaText: "View Projects",
-            secondaryCtaLink: "#projects",
+            image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
+            ctaText: safeString(data.hero.ctaText, "View GitHub"),
+            ctaLink: safeString(data.hero.ctaLink, "https://github.com"),
+            secondaryCtaText: safeString(data.hero.secondaryCtaText, "View Projects"),
+            secondaryCtaLink: safeString(data.hero.secondaryCtaLink, "#projects"),
         },
         about: {
             title: safeString(data.about.title, "About Me"),
-            paragraphs: (() => {
-                const paragraphs = safelyExtractParagraphs(data.about.paragraphs);
-                if (paragraphs.length > 0) return paragraphs;
-                
-                // Fallback to bio field if paragraphs array is empty
-                const bio = safeString(data.about.bio);
-                return bio ? [bio] : ["Please add content through the PayloadCMS admin panel"];
-            })(),
+            paragraphs: safelyExtractParagraphs(data.about.paragraphs),
             technologies: safelyExtractNames(data.about.technologies),
             interests: safelyExtractNames(data.about.interests),
-            image: safelyExtractImageUrl(data.about.image, "/placeholder-image.svg") || "/placeholder-image.svg",
+            image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
             technologiesHeading: safeString(data.about.technologiesHeading, "Technologies"),
             interestsHeading: safeString(data.about.interestsHeading, "Interests"),
         },
@@ -227,29 +172,23 @@ export function adaptPortfolioData(data: any) {
                     };
                 }
 
-                const mediaData = processProjectMediaData(featured);
-
                 return {
                     title: safeString(featured.title, "Featured Project"),
                     description: safeString(featured.description, "A showcase of my best work"),
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
                     technologies: safelyProcessTechnologies(featured.technologies),
-                    ...mediaData
+                    image: safelyExtractImageUrl(featured.image) || "/placeholder-image.svg",
                 };
             })(),
-            items: (data.projects.items || []).map((project: any) => {
-                const mediaData = processProjectMediaData(project);
-
-                return {
-                    title: safeString(project.title, "Project"),
-                    description: safeString(project.description, "Project description"),
-                    projectUrl: safeString(project.projectUrl),
-                    codeUrl: safeString(project.codeUrl),
-                    technologies: safelyProcessTechnologies(project.technologies),
-                    ...mediaData
-                };
-            }),
+            items: (data.projects.items || []).map((project: any) => ({
+                title: safeString(project.title, "Project"),
+                description: safeString(project.description, "Project description"),
+                projectUrl: safeString(project.projectUrl),
+                codeUrl: safeString(project.codeUrl),
+                technologies: safelyProcessTechnologies(project.technologies),
+                image: safelyExtractImageUrl(project.image) || "/placeholder-image.svg",
+            })),
             description: safeString(data.projects.description, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
             viewAllLink: safeString(data.projects.viewAllLink),
@@ -265,7 +204,7 @@ export function adaptPortfolioData(data: any) {
             ctaDescription: safeString(data.contact.ctaDescription, "I'm open to new opportunities and collaborations"),
         },
         footer: {
-            copyright: safeString(data.footer.copyright, "© 2025 All Rights Reserved"),
+            copyright: safeString(data.footer.copyright, "© 2024 Portfolio. All rights reserved."),
         },
     };
 }
@@ -335,7 +274,6 @@ export async function getPortfolioData(
 
                 // Try published content if draft request fails
                 if (draft) {
-                                    // Fallback to published content on draft error
                     return getPortfolioData(false);
                 }
 
@@ -352,7 +290,6 @@ export async function getPortfolioData(
 
                 // Try draft mode if no published docs found
                 if (!draft && result.totalDocs === 0) {
-                                    // Fallback to draft content if no published docs exist
                     return getPortfolioData(true);
                 }
 
@@ -378,7 +315,6 @@ export async function getPortfolioData(
             error.message.includes('network') ||
             error.message.includes('timeout')
         ))) {
-            // Network error in draft mode - try published content
             return getPortfolioData(false);
         }
 

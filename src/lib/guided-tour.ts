@@ -24,18 +24,13 @@ function isElementProperlyVisible(element: Element): boolean {
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
     
-    // Add margin to viewport for better detection (10% on each side)
-    const margin = Math.min(viewportHeight * 0.1, 100);
+    const isInViewport = rect.top >= 0 && rect.left >= 0 && 
+                        rect.bottom <= viewportHeight && rect.right <= viewportWidth;
+    const hasSize = rect.width > 0 && rect.height > 0;
+    const isVisible = window.getComputedStyle(element).visibility !== 'hidden' && 
+                     window.getComputedStyle(element).display !== 'none';
     
-    // Check if element is reasonably visible within the viewport
-    const isVerticallyVisible = rect.top >= -margin && rect.bottom <= viewportHeight + margin;
-    const isHorizontallyVisible = rect.left >= -50 && rect.right <= viewportWidth + 50;
-    
-    // Also check if the element center is reasonably positioned
-    const elementCenter = rect.top + rect.height / 2;
-    const isCenterVisible = elementCenter >= margin && elementCenter <= viewportHeight - margin;
-    
-    return isVerticallyVisible && isHorizontallyVisible && isCenterVisible;
+    return isInViewport && hasSize && isVisible;
 }
 
 /**
@@ -53,12 +48,16 @@ async function handleScrollingWithDelay(element: Element, step: any): Promise<vo
             inline: "nearest",
         });
         
-        // Wait for scroll to complete
         await new Promise(resolve => setTimeout(resolve, 800 + extraTime));
-    } else {
-        tourLogger.log(`Element already visible: ${step.popover?.title}`);
-        await new Promise(resolve => setTimeout(resolve, 100));
     }
+    
+    // Show popover after scroll completes
+    setTimeout(() => {
+        const popover = document.querySelector('.driver-popover');
+        if (popover) {
+            (popover as HTMLElement).style.display = 'block';
+        }
+    }, 100);
 }
 
 /**
@@ -170,11 +169,11 @@ const tourSteps = [
     {
         element: 'body', // Temporary element, will be replaced
         popover: {
-            title: 'Instagram-Style Mobile Navigation',
-            description: 'This bottom navigation bar appears only on mobile devices, providing an Instagram-like experience with icons and smooth section navigation.',
+                    title: 'Mobile Navigation',
+        description: 'This bottom navigation bar appears only on mobile devices, providing smooth section navigation with icons and active indicators.',
             side: 'bottom' as const,
             align: 'center' as const,
-            popoverClass: 'tour-popover instagram-nav-popover',
+            popoverClass: 'tour-popover mobile-nav-popover',
         },
         special: 'mobile-navigation' // Special flag for custom handling
     },
@@ -338,24 +337,24 @@ export function createGuidedTour(automated: boolean = false) {
                     
                     // Wait a moment for the mobile view to activate
                     setTimeout(() => {
-                        // Find the Instagram navigation element
-                        const instagramNav = document.querySelector('[data-tour="instagram-navigation"]');
-                        tourLogger.log('Instagram navigation element found:', instagramNav);
+                        // Find the mobile navigation element
+                        const mobileNav = document.querySelector('[data-tour="mobile-navigation"]');
+                        tourLogger.log('Mobile navigation element found:', mobileNav);
                         tourLogger.log('All elements with data-tour attribute:', document.querySelectorAll('[data-tour]'));
                         
-                        if (instagramNav && driverInstance) {
-                            tourLogger.log('Instagram navigation found, mobile view is active');
+                        if (mobileNav && driverInstance) {
+                            tourLogger.log('Mobile navigation found, mobile view is active');
                             
-                            // Highlight the Instagram navigation element
+                            // Highlight the mobile navigation element
                             driverInstance.highlight({
-                                element: instagramNav,
+                                element: mobileNav,
                                 popover: {
                                     ...step.popover,
-                                    popoverClass: 'tour-popover instagram-nav-popover'
+                                    popoverClass: 'tour-popover mobile-nav-popover'
                                 }
                             });
                             
-                            tourLogger.log('Instagram navigation configured with custom popover positioning');
+                            tourLogger.log('Mobile navigation configured with custom popover positioning');
                             
                             if (automated) {
                                 tourLogger.log('Automated tour - will switch back after duration');
@@ -392,7 +391,7 @@ export function createGuidedTour(automated: boolean = false) {
                                 }
                             }
                         } else {
-                            tourLogger.log('Instagram navigation not found or driver not available');
+                            tourLogger.log('Mobile navigation not found or driver not available');
                             // Resume tour if something went wrong
                             if (automated) {
                                 // For automated tours, continue automatically
@@ -403,7 +402,7 @@ export function createGuidedTour(automated: boolean = false) {
                                 }
                             } else {
                                 // For manual tours, show a fallback message but don't auto-advance
-                                tourLogger.log('Manual tour - Instagram navigation not found, continuing with body element');
+                                tourLogger.log('Manual tour - Mobile navigation not found, continuing with body element');
                             }
                         }
                     }, 300); // Wait for mobile view to activate

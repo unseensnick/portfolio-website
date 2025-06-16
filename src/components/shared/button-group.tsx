@@ -32,7 +32,6 @@ interface ButtonGroupProps {
     "data-tour"?: string;
 }
 
-/** Responsive button group for CTA sections */
 export function ButtonGroup({
     buttons,
     fullWidthMobile = true,

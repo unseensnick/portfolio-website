@@ -1,7 +1,7 @@
 "use client";
 
 import { HexagonLogo } from "@/components/hexagon-logo";
-import { InstagramMobileNav } from "@/components/instagram-mobile-nav";
+import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TourControls } from "@/components/tour-controls";
 import { useActiveSection } from "@/hooks/use-active-section";
@@ -124,7 +124,7 @@ export function SiteHeader({
                 </div>
             </header>
 
-            <InstagramMobileNav navLinks={navLinks} />
+            <MobileNav navLinks={navLinks} />
         </>
     );
 }

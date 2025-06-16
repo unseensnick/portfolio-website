@@ -321,13 +321,9 @@ export function createFullScreenCenteredLayout(): string {
     return `min-h-screen ${commonClasses.flexCenter} bg-muted/50 p-4`;
 }
 
-/**
- * Logging utilities to eliminate repeated console logging patterns
- */
+// Logging utilities
 export const logger = {
-    /**
-     * Creates a prefixed logger for consistent API logging
-     */
+
     createApiLogger: (service: string, requestId: string) => ({
         error: (message: string, ...args: any[]) => 
             console.error(`[${service} API ${requestId}] ${message}`, ...args),
@@ -337,9 +333,6 @@ export const logger = {
             console.log(`[${service} API ${requestId}] ${message}`, ...args),
     }),
     
-    /**
-     * Creates a prefixed logger for feature logging
-     */
     createFeatureLogger: (feature: string) => ({
         error: (message: string, ...args: any[]) => 
             console.error(`[${feature}] ${message}`, ...args),
