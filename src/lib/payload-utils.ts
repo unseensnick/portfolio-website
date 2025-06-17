@@ -1,4 +1,3 @@
-import { demoData } from "@/lib/demo-data";
 import { logDemoModeStatus, shouldUseDemoMode } from "@/lib/demo-utils";
 import { logger } from "@/lib/utils";
 import type { PortfolioData } from "@/types/portfolio";
@@ -277,14 +276,14 @@ export async function getPortfolioData(
     draft: boolean = false,
     searchParams?: { [key: string]: string | string[] | undefined }
 ): Promise<PortfolioData> {
-    // Check if demo mode should be used
-    const useDemoMode = shouldUseDemoMode(searchParams);
+    const requestId = Math.random().toString(36).substr(2, 9);
     
+    // Check if demo mode should be used - now uses real data from database
+    const useDemoMode = shouldUseDemoMode(searchParams);
     if (useDemoMode) {
         logDemoModeStatus(true, searchParams?.demo === "true" ? "url" : "env");
-        return demoData;
+        // Demo mode now uses real data from database instead of hardcoded data
     }
-    const requestId = Math.random().toString(36).substr(2, 9);
     const apiLogger = logger.createApiLogger("Portfolio", requestId);
     
     try {
