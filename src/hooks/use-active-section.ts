@@ -20,7 +20,7 @@ interface UseActiveSectionOptions {
 
 /**
  * Custom hook for managing active section state in navigation components
- * Eliminates duplicate logic across site-header, section-navigation, and instagram-mobile-nav
+ * Eliminates duplicate logic across site-header, section-navigation, and mobile-nav
  * 
  * @param options Configuration options for active section tracking
  * @returns Object with activeSection state and section mapping

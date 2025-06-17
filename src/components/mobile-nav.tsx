@@ -2,6 +2,7 @@
 
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useMounted } from "@/hooks/use-mounted";
 import { scrollToSection } from "@/lib/navigation-utils";
 import { cn, commonClasses } from "@/lib/utils";
 
@@ -19,17 +20,19 @@ interface MobileNavProps {
  * Features blur backdrop, safe area padding, and animated indicators
  */
 export function MobileNav({ navLinks = [] }: MobileNavProps) {
-    const isMobile = useIsMobile();
+    const isMobile = useIsMobile(900);
+    const mounted = useMounted();
 
     // Use custom hook for active section management
     const { activeSection, sections } = useActiveSection({
         navLinks,
         offset: 0,
         isMobile: true,
-        enabled: isMobile, // Only track on mobile
+        enabled: isMobile && mounted,
     });
 
-    if (!isMobile) return null;
+    // Prevent hydration mismatch by not rendering until mounted
+    if (!mounted || !isMobile) return null;
 
     const handleNavigationClick = (sectionId: string) => {
         scrollToSection(sectionId, 0, 0, true);

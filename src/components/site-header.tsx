@@ -31,7 +31,7 @@ export function SiteHeader({
     navLinks = [],
     logoSplitAt,
 }: SiteHeaderProps) {
-    const isMobile = useIsMobile();
+    const isMobile = useIsMobile(900);
     const [isLogoHovered, setIsLogoHovered] = useState(false);
 
     // Use custom hook for active section management
