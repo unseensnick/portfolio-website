@@ -796,14 +796,23 @@ html:not(.dark) .driver-active-element {
     }
 }
 
-/* Special positioning for Instagram navigation popover - offset up to avoid blocking nav */
-.tour-popover.driver-popover.instagram-nav-popover {
+/* Special positioning for mobile navigation popover - offset up to avoid blocking nav */
+.tour-popover.driver-popover.mobile-nav-popover {
     transform: translateY(-80px) !important;
 }
 
-/* Responsive adjustment for mobile Instagram nav popover */
+/* Responsive adjustment for mobile nav popover */
 @media (max-width: 768px) {
-    .tour-popover.driver-popover.instagram-nav-popover {
+    .tour-popover.driver-popover.mobile-nav-popover {
         transform: translateY(-60px) !important;
     }
+}
+
+/* Mobile demo mode - constrain mobile navigation to demo wrapper width */
+.mobile-demo-active [data-tour="mobile-navigation"] {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    max-width: 764px !important;
+    width: 100% !important;
 }

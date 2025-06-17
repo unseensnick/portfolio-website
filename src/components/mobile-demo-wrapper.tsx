@@ -1,7 +1,7 @@
 "use client";
 
 import { TourControls } from "@/components/tour-controls";
-import { MobileOverrideProvider } from "@/hooks/use-mobile";
+import { MobileOverrideProvider, useIsMobile } from "@/hooks/use-mobile";
 import { createConditionalClasses } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
@@ -22,6 +22,7 @@ export function MobileDemoWrapper({
     onMobileToggle,
 }: MobileDemoWrapperProps) {
     const [forceMobileView, setForceMobileView] = useState(false);
+    const isNativeMobile = useIsMobile(900);
 
     // Expose mobile toggle function globally for tour integration
     useEffect(() => {
@@ -51,74 +52,67 @@ export function MobileDemoWrapper({
         onMobileToggle?.(mobile);
     };
 
-    // Apply custom styles to mobile navigation when mobile view is active
+    // Apply CSS class to body when mobile view is active for styling mobile nav
     useEffect(() => {
-        const mobileNav = document.querySelector(
-            '[data-tour="mobile-navigation"]'
-        ) as HTMLElement;
-
-        if (mobileNav) {
-            if (forceMobileView) {
-                // Store original styles
-                const originalLeft = mobileNav.style.left;
-                const originalRight = mobileNav.style.right;
-                const originalTransform = mobileNav.style.transform;
-                const originalMaxWidth = mobileNav.style.maxWidth;
-
-                // Apply constrained styles
-                mobileNav.style.left = "50%";
-                mobileNav.style.right = "auto";
-                mobileNav.style.transform = "translateX(-50%)";
-                mobileNav.style.maxWidth = "764px";
-                mobileNav.style.width = "100%";
-
-                // Cleanup function to restore original styles
-                return () => {
-                    mobileNav.style.left = originalLeft;
-                    mobileNav.style.right = originalRight;
-                    mobileNav.style.transform = originalTransform;
-                    mobileNav.style.maxWidth = originalMaxWidth;
-                };
-            }
+        if (forceMobileView) {
+            document.body.classList.add("mobile-demo-active");
+        } else {
+            document.body.classList.remove("mobile-demo-active");
         }
+
+        // Cleanup on unmount
+        return () => {
+            document.body.classList.remove("mobile-demo-active");
+        };
     }, [forceMobileView]);
 
-    return (
-        <MobileOverrideProvider forceMobile={forceMobileView}>
+    const content = (
+        <div
+            className={createConditionalClasses(
+                forceMobileView,
+                "flex justify-center bg-muted/80 dark:bg-slate-900/90 min-h-screen relative"
+            )}
+        >
             <div
                 className={createConditionalClasses(
                     forceMobileView,
-                    "flex justify-center bg-muted/80 dark:bg-slate-900/90 min-h-screen relative"
+                    "max-w-[764px] w-full bg-background relative",
+                    "w-full"
                 )}
+                style={forceMobileView ? { minHeight: "100vh" } : {}}
             >
-                <div
-                    className={createConditionalClasses(
-                        forceMobileView,
-                        "max-w-[764px] w-full bg-background relative",
-                        "w-full"
-                    )}
-                    style={forceMobileView ? { minHeight: "100vh" } : {}}
-                >
-                    {children}
-                </div>
-
-                {/* Subtle border overlay - on top of everything */}
-                {forceMobileView && (
-                    <div
-                        className="absolute inset-0 pointer-events-none z-[9999]"
-                        style={{
-                            maxWidth: "764px",
-                            margin: "0 auto",
-                            boxShadow:
-                                "inset 1px 0 0 rgba(147, 51, 234, 0.08), inset -1px 0 0 rgba(147, 51, 234, 0.08)",
-                            minHeight: "100vh",
-                        }}
-                    />
-                )}
+                {children}
             </div>
 
-            {/* Desktop tour controls - only show when mobile wrapper is NOT active */}
-            {showTourControls && !forceMobileView && (
+            {/* Subtle border overlay - on top of everything */}
+            {forceMobileView && (
+                <div
+                    className="absolute inset-0 pointer-events-none z-[9999]"
+                    style={{
+                        maxWidth: "764px",
+                        margin: "0 auto",
+                        boxShadow:
+                            "inset 1px 0 0 rgba(147, 51, 234, 0.08), inset -1px 0 0 rgba(147, 51, 234, 0.08)",
+                        minHeight: "100vh",
+                    }}
+                />
+            )}
+        </div>
+    );
+
+    return (
+        <>
+            {/* Only provide MobileOverrideProvider when we actually want to override */}
+            {forceMobileView ? (
+                <MobileOverrideProvider forceMobile={true}>
+                    {content}
+                </MobileOverrideProvider>
+            ) : (
+                content
+            )}
+
+            {/* Desktop tour controls - hide in both demo mobile mode and native mobile view */}
+            {showTourControls && !forceMobileView && !isNativeMobile && (
                 <div className="fixed bottom-4 right-4 z-50">
                     <TourControls
                         variant="desktop"
@@ -126,6 +120,6 @@ export function MobileDemoWrapper({
                     />
                 </div>
             )}
-        </MobileOverrideProvider>
+        </>
     );
 }
