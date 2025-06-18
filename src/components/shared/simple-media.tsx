@@ -107,8 +107,9 @@ export function SimpleMedia({
             ? (media?.imageZoom ?? imageZoom)
             : 100;
     const effectiveFinePosition = media?.imageFinePosition ?? imageFinePosition;
+    const effectiveAspectRatio = media?.aspectRatio ?? aspectRatio;
 
-    const ratioValue = getAspectRatioValue(aspectRatio);
+    const ratioValue = getAspectRatioValue(effectiveAspectRatio);
 
     // YouTube video handling (simplified)
     if (videoSrc && isYouTubeUrl(videoSrc)) {

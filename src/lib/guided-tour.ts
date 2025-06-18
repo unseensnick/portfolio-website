@@ -107,6 +107,26 @@ function showSectionNavForTour(): () => void {
 }
 
 /**
+ * Finds element by selector with fallback and logging
+ */
+function findTourElement(selector: string, title: string): Element {
+    const element = document.querySelector(selector);
+    if (!element) {
+        tourLogger.warn(`Element not found for step "${title}": ${selector}`);
+        // Log all elements with data-tour attribute for debugging
+        const tourElements = document.querySelectorAll('[data-tour]');
+        tourLogger.log('Available tour elements:', Array.from(tourElements).map(el => ({
+            selector: el.getAttribute('data-tour'),
+            tag: el.tagName,
+            classes: el.className
+        })));
+        // Return document.body as fallback to prevent tour from breaking
+        return document.body;
+    }
+    return element;
+}
+
+/**
  * Tour step configuration for the portfolio website
  */
 const tourSteps = [
@@ -286,7 +306,12 @@ export function createGuidedTour(automated: boolean = false) {
     
     const config = {
         ...tourConfig,
-        steps: tourSteps,
+        steps: tourSteps.map(step => ({
+            ...step,
+            element: step.element === 'body' && step.special === 'mobile-navigation' 
+                ? step.element 
+                : () => findTourElement(step.element, step.popover.title)
+        })),
         ...(automated && {
             // For automated tours (showcase videos)
             allowKeyboardControl: false,
@@ -701,4 +726,4 @@ export const tourControls = {
     shouldShow: shouldShowTour,
     markSeen: markTourAsSeen,
     isDemoMode: isDemoMode
-}; 
+};

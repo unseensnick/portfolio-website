@@ -83,6 +83,9 @@ export function Hero({
                   alt: "Hero",
               },
               imagePosition,
+              aspectRatio,
+              imageZoom,
+              imageFinePosition,
           }
         : undefined;
 
@@ -90,14 +93,7 @@ export function Hero({
         <div className="w-full">
             {/* Hero image with decorative blur effect */}
             <div className="relative mb-8 mx-auto max-w-sm">
-                <SimpleMedia
-                    media={heroMedia}
-                    alt="Hero"
-                    aspectRatio={aspectRatio}
-                    imageZoom={imageZoom}
-                    imageFinePosition={imageFinePosition}
-                    priority={true}
-                />
+                <SimpleMedia media={heroMedia} alt="Hero" priority={true} />
                 <div
                     className={`absolute -inset-3 ${commonClasses.backgroundGradient} rounded-2xl -z-10 opacity-50 blur-lg`}
                 ></div>
@@ -122,12 +118,13 @@ export function Hero({
                     </p>
                 </div>
 
-                <ButtonGroup
-                    buttons={buttons}
-                    fullWidthMobile={true}
-                    className="px-4"
-                    data-tour="hero-cta"
-                />
+                <div data-tour="hero-cta">
+                    <ButtonGroup
+                        buttons={buttons}
+                        fullWidthMobile={true}
+                        className="px-4"
+                    />
+                </div>
             </div>
         </div>
     );
@@ -153,22 +150,13 @@ export function Hero({
                     </p>
                 </div>
 
-                <ButtonGroup
-                    buttons={buttons}
-                    fullWidthMobile={false}
-                    data-tour="hero-cta"
-                />
+                <div data-tour="hero-cta">
+                    <ButtonGroup buttons={buttons} fullWidthMobile={false} />
+                </div>
             </div>
 
             <div className="relative group">
-                <SimpleMedia
-                    media={heroMedia}
-                    alt="Hero"
-                    aspectRatio={aspectRatio}
-                    imageZoom={imageZoom}
-                    imageFinePosition={imageFinePosition}
-                    priority={true}
-                />
+                <SimpleMedia media={heroMedia} alt="Hero" priority={true} />
                 <div
                     className={`absolute -inset-4 ${commonClasses.backgroundGradient} rounded-3xl -z-10 opacity-50 blur-xl`}
                 ></div>

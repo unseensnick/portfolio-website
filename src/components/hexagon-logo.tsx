@@ -1,6 +1,5 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, commonClasses } from "@/lib/utils";
 
 interface HexagonLogoProps {
@@ -24,8 +23,6 @@ export function HexagonLogo({
     isHovered = false,
     onClick,
 }: HexagonLogoProps) {
-    const isMobile = useIsMobile();
-
     // Smart split: after first word, or 60% through single word for gradient effect
     const calculateSplitAt = () => {
         if (splitAt !== undefined) return splitAt;

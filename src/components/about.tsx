@@ -77,18 +77,15 @@ export function About({
                   alt: "About",
               },
               imagePosition,
+              aspectRatio,
+              imageZoom,
+              imageFinePosition,
           }
         : undefined;
 
     const renderImage = () => (
         <div className={isMobile ? "mx-auto max-w-sm" : "lg:col-span-2"}>
-            <SimpleMedia
-                media={aboutMedia}
-                alt="About"
-                aspectRatio={aspectRatio}
-                imageZoom={imageZoom}
-                imageFinePosition={imageFinePosition}
-            />
+            <SimpleMedia media={aboutMedia} alt="About" />
         </div>
     );
 

@@ -72,7 +72,6 @@ export function SimpleMediaCarousel({
             <SimpleMedia
                 media={mediaArray[0]}
                 alt={title}
-                aspectRatio={mediaArray[0]?.aspectRatio || aspectRatio}
                 className={className}
                 priority={priority}
             />
@@ -104,9 +103,6 @@ export function SimpleMediaCarousel({
                             <SimpleMedia
                                 media={mediaItem}
                                 alt={`${title} - Item ${index + 1} of ${mediaArray.length}`}
-                                aspectRatio={
-                                    mediaItem?.aspectRatio || aspectRatio
-                                }
                                 priority={priority && index === 0}
                             />
                         </CarouselItem>

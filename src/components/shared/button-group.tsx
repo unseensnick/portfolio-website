@@ -29,7 +29,7 @@ interface ButtonGroupProps {
     buttons: ButtonItem[];
     fullWidthMobile?: boolean;
     className?: string;
-    "data-tour"?: string;
+    [key: string]: any; // Allow any additional props like data-tour
 }
 
 export function ButtonGroup({
