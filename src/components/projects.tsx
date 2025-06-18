@@ -29,6 +29,16 @@ interface ProjectItemProps {
                   alt?: string;
               }
             | any;
+        imagePosition?:
+            | "center"
+            | "top"
+            | "bottom"
+            | "left"
+            | "right"
+            | "top-left"
+            | "top-right"
+            | "bottom-left"
+            | "bottom-right";
         video?: {
             src?: string;
             file?:
@@ -180,6 +190,16 @@ interface ProjectItem {
                   alt?: string;
               }
             | any;
+        imagePosition?:
+            | "center"
+            | "top"
+            | "bottom"
+            | "left"
+            | "right"
+            | "top-left"
+            | "top-right"
+            | "bottom-left"
+            | "bottom-right";
         video?: {
             src?: string;
             file?:

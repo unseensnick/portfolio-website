@@ -27,24 +27,26 @@ const fallbackData = {
         ],
     },
     hero: {
-        greeting: "Hello, I'm",
-        title: "A Developer",
-        description: "Please add content through the PayloadCMS admin panel",
+        greeting: "Hello There! I'm",
+        title: "UnseenSnick",
+        description: "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs.",
         githubUrl: "https://github.com",
         image: "/placeholder-image.svg",
+        imagePosition: "center" as const,
         ctaText: "View GitHub",
         ctaLink: "https://github.com",
         secondaryCtaText: "View Projects",
         secondaryCtaLink: "#projects",
     },
     about: {
-        title: "About Me",
+        title: "About",
         paragraphs: ["Please add content through the PayloadCMS admin panel"],
-        technologies: ["JavaScript", "TypeScript", "React", "Next.js"],
-        interests: ["Web Development", "UI/UX Design"],
+        technologies: ["React", "TypeScript", "Next.js"],
+        interests: ["Coding", "Design", "Technology"],
         image: "/placeholder-image.svg",
-        technologiesHeading: "Technologies",
-        interestsHeading: "Interests",
+        imagePosition: "center" as const,
+        technologiesHeading: "Technologies & Tools",
+        interestsHeading: "When I'm Not Coding",
     },
     projects: {
         title: "My Projects",
@@ -57,7 +59,8 @@ const fallbackData = {
                 image: {
                     url: "/placeholder-image.svg",
                     alt: "Featured project placeholder"
-                }
+                },
+                imagePosition: "center" as const
             },
             technologies: [
                 { name: "React" },
@@ -75,7 +78,8 @@ const fallbackData = {
                     image: {
                         url: "/placeholder-image.svg",
                         alt: "Sample project placeholder"
-                    }
+                    },
+                    imagePosition: "center" as const
                 },
                 technologies: [{ name: "Next.js" }, { name: "JavaScript" }],
             },
@@ -148,24 +152,26 @@ export function adaptPortfolioData(data: any) {
             links: safelyProcessNavLinks(data.nav.links),
         },
         hero: {
-            greeting: safeString(data.hero.greeting, "Hello, I'm"),
-            title: safeString(data.hero.title, "A Developer"),
-            description: safeString(data.hero.description, "Welcome to my portfolio"),
+            greeting: safeString(data.hero.greeting, "Hello There! I'm"),
+            title: safeString(data.hero.title, "UnseenSnick"),
+            description: safeString(data.hero.description, "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs."),
             githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
             image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
-            ctaText: safeString(data.hero.ctaText, "View GitHub"),
-            ctaLink: safeString(data.hero.ctaLink, "https://github.com"),
-            secondaryCtaText: safeString(data.hero.secondaryCtaText, "View Projects"),
-            secondaryCtaLink: safeString(data.hero.secondaryCtaLink, "#projects"),
+            imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            ctaText: "View GitHub",
+            ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
+            secondaryCtaText: "View Projects",
+            secondaryCtaLink: "#projects",
         },
         about: {
-            title: safeString(data.about.title, "About Me"),
-            paragraphs: safelyExtractParagraphs(data.about.paragraphs),
-            technologies: safelyExtractNames(data.about.technologies),
-            interests: safelyExtractNames(data.about.interests),
+            title: safeString(data.about.title, "About"),
+            paragraphs: safelyExtractParagraphs(data.about.paragraphs) || ["Tell us about yourself..."],
+            technologies: safelyExtractNames(data.about.technologies) || [],
+            interests: safelyExtractNames(data.about.interests) || [],
             image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
-            technologiesHeading: safeString(data.about.technologiesHeading, "Technologies"),
-            interestsHeading: safeString(data.about.interestsHeading, "Interests"),
+            imagePosition: (data.about.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
+            interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),
         },
         projects: {
             title: safeString(data.projects.title, "My Projects"),
@@ -181,7 +187,8 @@ export function adaptPortfolioData(data: any) {
                             image: {
                                 url: "/placeholder-image.svg",
                                 alt: "Featured project placeholder"
-                            }
+                            },
+                            imagePosition: "center" as const
                         },
                         technologies: [],
                     };
@@ -193,6 +200,7 @@ export function adaptPortfolioData(data: any) {
                         url: safelyExtractImageUrl(featured.media.image),
                         alt: featured.title || "Project image"
                     } : undefined,
+                    imagePosition: (featured.media.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
                     video: featured.media.video ? {
                         src: safeString(featured.media.video.src),
                         file: featured.media.video.file ? {
@@ -205,7 +213,8 @@ export function adaptPortfolioData(data: any) {
                     image: {
                         url: "/placeholder-image.svg",
                         alt: featured.title || "Project image"
-                    }
+                    },
+                    imagePosition: "center" as const
                 };
 
                 return {
@@ -224,6 +233,7 @@ export function adaptPortfolioData(data: any) {
                         url: safelyExtractImageUrl(project.media.image),
                         alt: project.title || "Project image"
                     } : undefined,
+                    imagePosition: (project.media.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
                     video: project.media.video ? {
                         src: safeString(project.media.video.src),
                         file: project.media.video.file ? {
@@ -236,7 +246,8 @@ export function adaptPortfolioData(data: any) {
                     image: {
                         url: "/placeholder-image.svg",
                         alt: project.title || "Project image"
-                    }
+                    },
+                    imagePosition: "center" as const
                 };
 
                 return {

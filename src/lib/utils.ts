@@ -126,7 +126,7 @@ export const responsiveSizes = {
     },
     gap: {
         mobile: "gap-1.5",
-        desktop: "gap-2.5",
+        desktop: "gap-2.5", 
     },
 } as const;
 

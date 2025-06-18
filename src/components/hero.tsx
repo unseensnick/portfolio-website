@@ -18,6 +18,16 @@ interface HeroProps {
     description?: string;
     githubUrl?: string;
     image?: string;
+    imagePosition?:
+        | "center"
+        | "top"
+        | "bottom"
+        | "left"
+        | "right"
+        | "top-left"
+        | "top-right"
+        | "bottom-left"
+        | "bottom-right";
     ctaText?: string;
     secondaryCtaText?: string;
     secondaryCtaLink?: string;
@@ -33,6 +43,7 @@ export function Hero({
     description = "Building modern web applications",
     githubUrl = "https://github.com",
     image,
+    imagePosition = "center",
     ctaText = "View GitHub",
     secondaryCtaText = "View Projects",
     secondaryCtaLink = "#projects",
@@ -61,6 +72,7 @@ export function Hero({
                   url: image,
                   alt: "Hero",
               },
+              imagePosition,
           }
         : undefined;
 

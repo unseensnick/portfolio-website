@@ -10,7 +10,7 @@
  * Supported timezones in IANA format.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "supportedTimezones".
+ * via the `definition` "supportedTimezones". 
  */
 export type SupportedTimezones =
   | 'Pacific/Midway'
@@ -226,6 +226,12 @@ export interface Portfolio {
      * Featured image for the hero section
      */
     image?: (number | null) | Media;
+    /**
+     * Controls how the hero image is positioned within its container when cropped
+     */
+    imagePosition?:
+      | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
+      | null;
   };
   /**
    * Configure your portfolio projects section
@@ -291,6 +297,12 @@ export interface Portfolio {
          * Screenshot or thumbnail of your project (used as fallback or video poster)
          */
         image?: (number | null) | Media;
+        /**
+         * Controls how the image is positioned within its container when cropped
+         */
+        imagePosition?:
+          | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
+          | null;
         /**
          * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
          */
@@ -363,6 +375,22 @@ export interface Portfolio {
              * Screenshot or thumbnail of your project (used as fallback or video poster)
              */
             image?: (number | null) | Media;
+            /**
+             * Controls how the image is positioned within its container when cropped
+             */
+            imagePosition?:
+              | (
+                  | 'center'
+                  | 'top'
+                  | 'bottom'
+                  | 'left'
+                  | 'right'
+                  | 'top-left'
+                  | 'top-right'
+                  | 'bottom-left'
+                  | 'bottom-right'
+                )
+              | null;
             /**
              * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
              */
@@ -449,6 +477,12 @@ export interface Portfolio {
      * Image to display in the about section (e.g., your photo)
      */
     image?: (number | null) | Media;
+    /**
+     * Controls how the about image is positioned within its container when cropped
+     */
+    imagePosition?:
+      | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
+      | null;
   };
   /**
    * Configure the contact section of your portfolio
@@ -624,6 +658,7 @@ export interface PortfolioSelect<T extends boolean = true> {
         description?: T;
         githubUrl?: T;
         image?: T;
+        imagePosition?: T;
       };
   projects?:
     | T
@@ -653,6 +688,7 @@ export interface PortfolioSelect<T extends boolean = true> {
                 | T
                 | {
                     image?: T;
+                    imagePosition?: T;
                     video?:
                       | T
                       | {
@@ -685,6 +721,7 @@ export interface PortfolioSelect<T extends boolean = true> {
                 | T
                 | {
                     image?: T;
+                    imagePosition?: T;
                     video?:
                       | T
                       | {
@@ -723,6 +760,7 @@ export interface PortfolioSelect<T extends boolean = true> {
               id?: T;
             };
         image?: T;
+        imagePosition?: T;
       };
   contact?:
     | T

@@ -26,6 +26,16 @@ interface AboutProps {
     technologies?: string[];
     interests?: string[];
     image?: string;
+    imagePosition?:
+        | "center"
+        | "top"
+        | "bottom"
+        | "left"
+        | "right"
+        | "top-left"
+        | "top-right"
+        | "bottom-left"
+        | "bottom-right";
     technologiesHeading?: string;
     interestsHeading?: string;
 }
@@ -42,6 +52,7 @@ export function About({
     technologies = ["React", "TypeScript", "Next.js"],
     interests = ["Web Development", "UI/UX Design", "Open Source"],
     image,
+    imagePosition = "center",
     technologiesHeading = "Technologies",
     interestsHeading = "Interests",
 }: AboutProps) {
@@ -55,6 +66,7 @@ export function About({
                   url: image,
                   alt: "About",
               },
+              imagePosition,
           }
         : undefined;
 

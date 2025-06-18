@@ -186,6 +186,54 @@ export const Portfolio: CollectionConfig = {
                         description: "Featured image for the hero section",
                     },
                 },
+                {
+                    name: "imagePosition",
+                    type: "select",
+                    label: "Hero Image Position",
+                    defaultValue: "center",
+                    dbName: "hero_img_pos",
+                    options: [
+                        {
+                            label: "Center",
+                            value: "center",
+                        },
+                        {
+                            label: "Top",
+                            value: "top",
+                        },
+                        {
+                            label: "Bottom",
+                            value: "bottom",
+                        },
+                        {
+                            label: "Left",
+                            value: "left",
+                        },
+                        {
+                            label: "Right",
+                            value: "right",
+                        },
+                        {
+                            label: "Top Left",
+                            value: "top-left",
+                        },
+                        {
+                            label: "Top Right",
+                            value: "top-right",
+                        },
+                        {
+                            label: "Bottom Left",
+                            value: "bottom-left",
+                        },
+                        {
+                            label: "Bottom Right",
+                            value: "bottom-right",
+                        },
+                    ],
+                    admin: {
+                        description: "Controls how the hero image is positioned within its container when cropped",
+                    },
+                },
             ],
         },
         {
@@ -309,6 +357,54 @@ export const Portfolio: CollectionConfig = {
                                     label: "Project Image",
                                     admin: {
                                         description: "Screenshot or thumbnail of your project (used as fallback or video poster)",
+                                    },
+                                },
+                                {
+                                    name: "imagePosition",
+                                    type: "select",
+                                    label: "Image Position",
+                                    defaultValue: "center",
+                                    dbName: "img_pos",
+                                    options: [
+                                        {
+                                            label: "Center",
+                                            value: "center",
+                                        },
+                                        {
+                                            label: "Top",
+                                            value: "top",
+                                        },
+                                        {
+                                            label: "Bottom",
+                                            value: "bottom",
+                                        },
+                                        {
+                                            label: "Left",
+                                            value: "left",
+                                        },
+                                        {
+                                            label: "Right",
+                                            value: "right",
+                                        },
+                                        {
+                                            label: "Top Left",
+                                            value: "top-left",
+                                        },
+                                        {
+                                            label: "Top Right",
+                                            value: "top-right",
+                                        },
+                                        {
+                                            label: "Bottom Left",
+                                            value: "bottom-left",
+                                        },
+                                        {
+                                            label: "Bottom Right",
+                                            value: "bottom-right",
+                                        },
+                                    ],
+                                    admin: {
+                                        description: "Controls how the image is positioned within its container when cropped",
                                     },
                                 },
                                 {
@@ -445,6 +541,54 @@ export const Portfolio: CollectionConfig = {
                                     label: "Project Image",
                                     admin: {
                                         description: "Screenshot or thumbnail of your project (used as fallback or video poster)",
+                                    },
+                                },
+                                {
+                                    name: "imagePosition",
+                                    type: "select",
+                                    label: "Image Position",
+                                    defaultValue: "center",
+                                    dbName: "img_pos",
+                                    options: [
+                                        {
+                                            label: "Center",
+                                            value: "center",
+                                        },
+                                        {
+                                            label: "Top",
+                                            value: "top",
+                                        },
+                                        {
+                                            label: "Bottom",
+                                            value: "bottom",
+                                        },
+                                        {
+                                            label: "Left",
+                                            value: "left",
+                                        },
+                                        {
+                                            label: "Right",
+                                            value: "right",
+                                        },
+                                        {
+                                            label: "Top Left",
+                                            value: "top-left",
+                                        },
+                                        {
+                                            label: "Top Right",
+                                            value: "top-right",
+                                        },
+                                        {
+                                            label: "Bottom Left",
+                                            value: "bottom-left",
+                                        },
+                                        {
+                                            label: "Bottom Right",
+                                            value: "bottom-right",
+                                        },
+                                    ],
+                                    admin: {
+                                        description: "Controls how the image is positioned within its container when cropped",
                                     },
                                 },
                                 {
@@ -607,6 +751,54 @@ export const Portfolio: CollectionConfig = {
                     label: "About Image",
                     admin: {
                         description: "Image to display in the about section (e.g., your photo)",
+                    },
+                },
+                {
+                    name: "imagePosition",
+                    type: "select",
+                    label: "About Image Position",
+                    defaultValue: "center",
+                    dbName: "about_img_pos",
+                    options: [
+                        {
+                            label: "Center",
+                            value: "center",
+                        },
+                        {
+                            label: "Top",
+                            value: "top",
+                        },
+                        {
+                            label: "Bottom",
+                            value: "bottom",
+                        },
+                        {
+                            label: "Left",
+                            value: "left",
+                        },
+                        {
+                            label: "Right",
+                            value: "right",
+                        },
+                        {
+                            label: "Top Left",
+                            value: "top-left",
+                        },
+                        {
+                            label: "Top Right",
+                            value: "top-right",
+                        },
+                        {
+                            label: "Bottom Left",
+                            value: "bottom-left",
+                        },
+                        {
+                            label: "Bottom Right",
+                            value: "bottom-right",
+                        },
+                    ],
+                    admin: {
+                        description: "Controls how the about image is positioned within its container when cropped",
                     },
                 },
             ],

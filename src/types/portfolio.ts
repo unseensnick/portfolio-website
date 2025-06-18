@@ -17,6 +17,7 @@ export interface Hero {
     description: string;
     githubUrl: string;
     image: string;
+    imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
     ctaText: string;
     ctaLink: string;
     secondaryCtaText: string;
@@ -29,6 +30,7 @@ export interface About {
     technologies: string[];
     interests: string[];
     image: string;
+    imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
     technologiesHeading: string;
     interestsHeading: string;
 }
@@ -49,6 +51,7 @@ export interface ProjectItem {
             url?: string;
             alt?: string;
         } | any;
+        imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
         video?: {
             src?: string;
             file?: {

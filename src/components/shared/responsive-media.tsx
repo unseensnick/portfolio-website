@@ -22,6 +22,16 @@ interface ResponsiveMediaProps {
                   alt?: string;
               }
             | any;
+        imagePosition?:
+            | "center"
+            | "top"
+            | "bottom"
+            | "left"
+            | "right"
+            | "top-left"
+            | "top-right"
+            | "bottom-left"
+            | "bottom-right";
         video?: {
             src?: string;
             file?:
@@ -39,6 +49,31 @@ interface ResponsiveMediaProps {
     className?: string;
     priority?: boolean;
     fillContainer?: boolean;
+}
+
+// Helper function to convert imagePosition to CSS object-position class
+function getObjectPositionClass(position?: string): string {
+    switch (position) {
+        case "top":
+            return "object-top";
+        case "bottom":
+            return "object-bottom";
+        case "left":
+            return "object-left";
+        case "right":
+            return "object-right";
+        case "top-left":
+            return "object-left-top";
+        case "top-right":
+            return "object-right-top";
+        case "bottom-left":
+            return "object-left-bottom";
+        case "bottom-right":
+            return "object-right-bottom";
+        case "center":
+        default:
+            return "object-center";
+    }
 }
 
 /**
@@ -151,7 +186,8 @@ export function ResponsiveMedia({
                 className={cn(
                     "object-cover transition-opacity duration-300",
                     createResponsiveContainer("card", isMobile),
-                    imageLoading ? "opacity-0" : "opacity-100"
+                    imageLoading ? "opacity-0" : "opacity-100",
+                    getObjectPositionClass(media?.imagePosition)
                 )}
                 priority={priority}
                 onLoad={() => setImageLoading(false)}
