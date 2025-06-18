@@ -161,24 +161,18 @@ export interface Media {
  */
 export interface Portfolio {
   id: number;
-  /**
-   * The main title of your portfolio website
-   */
   title: string;
-  /**
-   * Configure your hexagon logo and navigation bar
-   */
   nav: {
     /**
-     * Main text for your hexagon logo (e.g., your name or brand). Examples: 'YourName', 'JohnDoe', 'Portfolio'
+     * Main text for your hexagon logo
      */
     logo: string;
     /**
-     * Character position where gradient effect starts. Leave empty for auto-split. Examples: 'YourName' with 4 = 'Your|Name', 'JohnDoe' with 4 = 'John|Doe'
+     * Character position where gradient effect starts
      */
     logoSplitAt?: number | null;
     /**
-     * Subtitle displayed below your logo (e.g., your profession or tagline)
+     * Subtitle displayed below your logo
      */
     subtitle: string;
     /**
@@ -235,7 +229,7 @@ export interface Portfolio {
     /**
      * Controls the aspect ratio (width to height ratio) of the hero image. This applies to both mobile and desktop views.
      */
-    aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+    aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
     /**
      * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
      */

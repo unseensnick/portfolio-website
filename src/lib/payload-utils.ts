@@ -136,7 +136,6 @@ const fallbackData = {
  * Ensures projects always have media, using placeholder when none provided
  */
 function processMediaItem(mediaItem: any, title: string = "Project"): any {
-    // Always return a complete media object, even if input is null/undefined
     if (!mediaItem) {
         return {
             image: {
@@ -148,7 +147,6 @@ function processMediaItem(mediaItem: any, title: string = "Project"): any {
         };
     }
 
-    // Extract image URL with fallback to placeholder
     const imageUrl = safelyExtractImageUrl(mediaItem.image);
     const hasValidImage = imageUrl && imageUrl !== "";
 
@@ -178,7 +176,6 @@ function processMediaItem(mediaItem: any, title: string = "Project"): any {
  * Transforms raw PayloadCMS data into the format expected by components
  */
 export function adaptPortfolioData(data: any) {
-    // Validate required sections exist before processing
     if (
         !data ||
         !data.nav ||
@@ -201,7 +198,6 @@ export function adaptPortfolioData(data: any) {
         return fallbackData;
     }
 
-    // Debug: Log projects data to understand what's happening
     const portfolioLogger = logger.createFeatureLogger("Portfolio");
     portfolioLogger.log("Processing projects data:", {
         hasProjects: !!data.projects,
@@ -259,11 +255,9 @@ export function adaptPortfolioData(data: any) {
                     return fallbackData.projects.featured;
                 }
 
-                // ALWAYS process media, even if it's null/undefined - this ensures placeholder
                 let processedMedia;
                 
                 if (Array.isArray(featured.media)) {
-                    // If media is an array but empty, provide placeholder
                     if (featured.media.length === 0) {
                         processedMedia = processMediaItem(null, featured.title);
                         portfolioLogger.log(`Empty media array for featured project "${featured.title}", using placeholder`);
@@ -271,7 +265,6 @@ export function adaptPortfolioData(data: any) {
                         processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.title));
                     }
                 } else {
-                    // Single media item or null/undefined
                     processedMedia = processMediaItem(featured.media, featured.title);
                 }
                 
@@ -294,11 +287,9 @@ export function adaptPortfolioData(data: any) {
                 }
                 
                 const processedItems = items.map((project: any) => {
-                    // ALWAYS process media, even if it's null/undefined - this ensures placeholder
                     let processedMedia;
                     
                     if (Array.isArray(project.media)) {
-                        // If media is an array but empty, provide placeholder
                         if (project.media.length === 0) {
                             processedMedia = processMediaItem(null, project.title);
                             portfolioLogger.log(`Empty media array for project "${project.title}", using placeholder`);
@@ -306,7 +297,6 @@ export function adaptPortfolioData(data: any) {
                             processedMedia = project.media.map((item: any) => processMediaItem(item, project.title));
                         }
                     } else {
-                        // Single media item or null/undefined
                         processedMedia = processMediaItem(project.media, project.title);
                     }
                     
@@ -344,21 +334,16 @@ export function adaptPortfolioData(data: any) {
     };
 }
 
-/**
- * Fetches portfolio data from PayloadCMS with error handling and fallbacks
- * Supports demo mode for showcasing the portfolio
- */
+// ===== API FUNCTIONS =====
 export async function getPortfolioData(
     draft: boolean = false,
     searchParams?: { [key: string]: string | string[] | undefined }
 ): Promise<PortfolioData> {
     const requestId = Math.random().toString(36).substr(2, 9);
     
-    // Check if demo mode should be used - now uses real data from database
     const useDemoMode = shouldUseDemoMode(searchParams);
     if (useDemoMode) {
         logDemoModeStatus(true, searchParams?.demo === "true" ? "url" : "env");
-        // Demo mode now uses real data from database instead of hardcoded data
     }
     const apiLogger = logger.createApiLogger("Portfolio", requestId);
     
@@ -407,7 +392,6 @@ export async function getPortfolioData(
                     apiLogger.error("Could not read error body");
                 }
 
-                // Try published content if draft request fails
                 if (draft) {
                     return getPortfolioData(false);
                 }
@@ -416,22 +400,17 @@ export async function getPortfolioData(
             }
 
             const result = await response.json();
-
-
             const portfolioDoc = result.docs?.[0];
 
             if (!portfolioDoc) {
                 apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
 
-                // Try draft mode if no published docs found
                 if (!draft && result.totalDocs === 0) {
                     return getPortfolioData(true);
                 }
 
                 throw new Error("No portfolio documents found");
             }
-
-
 
             return adaptPortfolioData(portfolioDoc);
 
@@ -443,7 +422,6 @@ export async function getPortfolioData(
     } catch (error) {
         apiLogger.error("Error fetching portfolio data:", error);
 
-        // Fallback from draft to published on network errors
         if (draft && (error instanceof Error && (
             error.name === 'AbortError' || 
             error.message.includes('fetch') ||

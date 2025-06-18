@@ -31,7 +31,6 @@ export function SimpleMediaCarousel({
     const [api, setApi] = useState<CarouselApi>();
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Keyboard navigation
     useEffect(() => {
         if (!api || !containerRef.current) return;
 
@@ -50,7 +49,6 @@ export function SimpleMediaCarousel({
         return () => container.removeEventListener("keydown", handleKeyDown);
     }, [api]);
 
-    // Handle undefined/empty media
     if (!media) {
         return (
             <SimpleMedia
@@ -63,10 +61,8 @@ export function SimpleMediaCarousel({
         );
     }
 
-    // Convert to array for uniform handling
     const mediaArray = Array.isArray(media) ? media : [media];
 
-    // Single media item - no carousel needed
     if (mediaArray.length === 1) {
         return (
             <SimpleMedia
@@ -77,8 +73,6 @@ export function SimpleMediaCarousel({
             />
         );
     }
-
-    // Multiple media items - use carousel
     return (
         <div
             ref={containerRef}

@@ -26,9 +26,6 @@ interface ProjectItemProps {
     media?: MediaItem | MediaItem[];
 }
 
-/**
- * Unified project item component that adapts to mobile/desktop layouts
- */
 function ProjectItem({
     title,
     description,
@@ -173,9 +170,6 @@ interface ProjectsProps {
     viewMoreText?: string;
 }
 
-/**
- * Projects section with responsive layout using utility patterns
- */
 export function Projects({
     title = "Projects",
     featured = {

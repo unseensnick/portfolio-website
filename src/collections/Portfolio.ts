@@ -1,5 +1,43 @@
 import type { CollectionConfig } from "payload";
 
+// ===== VALIDATION UTILITIES =====
+const createPositionValidator = (fieldName: string) => (value: number | null | undefined) => {
+    if (value === null || value === undefined) return true;
+    if (value < 0 || value > 100) {
+        return `${fieldName} must be between 0% and 100%`;
+    }
+    return true;
+};
+
+const createZoomValidator = () => (value: number | null | undefined) => {
+    if (value === null || value === undefined) return true;
+    if (value < 50 || value > 200) {
+        return "Zoom must be between 50% and 200%";
+    }
+    return true;
+};
+
+const imagePositionOptions = [
+    { label: "Center", value: "center" },
+    { label: "Top", value: "top" },
+    { label: "Bottom", value: "bottom" },
+    { label: "Left", value: "left" },
+    { label: "Right", value: "right" },
+    { label: "Top Left", value: "top-left" },
+    { label: "Top Right", value: "top-right" },
+    { label: "Bottom Left", value: "bottom-left" },
+    { label: "Bottom Right", value: "bottom-right" },
+];
+
+const aspectRatioOptions = [
+    { label: "Landscape (16:9)", value: "landscape" },
+    { label: "Portrait (4:5)", value: "portrait" },
+    { label: "Square (1:1)", value: "square" },
+    { label: "Cinematic (21:9)", value: "21/9" },
+    { label: "Classic (4:3)", value: "4/3" },
+    { label: "Golden Ratio (1.618:1)", value: "1.618/1" },
+];
+
 export const Portfolio: CollectionConfig = {
     slug: "portfolio",
     admin: {
@@ -44,17 +82,12 @@ export const Portfolio: CollectionConfig = {
             required: true,
             defaultValue: "Portfolio",
             label: "Portfolio Title",
-            admin: {
-                description: "The main title of your portfolio website",
-            },
         },
         {
             name: "nav",
             type: "group",
             label: "Navigation & Logo",
-            admin: {
-                description: "Configure your hexagon logo and navigation bar",
-            },
+
             fields: [
                 {
                     name: "logo",
@@ -63,7 +96,7 @@ export const Portfolio: CollectionConfig = {
                     defaultValue: "YourName",
                     label: "Logo Text",
                     admin: {
-                        description: "Main text for your hexagon logo (e.g., your name or brand). Examples: 'YourName', 'JohnDoe', 'Portfolio'",
+                        description: "Main text for your hexagon logo",
                     },
                 },
                 {
@@ -71,7 +104,7 @@ export const Portfolio: CollectionConfig = {
                     type: "number",
                     label: "Logo Split Point (Optional)",
                     admin: {
-                        description: "Character position where gradient effect starts. Leave empty for auto-split. Examples: 'YourName' with 4 = 'Your|Name', 'JohnDoe' with 4 = 'John|Doe'",
+                        description: "Character position where gradient effect starts",
                         placeholder: "Auto-split if empty",
                     },
                     validate: (val: number | null | undefined) => {
@@ -89,7 +122,7 @@ export const Portfolio: CollectionConfig = {
                     defaultValue: "Full Stack Developer",
                     label: "Logo Subtitle",
                     admin: {
-                        description: "Subtitle displayed below your logo (e.g., your profession or tagline)",
+                        description: "Subtitle displayed below your logo",
                     },
                 },
                 {
@@ -192,44 +225,7 @@ export const Portfolio: CollectionConfig = {
                     label: "Hero Image Position",
                     defaultValue: "center",
                     dbName: "hero_img_pos",
-                    options: [
-                        {
-                            label: "Center",
-                            value: "center",
-                        },
-                        {
-                            label: "Top",
-                            value: "top",
-                        },
-                        {
-                            label: "Bottom",
-                            value: "bottom",
-                        },
-                        {
-                            label: "Left",
-                            value: "left",
-                        },
-                        {
-                            label: "Right",
-                            value: "right",
-                        },
-                        {
-                            label: "Top Left",
-                            value: "top-left",
-                        },
-                        {
-                            label: "Top Right",
-                            value: "top-right",
-                        },
-                        {
-                            label: "Bottom Left",
-                            value: "bottom-left",
-                        },
-                        {
-                            label: "Bottom Right",
-                            value: "bottom-right",
-                        },
-                    ],
+                    options: imagePositionOptions,
                     admin: {
                         description: "Controls how the hero image is positioned within its container when cropped",
                     },
@@ -240,32 +236,7 @@ export const Portfolio: CollectionConfig = {
                     label: "Hero Image Aspect Ratio",
                     defaultValue: "landscape",
                     dbName: "hero_aspect_ratio",
-                    options: [
-                        {
-                            label: "Square (1:1)",
-                            value: "square",
-                        },
-                        {
-                            label: "Landscape (16:9)",
-                            value: "landscape",
-                        },
-                        {
-                            label: "Portrait (3:4)",
-                            value: "portrait",
-                        },
-                        {
-                            label: "Wide (21:9)",
-                            value: "21/9",
-                        },
-                        {
-                            label: "Classic (4:3)",
-                            value: "4/3",
-                        },
-                        {
-                            label: "Golden Ratio (1.618:1)",
-                            value: "1.618/1",
-                        },
-                    ],
+                    options: aspectRatioOptions,
                     admin: {
                         description: "Controls the aspect ratio (width to height ratio) of the hero image. This applies to both mobile and desktop views.",
                     },
@@ -281,13 +252,7 @@ export const Portfolio: CollectionConfig = {
                         placeholder: "Leave empty for default (100%)",
                         condition: (data, siblingData) => !!siblingData?.image,
                     },
-                    validate: (value: number | null | undefined) => {
-                        if (value === null || value === undefined) return true;
-                        if (value < 50 || value > 200) {
-                            return "Zoom must be between 50% and 200%";
-                        }
-                        return true;
-                    },
+                    validate: createZoomValidator(),
                 },
                 {
                     name: "imageFinePosition",
@@ -308,13 +273,7 @@ export const Portfolio: CollectionConfig = {
                                 description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
                                 placeholder: "Leave empty for preset position",
                             },
-                            validate: (value: number | null | undefined) => {
-                                if (value === null || value === undefined) return true;
-                                if (value < 0 || value > 100) {
-                                    return "Position must be between 0% and 100%";
-                                }
-                                return true;
-                            },
+                            validate: createPositionValidator("Horizontal position"),
                         },
                         {
                             name: "y",
@@ -326,13 +285,7 @@ export const Portfolio: CollectionConfig = {
                                 description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
                                 placeholder: "Leave empty for preset position",
                             },
-                            validate: (value: number | null | undefined) => {
-                                if (value === null || value === undefined) return true;
-                                if (value < 0 || value > 100) {
-                                    return "Position must be between 0% and 100%";
-                                }
-                                return true;
-                            },
+                            validate: createPositionValidator("Vertical position"),
                         },
                     ],
                 },
@@ -558,13 +511,7 @@ export const Portfolio: CollectionConfig = {
                                             return !!siblingData?.image;
                                         },
                                     },
-                                    validate: (value: number | null | undefined) => {
-                                        if (value === null || value === undefined) return true;
-                                        if (value < 50 || value > 200) {
-                                            return "Zoom must be between 50% and 200%";
-                                        }
-                                        return true;
-                                    },
+                                    validate: createZoomValidator(),
                                 },
                                 {
                                     name: "imageFinePosition",
@@ -587,13 +534,7 @@ export const Portfolio: CollectionConfig = {
                                                 description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
                                                 placeholder: "Leave empty for preset position",
                                             },
-                                            validate: (value: number | null | undefined) => {
-                                                if (value === null || value === undefined) return true;
-                                                if (value < 0 || value > 100) {
-                                                    return "Position must be between 0% and 100%";
-                                                }
-                                                return true;
-                                            },
+                                            validate: createPositionValidator("Horizontal position"),
                                         },
                                         {
                                             name: "y",
@@ -605,13 +546,7 @@ export const Portfolio: CollectionConfig = {
                                                 description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
                                                 placeholder: "Leave empty for preset position",
                                             },
-                                            validate: (value: number | null | undefined) => {
-                                                if (value === null || value === undefined) return true;
-                                                if (value < 0 || value > 100) {
-                                                    return "Position must be between 0% and 100%";
-                                                }
-                                                return true;
-                                            },
+                                            validate: createPositionValidator("Vertical position"),
                                         },
                                     ],
                                 },
@@ -848,63 +783,45 @@ export const Portfolio: CollectionConfig = {
                                             return !!siblingData?.image;
                                         },
                                     },
-                                    validate: (value: number | null | undefined) => {
-                                        if (value === null || value === undefined) return true;
-                                        if (value < 50 || value > 200) {
-                                            return "Zoom must be between 50% and 200%";
-                                        }
-                                        return true;
-                                    },
+                                    validate: createZoomValidator(),
                                 },
-                                                {
-                    name: "imageFinePosition",
-                    type: "group",
-                    label: "Fine Position Control (Advanced)",
-                    admin: {
-                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
-                        condition: (data, siblingData) => {
-                            return !!siblingData?.image;
-                        },
-                    },
-                    fields: [
-                        {
-                            name: "x",
-                            type: "number",
-                            label: "Horizontal Position (%)",
-                            min: 0,
-                            max: 100,
-                            admin: {
-                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
-                                placeholder: "Leave empty for preset position",
-                            },
-                            validate: (value: number | null | undefined) => {
-                                if (value === null || value === undefined) return true;
-                                if (value < 0 || value > 100) {
-                                    return "Position must be between 0% and 100%";
-                                }
-                                return true;
-                            },
-                        },
-                        {
-                            name: "y",
-                            type: "number",
-                            label: "Vertical Position (%)",
-                            min: 0,
-                            max: 100,
-                            admin: {
-                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
-                                placeholder: "Leave empty for preset position",
-                            },
-                            validate: (value: number | null | undefined) => {
-                                if (value === null || value === undefined) return true;
-                                if (value < 0 || value > 100) {
-                                    return "Position must be between 0% and 100%";
-                                }
-                                return true;
-                            },
-                        },
-                    ],
-                },
+                                {
+                                    name: "imageFinePosition",
+                                    type: "group",
+                                    label: "Fine Position Control (Advanced)",
+                                    admin: {
+                                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
+                                        condition: (data, siblingData) => {
+                                            return !!siblingData?.image;
+                                        },
+                                    },
+                                    fields: [
+                                        {
+                                            name: "x",
+                                            type: "number",
+                                            label: "Horizontal Position (%)",
+                                            min: 0,
+                                            max: 100,
+                                            admin: {
+                                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
+                                                placeholder: "Leave empty for preset position",
+                                            },
+                                            validate: createPositionValidator("Horizontal position"),
+                                        },
+                                        {
+                                            name: "y",
+                                            type: "number",
+                                            label: "Vertical Position (%)",
+                                            min: 0,
+                                            max: 100,
+                                            admin: {
+                                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
+                                                placeholder: "Leave empty for preset position",
+                                            },
+                                            validate: createPositionValidator("Vertical position"),
+                                        },
+                                    ],
+                                },
                                 {
                                     name: "video",
                                     type: "group",
@@ -1162,13 +1079,7 @@ export const Portfolio: CollectionConfig = {
                         placeholder: "Leave empty for default (100%)",
                         condition: (data, siblingData) => !!siblingData?.image,
                     },
-                    validate: (value: number | null | undefined) => {
-                        if (value === null || value === undefined) return true;
-                        if (value < 50 || value > 200) {
-                            return "Zoom must be between 50% and 200%";
-                        }
-                        return true;
-                    },
+                    validate: createZoomValidator(),
                 },
                 {
                     name: "imageFinePosition",
@@ -1189,13 +1100,7 @@ export const Portfolio: CollectionConfig = {
                                 description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
                                 placeholder: "Leave empty for preset position",
                             },
-                            validate: (value: number | null | undefined) => {
-                                if (value === null || value === undefined) return true;
-                                if (value < 0 || value > 100) {
-                                    return "Position must be between 0% and 100%";
-                                }
-                                return true;
-                            },
+                            validate: createPositionValidator("Horizontal position"),
                         },
                         {
                             name: "y",
@@ -1207,13 +1112,7 @@ export const Portfolio: CollectionConfig = {
                                 description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
                                 placeholder: "Leave empty for preset position",
                             },
-                            validate: (value: number | null | undefined) => {
-                                if (value === null || value === undefined) return true;
-                                if (value < 0 || value > 100) {
-                                    return "Position must be between 0% and 100%";
-                                }
-                                return true;
-                            },
+                            validate: createPositionValidator("Vertical position"),
                         },
                     ],
                 },

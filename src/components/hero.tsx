@@ -40,10 +40,6 @@ interface HeroProps {
     secondaryCtaLink?: string;
 }
 
-/**
- * Hero section with responsive layout using utility patterns
- * Mobile: stacked layout, Desktop: two-column grid
- */
 export function Hero({
     greeting = "Welcome",
     title = "Full Stack Developer",

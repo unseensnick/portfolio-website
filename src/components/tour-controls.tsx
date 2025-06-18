@@ -25,10 +25,6 @@ interface TourControlsProps {
     onMobileToggle?: (mobile: boolean) => void;
 }
 
-/**
- * Tour control buttons for starting manual or automated tours
- * Supports desktop, mobile, and compact variants
- */
 export function TourControls({
     className,
     variant = "desktop",

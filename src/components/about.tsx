@@ -47,10 +47,6 @@ interface AboutProps {
     interestsHeading?: string;
 }
 
-/**
- * About section with responsive layout using utility patterns
- * Mobile: stacked layout, Desktop: two-column grid
- */
 export function About({
     title = "About Me",
     paragraphs = [
