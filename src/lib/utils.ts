@@ -157,6 +157,17 @@ export const responsiveLayouts = {
 } as const;
 
 /**
+ * Generic responsive utility factory - follows DRY principle
+ * Reduces duplication across multiple similar responsive utility functions
+ */
+function createResponsiveUtility<T>(
+    config: { mobile: T; desktop: T },
+    isMobile: boolean
+): T {
+    return isMobile ? config.mobile : config.desktop;
+}
+
+/**
  * Creates responsive classes based on mobile state
  */
 export function createResponsiveClasses(
@@ -164,7 +175,7 @@ export function createResponsiveClasses(
     desktopClasses: string,
     isMobile: boolean
 ): string {
-    return isMobile ? mobileClasses : desktopClasses;
+    return createResponsiveUtility({ mobile: mobileClasses, desktop: desktopClasses }, isMobile);
 }
 
 /**
@@ -174,11 +185,7 @@ export function createResponsiveLayout(
     layout: keyof typeof responsiveLayouts,
     isMobile: boolean
 ): string {
-    return createResponsiveClasses(
-        responsiveLayouts[layout].mobile,
-        responsiveLayouts[layout].desktop,
-        isMobile
-    );
+    return createResponsiveUtility(responsiveLayouts[layout], isMobile);
 }
 
 /**
@@ -188,11 +195,7 @@ export function createResponsiveText(
     textType: keyof typeof responsiveSizes.text,
     isMobile: boolean
 ): string {
-    return createResponsiveClasses(
-        responsiveSizes.text[textType].mobile,
-        responsiveSizes.text[textType].desktop,
-        isMobile
-    );
+    return createResponsiveUtility(responsiveSizes.text[textType], isMobile);
 }
 
 /**
@@ -203,38 +206,15 @@ export function createResponsiveSpacing(
     isMobile: boolean
 ): string {
     const spacingMap = {
-        section: {
-            mobile: "space-y-3",
-            desktop: "space-y-4",
-        },
-        content: {
-            mobile: "space-y-4",
-            desktop: "space-y-6",
-        },
-        layout: {
-            mobile: "space-y-8",
-            desktop: "space-y-6",
-        },
-        cardContent: {
-            mobile: "space-y-3 sm:space-y-4",
-            desktop: "space-y-4 sm:space-y-6",
-        },
-        sectionPadding: {
-            mobile: "py-16",
-            desktop: "py-24 lg:py-32",
-        },
-        projectGrid: {
-            mobile: "space-y-12 mb-16",
-            desktop: "space-y-24 mb-32",
-        },
+        section: { mobile: "space-y-3", desktop: "space-y-4" },
+        content: { mobile: "space-y-4", desktop: "space-y-6" },
+        layout: { mobile: "space-y-8", desktop: "space-y-6" },
+        cardContent: { mobile: "space-y-3 sm:space-y-4", desktop: "space-y-4 sm:space-y-6" },
+        sectionPadding: { mobile: "py-16", desktop: "py-24 lg:py-32" },
+        projectGrid: { mobile: "space-y-12 mb-16", desktop: "space-y-24 mb-32" },
     };
     
-    const spacingConfig = spacingMap[spacingType];
-    return createResponsiveClasses(
-        spacingConfig.mobile,
-        spacingConfig.desktop,
-        isMobile
-    );
+    return createResponsiveUtility(spacingMap[spacingType], isMobile);
 }
 
 /**
@@ -244,44 +224,28 @@ export function createResponsiveBadge(
     size: keyof typeof responsiveSizes.badge,
     isMobile: boolean
 ): string {
-    return createResponsiveClasses(
-        responsiveSizes.badge[size].mobile,
-        responsiveSizes.badge[size].desktop,
-        isMobile
-    );
+    return createResponsiveUtility(responsiveSizes.badge[size], isMobile);
 }
 
 /**
  * Creates responsive gap classes
  */
 export function createResponsiveGap(isMobile: boolean): string {
-    return createResponsiveClasses(
-        responsiveSizes.gap.mobile,
-        responsiveSizes.gap.desktop,
-        isMobile
-    );
+    return createResponsiveUtility(responsiveSizes.gap, isMobile);
 }
 
 /**
  * Creates responsive card padding
  */
 export function createResponsiveCardPadding(isMobile: boolean): string {
-    return createResponsiveClasses(
-        commonClasses.cardPadding.mobile,
-        commonClasses.cardPadding.desktop,
-        isMobile
-    );
+    return createResponsiveUtility(commonClasses.cardPadding, isMobile);
 }
 
 /**
  * Creates responsive card hover effects
  */
 export function createResponsiveCardHover(isMobile: boolean): string {
-    return createResponsiveClasses(
-        commonClasses.cardHover.mobile,
-        commonClasses.cardHover.desktop,
-        isMobile
-    );
+    return createResponsiveUtility(commonClasses.cardHover, isMobile);
 }
 
 /**
@@ -321,25 +285,26 @@ export function createFullScreenCenteredLayout(): string {
     return `min-h-screen ${commonClasses.flexCenter} bg-muted/50 p-4`;
 }
 
-// Logging utilities
-export const logger = {
+// Production-friendly logging utilities - can be easily disabled
+const isDevMode = process.env.NODE_ENV === "development";
 
+export const logger = {
     createApiLogger: (service: string, requestId: string) => ({
         error: (message: string, ...args: any[]) => 
-            console.error(`[${service} API ${requestId}] ${message}`, ...args),
+            isDevMode && console.error(`[${service} API ${requestId}] ${message}`, ...args),
         warn: (message: string, ...args: any[]) => 
-            console.warn(`[${service} API ${requestId}] ${message}`, ...args),
+            isDevMode && console.warn(`[${service} API ${requestId}] ${message}`, ...args),
         log: (message: string, ...args: any[]) => 
-            console.log(`[${service} API ${requestId}] ${message}`, ...args),
+            isDevMode && console.log(`[${service} API ${requestId}] ${message}`, ...args),
     }),
     
     createFeatureLogger: (feature: string) => ({
         error: (message: string, ...args: any[]) => 
-            console.error(`[${feature}] ${message}`, ...args),
+            isDevMode && console.error(`[${feature}] ${message}`, ...args),
         warn: (message: string, ...args: any[]) => 
-            console.warn(`[${feature}] ${message}`, ...args),
+            isDevMode && console.warn(`[${feature}] ${message}`, ...args),
         log: (message: string, ...args: any[]) => 
-            console.log(`[${feature}] ${message}`, ...args),
+            isDevMode && console.log(`[${feature}] ${message}`, ...args),
     }),
 } as const;
 
@@ -458,11 +423,7 @@ export function createResponsiveIconSize(
     size: keyof typeof responsiveIconSizes,
     isMobile: boolean
 ): string {
-    return createResponsiveClasses(
-        responsiveIconSizes[size].mobile,
-        responsiveIconSizes[size].desktop,
-        isMobile
-    );
+    return createResponsiveUtility(responsiveIconSizes[size], isMobile);
 }
 
 /**
@@ -490,11 +451,7 @@ export function createResponsiveContainer(
     type: keyof typeof responsiveContainers,
     isMobile: boolean
 ): string {
-    return createResponsiveClasses(
-        responsiveContainers[type].mobile,
-        responsiveContainers[type].desktop,
-        isMobile
-    );
+    return createResponsiveUtility(responsiveContainers[type], isMobile);
 }
 
 /**

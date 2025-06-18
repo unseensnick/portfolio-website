@@ -28,23 +28,59 @@ interface ResponsiveMediaProps {
     };
 }
 
+// Simplified aspect ratio mapping - follows DRY principle
+const ASPECT_RATIOS: Record<string, number> = {
+    square: 1,
+    landscape: 16 / 9,
+    portrait: 3 / 4,
+} as const;
+
 // Helper function to get numeric aspect ratio value
 function getAspectRatioValue(aspectRatio: string): number {
-    switch (aspectRatio) {
-        case "square":
-            return 1;
-        case "landscape":
-            return 16 / 9;
-        case "portrait":
-            return 3 / 4;
-        default:
-            // Try to parse custom ratio like "16/9" or "4/3"
-            if (aspectRatio.includes("/")) {
-                const [width, height] = aspectRatio.split("/").map(Number);
-                return width && height ? width / height : 16 / 9;
-            }
-            return 16 / 9;
+    // Check predefined ratios first
+    if (aspectRatio in ASPECT_RATIOS) {
+        return ASPECT_RATIOS[aspectRatio];
     }
+
+    // Try to parse custom ratio like "16/9" or "4/3"
+    if (aspectRatio.includes("/")) {
+        const [width, height] = aspectRatio.split("/").map(Number);
+        return width && height ? width / height : ASPECT_RATIOS.landscape;
+    }
+
+    return ASPECT_RATIOS.landscape;
+}
+
+// Image position mapping - eliminates repetitive conditionals
+const IMAGE_POSITIONS: Record<string, string> = {
+    top: "center top",
+    bottom: "center bottom",
+    left: "left center",
+    right: "right center",
+    "top-left": "left top",
+    "top-right": "right top",
+    "bottom-left": "left bottom",
+    "bottom-right": "right bottom",
+    center: "center center",
+} as const;
+
+function getBackgroundPosition(
+    imagePosition?: string,
+    finePosition?: { x?: number; y?: number }
+): string {
+    // Use fine positioning if available with valid numeric values
+    if (
+        finePosition &&
+        (typeof finePosition.x === "number" ||
+            typeof finePosition.y === "number")
+    ) {
+        const x = finePosition.x ?? 50;
+        const y = finePosition.y ?? 50;
+        return `${x}% ${y}%`;
+    }
+
+    // Fall back to predefined positions
+    return IMAGE_POSITIONS[imagePosition || "center"] || IMAGE_POSITIONS.center;
 }
 
 /**
@@ -155,26 +191,10 @@ export function ResponsiveMedia({
                     effectiveFinePosition.y !== null));
 
         // Calculate background position and size for zoom and positioning
-        const backgroundPosition = hasFinePositioning
-            ? `${effectiveFinePosition?.x ?? 50}% ${effectiveFinePosition?.y ?? 50}%`
-            : media?.imagePosition === "top"
-              ? "center top"
-              : media?.imagePosition === "bottom"
-                ? "center bottom"
-                : media?.imagePosition === "left"
-                  ? "left center"
-                  : media?.imagePosition === "right"
-                    ? "right center"
-                    : media?.imagePosition === "top-left"
-                      ? "left top"
-                      : media?.imagePosition === "top-right"
-                        ? "right top"
-                        : media?.imagePosition === "bottom-left"
-                          ? "left bottom"
-                          : media?.imagePosition === "bottom-right"
-                            ? "right bottom"
-                            : "center center";
-
+        const backgroundPosition = getBackgroundPosition(
+            media?.imagePosition,
+            effectiveFinePosition
+        );
         const backgroundSize =
             effectiveZoom !== 100 ? `${effectiveZoom}%` : "cover";
 

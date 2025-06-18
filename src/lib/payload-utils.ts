@@ -41,9 +41,9 @@ const fallbackData = {
     },
     about: {
         title: "About",
-        paragraphs: ["Please add content through the PayloadCMS admin panel"],
-        technologies: ["React", "TypeScript", "Next.js"],
-        interests: ["Coding", "Design", "Technology"],
+        paragraphs: ["Welcome to my portfolio! I'm a passionate developer who loves creating modern web applications.", "I specialize in JavaScript and React, always eager to learn new technologies and tackle interesting challenges.", "When I'm not coding, you'll find me exploring new tools, contributing to open source, or brainstorming the next big project."],
+        technologies: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS", "PostgreSQL"],
+        interests: ["Open Source", "Web Development", "UI/UX Design", "Problem Solving", "Continuous Learning"],
         image: "/placeholder-image.svg",
         imagePosition: "center" as const,
         aspectRatio: "portrait" as const,
@@ -52,11 +52,15 @@ const fallbackData = {
     },
     projects: {
         title: "My Projects",
+        description: "Here are some of my recent projects showcasing my skills and creativity",
         featured: {
             title: "Featured Project",
-            description: [{ text: "Please add content through the PayloadCMS admin panel" }],
-            projectUrl: "#",
-            codeUrl: "#",
+            description: [
+                { text: "This is a showcase of my best work, demonstrating modern web development practices and clean, responsive design." },
+                { text: "Built with the latest technologies to deliver an exceptional user experience." }
+            ],
+            projectUrl: undefined,
+            codeUrl: undefined,
             media: {
                 image: {
                     url: "/placeholder-image.svg",
@@ -68,34 +72,54 @@ const fallbackData = {
             technologies: [
                 { name: "React" },
                 { name: "TypeScript" },
-                { name: "Tailwind CSS" },
+                { name: "Next.js" }
             ],
         },
         items: [
             {
-                title: "Sample Project",
-                description: [{ text: "Please add content through the PayloadCMS admin panel" }],
-                projectUrl: "#",
-                codeUrl: "#",
+                title: "Example Project 1",
+                description: [{ text: "A sample project showcasing modern development practices and responsive design." }],
+                projectUrl: undefined,
+                codeUrl: undefined, 
                 media: {
                     image: {
                         url: "/placeholder-image.svg",
-                        alt: "Sample project placeholder"
+                        alt: "Example project 1"
                     },
                     imagePosition: "center" as const,
                     aspectRatio: "landscape" as const
                 },
-                technologies: [{ name: "Next.js" }, { name: "JavaScript" }],
+                technologies: [
+                    { name: "React" },
+                    { name: "CSS" }
+                ],
             },
+            {
+                title: "Example Project 2",
+                description: [{ text: "Another sample project demonstrating full-stack development capabilities." }],
+                projectUrl: undefined,
+                codeUrl: undefined,
+                media: {
+                    image: {
+                        url: "/placeholder-image.svg", 
+                        alt: "Example project 2"
+                    },
+                    imagePosition: "center" as const,
+                    aspectRatio: "landscape" as const
+                },
+                technologies: [
+                    { name: "Node.js" },
+                    { name: "MongoDB" }
+                ],
+            }
         ],
-        description: "Here are some of my recent projects",
         viewMoreText: "Want to see more of my work?",
-        viewAllLink: "#",
+        viewAllLink: "",
     },
     contact: {
         title: "Get In Touch",
-        description: "Please add content through the PayloadCMS admin panel",
-        email: "example@example.com",
+        description: "Feel free to reach out for collaborations or just a friendly hello",
+        email: "hello@example.com",
         github: "https://github.com",
         emailSubtitle: "Email",
         githubSubtitle: "GitHub",
@@ -107,80 +131,45 @@ const fallbackData = {
     },
 };
 
-function safeNumber(value: any, min?: number, max?: number): number | undefined {
-    if (value === null || value === undefined || value === "") return undefined;
-    
-    const num = typeof value === "number" ? value : Number(value);
-    if (isNaN(num)) return undefined;
-    
-    if (min !== undefined && num < min) return undefined;
-    if (max !== undefined && num > max) return undefined;
-    
-    return num;
-}
-
 /**
- * Safely processes a media array or single media object
+ * Enhanced media processing with improved placeholder fallbacks
+ * Ensures projects always have media, using placeholder when none provided
  */
-function safelyProcessMedia(media: any, title: string = "Project"): any {
-    if (!media) {
+function processMediaItem(mediaItem: any, title: string = "Project"): any {
+    // Always return a complete media object, even if input is null/undefined
+    if (!mediaItem) {
         return {
             image: {
                 url: "/placeholder-image.svg",
-                alt: title || "Project image"
+                alt: `${title} placeholder image`
             },
             imagePosition: "center" as const,
             aspectRatio: "landscape" as const
         };
     }
 
-    // If media is an array, process each item
-    if (Array.isArray(media)) {
-        return media.map((mediaItem: any) => ({
-            image: mediaItem.image ? {
-                url: safelyExtractImageUrl(mediaItem.image),
-                alt: title || "Project image"
-            } : undefined,
-            imagePosition: (mediaItem.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(mediaItem.aspectRatio, "landscape"),
-            imageZoom: safeNumber(mediaItem.imageZoom, 50, 200),
-            imageFinePosition: (() => {
-                const x = safeNumber(mediaItem.imageFinePosition?.x, 0, 100);
-                const y = safeNumber(mediaItem.imageFinePosition?.y, 0, 100);
-                return (x !== undefined || y !== undefined) ? { x, y } : undefined;
-            })(),
-            video: mediaItem.video ? {
-                src: safeString(mediaItem.video.src),
-                file: mediaItem.video.file ? {
-                    url: safelyExtractImageUrl(mediaItem.video.file)
-                } : undefined,
-                title: safeString(mediaItem.video.title),
-                description: safeString(mediaItem.video.description)
-            } : undefined
-        }));
-    }
+    // Extract image URL with fallback to placeholder
+    const imageUrl = safelyExtractImageUrl(mediaItem.image);
+    const hasValidImage = imageUrl && imageUrl !== "";
 
-    // If media is a single object (for backward compatibility)
     return {
-        image: media.image ? {
-            url: safelyExtractImageUrl(media.image),
-            alt: title || "Project image"
-        } : undefined,
-        imagePosition: (media.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-        aspectRatio: safeString(media.aspectRatio, "landscape"),
-        imageZoom: safeNumber(media.imageZoom, 50, 200),
-        imageFinePosition: (() => {
-            const x = safeNumber(media.imageFinePosition?.x, 0, 100);
-            const y = safeNumber(media.imageFinePosition?.y, 0, 100);
-            return (x !== undefined || y !== undefined) ? { x, y } : undefined;
-        })(),
-        video: media.video ? {
-            src: safeString(media.video.src),
-            file: media.video.file ? {
-                url: safelyExtractImageUrl(media.video.file)
+        image: {
+            url: hasValidImage ? imageUrl : "/placeholder-image.svg",
+            alt: `${title} ${hasValidImage ? "" : "placeholder "}image`
+        },
+        imagePosition: (mediaItem.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+        aspectRatio: safeString(mediaItem.aspectRatio, "landscape"),
+        imageZoom: typeof mediaItem.imageZoom === "number" ? mediaItem.imageZoom : undefined,
+        imageFinePosition: (mediaItem.imageFinePosition?.x !== undefined || mediaItem.imageFinePosition?.y !== undefined) 
+            ? { x: mediaItem.imageFinePosition?.x, y: mediaItem.imageFinePosition?.y } 
+            : undefined,
+        video: mediaItem.video ? {
+            src: safeString(mediaItem.video.src),
+            file: mediaItem.video.file ? {
+                url: safelyExtractImageUrl(mediaItem.video.file)
             } : undefined,
-            title: safeString(media.video.title),
-            description: safeString(media.video.description)
+            title: safeString(mediaItem.video.title),
+            description: safeString(mediaItem.video.description)
         } : undefined
     };
 }
@@ -212,11 +201,21 @@ export function adaptPortfolioData(data: any) {
         return fallbackData;
     }
 
+    // Debug: Log projects data to understand what's happening
+    const portfolioLogger = logger.createFeatureLogger("Portfolio");
+    portfolioLogger.log("Processing projects data:", {
+        hasProjects: !!data.projects,
+        hasFeatured: !!data.projects?.featured,
+        itemsCount: data.projects?.items?.length || 0,
+        featuredMedia: data.projects?.featured?.media,
+        firstItemMedia: data.projects?.items?.[0]?.media
+    });
+
     return {
         nav: {
             logo: safeString(data.nav.logo, "Portfolio"),
             subtitle: safeString(data.nav.subtitle, "Developer"),
-            logoSplitAt: safeNumber(data.nav.logoSplitAt, 0, 50),
+            logoSplitAt: typeof data.nav.logoSplitAt === "number" ? data.nav.logoSplitAt : undefined,
             links: safelyProcessNavLinks(data.nav.links),
         },
         hero: {
@@ -227,12 +226,10 @@ export function adaptPortfolioData(data: any) {
             image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
             imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
             aspectRatio: safeString(data.hero.aspectRatio, "landscape"),
-            imageZoom: safeNumber(data.hero.imageZoom, 50, 200),
-            imageFinePosition: (() => {
-                const x = safeNumber(data.hero.imageFinePosition?.x, 0, 100);
-                const y = safeNumber(data.hero.imageFinePosition?.y, 0, 100);
-                return (x !== undefined || y !== undefined) ? { x, y } : undefined;
-            })(),
+            imageZoom: typeof data.hero.imageZoom === "number" ? data.hero.imageZoom : undefined,
+            imageFinePosition: (data.hero.imageFinePosition?.x !== undefined || data.hero.imageFinePosition?.y !== undefined) 
+                ? { x: data.hero.imageFinePosition?.x, y: data.hero.imageFinePosition?.y } 
+                : undefined,
             ctaText: "View GitHub",
             ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
             secondaryCtaText: "View Projects",
@@ -246,12 +243,10 @@ export function adaptPortfolioData(data: any) {
             image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
             imagePosition: (data.about.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
             aspectRatio: safeString(data.about.aspectRatio, "portrait"),
-            imageZoom: safeNumber(data.about.imageZoom, 50, 200),
-            imageFinePosition: (() => {
-                const x = safeNumber(data.about.imageFinePosition?.x, 0, 100);
-                const y = safeNumber(data.about.imageFinePosition?.y, 0, 100);
-                return (x !== undefined || y !== undefined) ? { x, y } : undefined;
-            })(),
+            imageZoom: typeof data.about.imageZoom === "number" ? data.about.imageZoom : undefined,
+            imageFinePosition: (data.about.imageFinePosition?.x !== undefined || data.about.imageFinePosition?.y !== undefined) 
+                ? { x: data.about.imageFinePosition?.x, y: data.about.imageFinePosition?.y } 
+                : undefined,
             technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
             interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),
         },
@@ -260,24 +255,27 @@ export function adaptPortfolioData(data: any) {
             featured: (() => {
                 const featured = data.projects.featured;
                 if (!featured) {
-                    return {
-                        title: "Featured Project",
-                        description: [{ text: "A showcase of my best work" }],
-                        projectUrl: undefined,
-                        codeUrl: undefined,
-                        media: {
-                            image: {
-                                url: "/placeholder-image.svg",
-                                alt: "Featured project placeholder"
-                            },
-                            imagePosition: "center" as const
-                        },
-                        technologies: [],
-                    };
+                    portfolioLogger.log("No featured project found, using fallback");
+                    return fallbackData.projects.featured;
                 }
 
-                // Process media structure (supports both array and single media)
-                const processedMedia = safelyProcessMedia(featured.media, featured.title);
+                // ALWAYS process media, even if it's null/undefined - this ensures placeholder
+                let processedMedia;
+                
+                if (Array.isArray(featured.media)) {
+                    // If media is an array but empty, provide placeholder
+                    if (featured.media.length === 0) {
+                        processedMedia = processMediaItem(null, featured.title);
+                        portfolioLogger.log(`Empty media array for featured project "${featured.title}", using placeholder`);
+                    } else {
+                        processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.title));
+                    }
+                } else {
+                    // Single media item or null/undefined
+                    processedMedia = processMediaItem(featured.media, featured.title);
+                }
+                
+                portfolioLogger.log("Processed featured media:", processedMedia);
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
@@ -288,22 +286,47 @@ export function adaptPortfolioData(data: any) {
                     technologies: safelyProcessTechnologies(featured.technologies),
                 };
             })(),
-            items: (data.projects.items || []).map((project: any) => {
-                // Process media structure (supports both array and single media)
-                const processedMedia = safelyProcessMedia(project.media, project.title);
-
-                return {
-                    title: safeString(project.title, "Project"),
-                    description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
-                    projectUrl: safeString(project.projectUrl),
-                    codeUrl: safeString(project.codeUrl),
-                    media: processedMedia,
-                    technologies: safelyProcessTechnologies(project.technologies),
-                };
-            }),
+            items: (() => {
+                const items = data.projects.items || [];
+                if (items.length === 0) {
+                    portfolioLogger.log("No project items found, using fallback items");
+                    return fallbackData.projects.items;
+                }
+                
+                const processedItems = items.map((project: any) => {
+                    // ALWAYS process media, even if it's null/undefined - this ensures placeholder
+                    let processedMedia;
+                    
+                    if (Array.isArray(project.media)) {
+                        // If media is an array but empty, provide placeholder
+                        if (project.media.length === 0) {
+                            processedMedia = processMediaItem(null, project.title);
+                            portfolioLogger.log(`Empty media array for project "${project.title}", using placeholder`);
+                        } else {
+                            processedMedia = project.media.map((item: any) => processMediaItem(item, project.title));
+                        }
+                    } else {
+                        // Single media item or null/undefined
+                        processedMedia = processMediaItem(project.media, project.title);
+                    }
+                    
+                    portfolioLogger.log(`Processed media for project "${project.title}":`, processedMedia);
+                    
+                    return {
+                        title: safeString(project.title, "Project"),
+                        description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
+                        projectUrl: safeString(project.projectUrl),
+                        codeUrl: safeString(project.codeUrl),
+                        media: processedMedia,
+                        technologies: safelyProcessTechnologies(project.technologies),
+                    };
+                });
+                
+                return processedItems;
+            })(),
             description: safeString(data.projects.description, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
-            viewAllLink: safeString(data.projects.viewAllLink),
+            viewAllLink: safeString(data.projects.viewAllLink, ""),
         },
         contact: {
             title: safeString(data.contact.title, "Get In Touch"),
