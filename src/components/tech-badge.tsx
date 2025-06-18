@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { safelyExtractTechnologyNames } from "@/lib/payload-safe-helpers";
+import { safelyExtractNames } from "@/lib/payload-safe-helpers";
 import { cn, createResponsiveBadge, createResponsiveGap } from "@/lib/utils";
 
 interface TechBadgeProps {
@@ -58,7 +58,7 @@ export function TechBadgeGroup({
     showCount = true,
 }: TechBadgeGroupProps) {
     const isMobile = useIsMobile();
-    const validTechnologies = safelyExtractTechnologyNames(technologies);
+    const validTechnologies = safelyExtractNames(technologies);
 
     if (validTechnologies.length === 0) return null;
 

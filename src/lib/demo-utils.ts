@@ -25,13 +25,16 @@ export function isDemoModeRequested(searchParams: URLSearchParams | { [key: stri
  */
 export function shouldUseDemoMode(searchParams?: URLSearchParams | { [key: string]: string | string[] | undefined }): boolean {
     // Environment variable takes precedence
-    if (isDemoModeEnabled()) {
+    if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
         return true;
     }
     
     // Check URL parameter if search params are provided
-    if (searchParams && isDemoModeRequested(searchParams)) {
-        return true;
+    if (searchParams) {
+        if (searchParams instanceof URLSearchParams) {
+            return searchParams.get("demo") === "true";
+        }
+        return searchParams.demo === "true";
     }
     
     return false;

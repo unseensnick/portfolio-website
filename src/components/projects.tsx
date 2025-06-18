@@ -8,12 +8,8 @@ import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
-import { MediaItem } from "@/types/portfolio";
+import { MediaItem, Technology } from "@/types/portfolio";
 import { ExternalLink, Github } from "lucide-react";
-
-interface Technology {
-    name: string;
-}
 
 interface ProjectItemProps {
     title: string;
@@ -150,21 +146,10 @@ function ProjectItem({
     );
 }
 
-interface ProjectItem {
-    title: string;
-    description: Array<{ text: string }>;
-    projectUrl?: string;
-    codeUrl?: string;
-    technologies?: Technology[];
-
-    // Updated media structure - can be single media or array of media
-    media?: MediaItem | MediaItem[];
-}
-
 interface ProjectsProps {
     title?: string;
-    featured?: ProjectItem;
-    items?: ProjectItem[];
+    featured?: ProjectItemProps;
+    items?: ProjectItemProps[];
     viewAllLink?: string;
     description?: string;
     viewMoreText?: string;

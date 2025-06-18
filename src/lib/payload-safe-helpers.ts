@@ -77,13 +77,6 @@ export function safelyProcessTechnologies(technologies?: any[]): { name: string 
 }
 
 /**
- * Extract technology names as strings (alternative to safelyProcessTechnologies)
- */
-export function safelyExtractTechnologyNames(technologies?: any[]): string[] {
-    return safelyExtractNames(technologies);
-}
-
-/**
  * Process navigation links with href/label validation
  */
 export function safelyProcessNavLinks(links?: any[]): Array<{ href: string; label: string; icon?: string }> {
