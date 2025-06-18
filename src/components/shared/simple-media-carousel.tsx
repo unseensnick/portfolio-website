@@ -82,7 +82,7 @@ export function SimpleMediaCarousel({
     return (
         <div
             ref={containerRef}
-            className={cn("relative group", className)}
+            className={cn("relative group focus:outline-none", className)}
             tabIndex={0}
             role="region"
             aria-label={`${title} media gallery with ${mediaArray.length} items`}
@@ -113,11 +113,11 @@ export function SimpleMediaCarousel({
                 {mediaArray.length > 1 && (
                     <>
                         <CarouselPrevious
-                            className="absolute top-1/2 left-3 -translate-y-1/2 z-10 size-9 bg-black/20 hover:bg-black/40 border-0 backdrop-blur-sm text-white hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200 md:opacity-100"
+                            className="absolute top-1/2 left-3 -translate-y-1/2 z-10 size-9 bg-black/20 hover:bg-black/40 border-0 backdrop-blur-sm text-white hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200"
                             aria-label="Previous image"
                         />
                         <CarouselNext
-                            className="absolute top-1/2 right-3 -translate-y-1/2 z-10 size-9 bg-black/20 hover:bg-black/40 border-0 backdrop-blur-sm text-white hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200 md:opacity-100"
+                            className="absolute top-1/2 right-3 -translate-y-1/2 z-10 size-9 bg-black/20 hover:bg-black/40 border-0 backdrop-blur-sm text-white hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200"
                             aria-label="Next image"
                         />
                     </>
