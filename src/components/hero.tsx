@@ -3,7 +3,11 @@
 import { ButtonGroup } from "@/components/shared/button-group";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMedia } from "@/components/shared/simple-media";
-import { useIsMobile } from "@/hooks/use-mobile";
+import {
+    useIsMobile,
+    useIsMobileOrTablet,
+    useIsTablet,
+} from "@/hooks/use-mobile";
 import {
     cn,
     commonClasses,
@@ -55,6 +59,8 @@ export function Hero({
     secondaryCtaLink = "#projects",
 }: HeroProps) {
     const isMobile = useIsMobile();
+    const isTablet = useIsTablet();
+    const isMobileOrTablet = useIsMobileOrTablet();
 
     const buttons = [
         {
@@ -85,45 +91,50 @@ export function Hero({
           }
         : undefined;
 
-    const renderMobileLayout = () => (
-        <div className="w-full">
-            {/* Hero image with decorative blur effect */}
-            <div className="relative mb-8 mx-auto max-w-sm">
-                <SimpleMedia media={heroMedia} alt="Hero" priority={true} />
-                <div
-                    className={`absolute -inset-3 ${commonClasses.backgroundGradient} rounded-2xl -z-10 opacity-50 blur-lg`}
-                ></div>
-            </div>
+    const renderMobileLayout = () => {
+        // Determine hero image container size
+        const imageContainerClass = isTablet ? "max-w-md" : "max-w-sm"; // md is one step bigger than sm
 
-            <div className="text-center space-y-6">
-                <div className="space-y-4">
-                    <p className="text-xs text-primary font-medium uppercase tracking-wider">
-                        {greeting}
-                    </p>
-                    <h1
-                        className={cn(
-                            createResponsiveText("heroTitle", isMobile),
-                            "font-bold leading-tight",
-                            commonClasses.gradientText
-                        )}
-                    >
-                        {title}
-                    </h1>
-                    <p className="text-base text-muted-foreground leading-relaxed px-4">
-                        {description}
-                    </p>
+        return (
+            <div className="w-full">
+                {/* Hero image with decorative blur effect */}
+                <div className={`relative mb-8 mx-auto ${imageContainerClass}`}>
+                    <SimpleMedia media={heroMedia} alt="Hero" priority={true} />
+                    <div
+                        className={`absolute -inset-3 ${commonClasses.backgroundGradient} rounded-2xl -z-10 opacity-50 blur-lg`}
+                    ></div>
                 </div>
 
-                <div data-tour="hero-cta">
-                    <ButtonGroup
-                        buttons={buttons}
-                        fullWidthMobile={true}
-                        className="px-4"
-                    />
+                <div className="text-center space-y-6">
+                    <div className="space-y-4">
+                        <p className="text-xs text-primary font-medium uppercase tracking-wider">
+                            {greeting}
+                        </p>
+                        <h1
+                            className={cn(
+                                createResponsiveText("heroTitle", isMobile),
+                                "font-bold leading-tight",
+                                commonClasses.gradientText
+                            )}
+                        >
+                            {title}
+                        </h1>
+                        <p className="text-base text-muted-foreground leading-relaxed px-4">
+                            {description}
+                        </p>
+                    </div>
+
+                    <div data-tour="hero-cta">
+                        <ButtonGroup
+                            buttons={buttons}
+                            fullWidthMobile={true}
+                            className="px-4"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     const renderDesktopLayout = () => (
         <div className={createResponsiveLayout("twoColumn", false)}>
@@ -164,12 +175,12 @@ export function Hero({
         <SectionWrapper
             id="home"
             className={cn(
-                isMobile
+                isMobileOrTablet
                     ? "min-h-[85vh] flex items-center pt-8 pb-16"
                     : "min-h-[90vh] flex items-center"
             )}
         >
-            {isMobile ? renderMobileLayout() : renderDesktopLayout()}
+            {isMobileOrTablet ? renderMobileLayout() : renderDesktopLayout()}
         </SectionWrapper>
     );
 }

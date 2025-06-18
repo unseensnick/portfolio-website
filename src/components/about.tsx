@@ -3,9 +3,14 @@
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMedia } from "@/components/shared/simple-media";
 import { TechBadgeGroup } from "@/components/tech-badge";
-import { useIsMobile } from "@/hooks/use-mobile";
+import {
+    useIsMobile,
+    useIsMobileOrTablet,
+    useIsTablet,
+} from "@/hooks/use-mobile";
 import {
     cn,
+    commonClasses,
     createContentWrapper,
     createResponsiveLayout,
     createResponsiveText,
@@ -63,27 +68,53 @@ export function About({
     interestsHeading = "Interests",
 }: AboutProps) {
     const isMobile = useIsMobile();
-    const { container, content, spacing } = createContentWrapper(isMobile);
+    const isTablet = useIsTablet();
+    const isMobileOrTablet = useIsMobileOrTablet();
 
-    // Create MediaItem structure for ResponsiveMedia
-    const aboutMedia: MediaItem | undefined = image
-        ? {
-              image: {
+    // Use mobile layout for both mobile and tablet, desktop layout only for desktop
+    const { container, content, spacing } =
+        createContentWrapper(isMobileOrTablet);
+
+    // Create MediaItem structure for ResponsiveMedia - always create it to show placeholder if no image
+    const aboutMedia: MediaItem = {
+        image: image
+            ? {
                   url: image,
                   alt: "About",
+              }
+            : {
+                  url: "/placeholder-image.svg",
+                  alt: "About placeholder image",
               },
-              imagePosition,
-              aspectRatio,
-              imageZoom,
-              imageFinePosition,
-          }
-        : undefined;
+        imagePosition,
+        aspectRatio,
+        imageZoom,
+        imageFinePosition,
+    };
 
-    const renderImage = () => (
-        <div className={isMobile ? "mx-auto max-w-sm" : "lg:col-span-2"}>
-            <SimpleMedia media={aboutMedia} alt="About" />
-        </div>
-    );
+    const renderImage = () => {
+        // Determine image container size based on screen size
+        let containerClass = "";
+        if (isMobile) {
+            containerClass = "mx-auto max-w-xs"; // Smaller on mobile
+        } else if (isTablet) {
+            containerClass = "mx-auto max-w-sm"; // Medium on tablet
+        } else {
+            containerClass = "lg:col-span-2"; // Full size on desktop
+        }
+
+        return (
+            <div className={containerClass}>
+                <div className="relative">
+                    <SimpleMedia media={aboutMedia} alt="About" />
+                    {/* Decorative blur effect like hero section */}
+                    <div
+                        className={`absolute -inset-2 ${commonClasses.backgroundGradient} rounded-2xl -z-10 opacity-30 blur-lg`}
+                    ></div>
+                </div>
+            </div>
+        );
+    };
 
     const renderContent = () => (
         <div className={cn(content, spacing)}>

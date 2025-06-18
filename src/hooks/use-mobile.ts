@@ -65,3 +65,58 @@ export function useIsMobile(breakpoint: number = 768): boolean {
     // Return override value if set, otherwise return native detection
     return mobileOverride !== null ? mobileOverride : isMobile;
 }
+
+/**
+ * Detects if viewport is tablet-sized (768px - 1024px)
+ * Returns true for tablet breakpoint range
+ */
+export function useIsTablet(): boolean {
+    const [isTablet, setIsTablet] = useState<boolean>(false);
+
+    useEffect(() => {
+        // Skip setup if running on server
+        if (typeof window === "undefined") return;
+
+        const checkTablet = () => {
+            const width = window.innerWidth;
+            setIsTablet(width >= 768 && width < 1024);
+        };
+
+        // Initial check
+        checkTablet();
+        
+        // Set up listener
+        window.addEventListener("resize", checkTablet);
+
+        return () => window.removeEventListener("resize", checkTablet);
+    }, []);
+
+    return isTablet;
+}
+
+/**
+ * Returns true if viewport should use mobile-style layout
+ * This includes both mobile (<768px) and tablet (768px-1024px) for hero section
+ */
+export function useIsMobileOrTablet(): boolean {
+    const [isMobileOrTablet, setIsMobileOrTablet] = useState<boolean>(false);
+
+    useEffect(() => {
+        // Skip setup if running on server
+        if (typeof window === "undefined") return;
+
+        const checkMobileOrTablet = () => {
+            setIsMobileOrTablet(window.innerWidth < 1024);
+        };
+
+        // Initial check
+        checkMobileOrTablet();
+        
+        // Set up listener
+        window.addEventListener("resize", checkMobileOrTablet);
+
+        return () => window.removeEventListener("resize", checkMobileOrTablet);
+    }, []);
+
+    return isMobileOrTablet;
+}
