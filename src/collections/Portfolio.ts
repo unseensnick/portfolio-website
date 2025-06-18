@@ -628,8 +628,8 @@ export const Portfolio: CollectionConfig = {
                                             type: "text",
                                             label: "Video URL",
                                             admin: {
-                                                description: "YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.",
-                                                placeholder: "https://youtube.com/watch?v=... or https://example.com/video.mp4",
+                                                description: "YouTube URL for embedding video demos of your projects.",
+                                                placeholder: "https://youtube.com/watch?v=...",
                                             },
                                         },
                                         {
@@ -918,8 +918,8 @@ export const Portfolio: CollectionConfig = {
                                             type: "text",
                                             label: "Video URL",
                                             admin: {
-                                                description: "YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.",
-                                                placeholder: "https://youtube.com/watch?v=... or https://example.com/video.mp4",
+                                                description: "YouTube URL for embedding video demos of your projects.",
+                                                placeholder: "https://youtube.com/watch?v=...",
                                             },
                                         },
                                         {

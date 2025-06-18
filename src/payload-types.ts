@@ -361,7 +361,7 @@ export interface Portfolio {
              */
             video?: {
               /**
-               * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
+               * YouTube URL for embedding video demos of your projects.
                */
               src?: string | null;
               /**
@@ -473,7 +473,7 @@ export interface Portfolio {
                  */
                 video?: {
                   /**
-                   * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
+                   * YouTube URL for embedding video demos of your projects.
                    */
                   src?: string | null;
                   /**
