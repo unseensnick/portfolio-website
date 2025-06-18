@@ -1,13 +1,14 @@
 "use client";
 
 import { ButtonGroup } from "@/components/shared/button-group";
+import { ProjectMediaCarousel } from "@/components/shared/project-media-carousel";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
-import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
+import { MediaItem } from "@/types/portfolio";
 import { ExternalLink, Github } from "lucide-react";
 
 interface Technology {
@@ -21,35 +22,8 @@ interface ProjectItemProps {
     codeUrl?: string;
     technologies?: Technology[];
 
-    // New consolidated media structure
-    media?: {
-        image?:
-            | {
-                  url?: string;
-                  alt?: string;
-              }
-            | any;
-        imagePosition?:
-            | "center"
-            | "top"
-            | "bottom"
-            | "left"
-            | "right"
-            | "top-left"
-            | "top-right"
-            | "bottom-left"
-            | "bottom-right";
-        video?: {
-            src?: string;
-            file?:
-                | {
-                      url?: string;
-                  }
-                | any;
-            title?: string;
-            description?: string;
-        };
-    };
+    // Updated media structure - can be single media or array of media
+    media?: MediaItem | MediaItem[];
 }
 
 /**
@@ -93,7 +67,11 @@ function ProjectItem({
     }
 
     const renderMedia = () => (
-        <ResponsiveMedia media={media} alt={title} aspectRatio="landscape" />
+        <ProjectMediaCarousel
+            media={media}
+            title={title}
+            aspectRatio="landscape"
+        />
     );
 
     const renderContent = () => (
@@ -182,35 +160,8 @@ interface ProjectItem {
     codeUrl?: string;
     technologies?: Technology[];
 
-    // New consolidated media structure
-    media?: {
-        image?:
-            | {
-                  url?: string;
-                  alt?: string;
-              }
-            | any;
-        imagePosition?:
-            | "center"
-            | "top"
-            | "bottom"
-            | "left"
-            | "right"
-            | "top-left"
-            | "top-right"
-            | "bottom-left"
-            | "bottom-right";
-        video?: {
-            src?: string;
-            file?:
-                | {
-                      url?: string;
-                  }
-                | any;
-            title?: string;
-            description?: string;
-        };
-    };
+    // Updated media structure - can be single media or array of media
+    media?: MediaItem | MediaItem[];
 }
 
 interface ProjectsProps {

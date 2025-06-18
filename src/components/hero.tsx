@@ -10,6 +10,7 @@ import {
     createResponsiveLayout,
     createResponsiveText,
 } from "@/lib/utils";
+import { MediaItem } from "@/types/portfolio";
 import { ExternalLink, Github } from "lucide-react";
 
 interface HeroProps {
@@ -28,6 +29,12 @@ interface HeroProps {
         | "top-right"
         | "bottom-left"
         | "bottom-right";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    imageZoom?: number;
+    imageFinePosition?: {
+        x?: number;
+        y?: number;
+    };
     ctaText?: string;
     secondaryCtaText?: string;
     secondaryCtaLink?: string;
@@ -44,6 +51,9 @@ export function Hero({
     githubUrl = "https://github.com",
     image,
     imagePosition = "center",
+    aspectRatio = "landscape",
+    imageZoom,
+    imageFinePosition,
     ctaText = "View GitHub",
     secondaryCtaText = "View Projects",
     secondaryCtaLink = "#projects",
@@ -65,8 +75,8 @@ export function Hero({
         },
     ];
 
-    // Create media structure for ResponsiveMedia
-    const heroMedia = image
+    // Create MediaItem structure for ResponsiveMedia
+    const heroMedia: MediaItem | undefined = image
         ? {
               image: {
                   url: image,
@@ -83,7 +93,9 @@ export function Hero({
                 <ResponsiveMedia
                     media={heroMedia}
                     alt="Hero"
-                    aspectRatio="square"
+                    aspectRatio={aspectRatio}
+                    imageZoom={imageZoom}
+                    imageFinePosition={imageFinePosition}
                     priority={true}
                 />
                 <div
@@ -152,7 +164,9 @@ export function Hero({
                 <ResponsiveMedia
                     media={heroMedia}
                     alt="Hero"
-                    aspectRatio="landscape"
+                    aspectRatio={aspectRatio}
+                    imageZoom={imageZoom}
+                    imageFinePosition={imageFinePosition}
                     priority={true}
                 />
                 <div

@@ -10,6 +10,7 @@ import {
     createResponsiveLayout,
     createResponsiveText,
 } from "@/lib/utils";
+import { MediaItem } from "@/types/portfolio";
 
 function InterestItem({ text }: { text: string }) {
     return (
@@ -36,6 +37,12 @@ interface AboutProps {
         | "top-right"
         | "bottom-left"
         | "bottom-right";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    imageZoom?: number;
+    imageFinePosition?: {
+        x?: number;
+        y?: number;
+    };
     technologiesHeading?: string;
     interestsHeading?: string;
 }
@@ -53,14 +60,17 @@ export function About({
     interests = ["Web Development", "UI/UX Design", "Open Source"],
     image,
     imagePosition = "center",
+    aspectRatio = "portrait",
+    imageZoom,
+    imageFinePosition,
     technologiesHeading = "Technologies",
     interestsHeading = "Interests",
 }: AboutProps) {
     const isMobile = useIsMobile();
     const { container, content, spacing } = createContentWrapper(isMobile);
 
-    // Create media structure for ResponsiveMedia
-    const aboutMedia = image
+    // Create MediaItem structure for ResponsiveMedia
+    const aboutMedia: MediaItem | undefined = image
         ? {
               image: {
                   url: image,
@@ -75,7 +85,9 @@ export function About({
             <ResponsiveMedia
                 media={aboutMedia}
                 alt="About"
-                aspectRatio={isMobile ? "square" : "portrait"}
+                aspectRatio={aspectRatio}
+                imageZoom={imageZoom}
+                imageFinePosition={imageFinePosition}
             />
         </div>
     );

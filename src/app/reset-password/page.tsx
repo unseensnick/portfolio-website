@@ -26,7 +26,10 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [errors, setErrors] = useState<{
+        password?: string;
+        confirmPassword?: string;
+    }>({});
     const router = useRouter();
 
     const validateForm = () => {
@@ -102,7 +105,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         showPassword,
         () => setShowPassword(!showPassword),
         {
-            id: "password",
+            id: "reset-password",
             placeholder: "Enter your new password",
             error: errors.password,
             disabled: isLoading,
@@ -115,7 +118,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         showConfirmPassword,
         () => setShowConfirmPassword(!showConfirmPassword),
         {
-            id: "confirmPassword",
+            id: "reset-confirm-password",
             placeholder: "Confirm your new password",
             error: errors.confirmPassword,
             disabled: isLoading,
@@ -175,7 +178,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Password Field */}
                     <div className="space-y-2">
-                        <Label htmlFor="password">New Password</Label>
+                        <Label htmlFor="reset-password">New Password</Label>
                         <div className="relative">
                             <Input {...passwordField.inputProps} />
                             <Button {...passwordField.toggleButtonProps}>
@@ -195,7 +198,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
                     {/* Confirm Password Field */}
                     <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">
+                        <Label htmlFor="reset-confirm-password">
                             Confirm New Password
                         </Label>
                         <div className="relative">

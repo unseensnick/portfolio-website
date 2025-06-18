@@ -33,6 +33,7 @@ const fallbackData = {
         githubUrl: "https://github.com",
         image: "/placeholder-image.svg",
         imagePosition: "center" as const,
+        aspectRatio: "landscape" as const,
         ctaText: "View GitHub",
         ctaLink: "https://github.com",
         secondaryCtaText: "View Projects",
@@ -45,6 +46,7 @@ const fallbackData = {
         interests: ["Coding", "Design", "Technology"],
         image: "/placeholder-image.svg",
         imagePosition: "center" as const,
+        aspectRatio: "portrait" as const,
         technologiesHeading: "Technologies & Tools",
         interestsHeading: "When I'm Not Coding",
     },
@@ -60,7 +62,8 @@ const fallbackData = {
                     url: "/placeholder-image.svg",
                     alt: "Featured project placeholder"
                 },
-                imagePosition: "center" as const
+                imagePosition: "center" as const,
+                aspectRatio: "landscape" as const
             },
             technologies: [
                 { name: "React" },
@@ -79,7 +82,8 @@ const fallbackData = {
                         url: "/placeholder-image.svg",
                         alt: "Sample project placeholder"
                     },
-                    imagePosition: "center" as const
+                    imagePosition: "center" as const,
+                    aspectRatio: "landscape" as const
                 },
                 technologies: [{ name: "Next.js" }, { name: "JavaScript" }],
             },
@@ -115,7 +119,71 @@ function safeNumber(value: any, min?: number, max?: number): number | undefined 
     return num;
 }
 
+/**
+ * Safely processes a media array or single media object
+ */
+function safelyProcessMedia(media: any, title: string = "Project"): any {
+    if (!media) {
+        return {
+            image: {
+                url: "/placeholder-image.svg",
+                alt: title || "Project image"
+            },
+            imagePosition: "center" as const,
+            aspectRatio: "landscape" as const
+        };
+    }
 
+    // If media is an array, process each item
+    if (Array.isArray(media)) {
+        return media.map((mediaItem: any) => ({
+            image: mediaItem.image ? {
+                url: safelyExtractImageUrl(mediaItem.image),
+                alt: title || "Project image"
+            } : undefined,
+            imagePosition: (mediaItem.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(mediaItem.aspectRatio, "landscape"),
+            imageZoom: safeNumber(mediaItem.imageZoom, 50, 200),
+            imageFinePosition: (() => {
+                const x = safeNumber(mediaItem.imageFinePosition?.x, 0, 100);
+                const y = safeNumber(mediaItem.imageFinePosition?.y, 0, 100);
+                return (x !== undefined || y !== undefined) ? { x, y } : undefined;
+            })(),
+            video: mediaItem.video ? {
+                src: safeString(mediaItem.video.src),
+                file: mediaItem.video.file ? {
+                    url: safelyExtractImageUrl(mediaItem.video.file)
+                } : undefined,
+                title: safeString(mediaItem.video.title),
+                description: safeString(mediaItem.video.description)
+            } : undefined
+        }));
+    }
+
+    // If media is a single object (for backward compatibility)
+    return {
+        image: media.image ? {
+            url: safelyExtractImageUrl(media.image),
+            alt: title || "Project image"
+        } : undefined,
+        imagePosition: (media.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+        aspectRatio: safeString(media.aspectRatio, "landscape"),
+        imageZoom: safeNumber(media.imageZoom, 50, 200),
+        imageFinePosition: (() => {
+            const x = safeNumber(media.imageFinePosition?.x, 0, 100);
+            const y = safeNumber(media.imageFinePosition?.y, 0, 100);
+            return (x !== undefined || y !== undefined) ? { x, y } : undefined;
+        })(),
+        video: media.video ? {
+            src: safeString(media.video.src),
+            file: media.video.file ? {
+                url: safelyExtractImageUrl(media.video.file)
+            } : undefined,
+            title: safeString(media.video.title),
+            description: safeString(media.video.description)
+        } : undefined
+    };
+}
 
 /**
  * Transforms raw PayloadCMS data into the format expected by components
@@ -158,6 +226,13 @@ export function adaptPortfolioData(data: any) {
             githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
             image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
             imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.hero.aspectRatio, "landscape"),
+            imageZoom: safeNumber(data.hero.imageZoom, 50, 200),
+            imageFinePosition: (() => {
+                const x = safeNumber(data.hero.imageFinePosition?.x, 0, 100);
+                const y = safeNumber(data.hero.imageFinePosition?.y, 0, 100);
+                return (x !== undefined || y !== undefined) ? { x, y } : undefined;
+            })(),
             ctaText: "View GitHub",
             ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
             secondaryCtaText: "View Projects",
@@ -170,6 +245,13 @@ export function adaptPortfolioData(data: any) {
             interests: safelyExtractNames(data.about.interests) || [],
             image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
             imagePosition: (data.about.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.about.aspectRatio, "portrait"),
+            imageZoom: safeNumber(data.about.imageZoom, 50, 200),
+            imageFinePosition: (() => {
+                const x = safeNumber(data.about.imageFinePosition?.x, 0, 100);
+                const y = safeNumber(data.about.imageFinePosition?.y, 0, 100);
+                return (x !== undefined || y !== undefined) ? { x, y } : undefined;
+            })(),
             technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
             interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),
         },
@@ -194,28 +276,8 @@ export function adaptPortfolioData(data: any) {
                     };
                 }
 
-                // Process media structure
-                const processedMedia = featured.media ? {
-                    image: featured.media.image ? {
-                        url: safelyExtractImageUrl(featured.media.image),
-                        alt: featured.title || "Project image"
-                    } : undefined,
-                    imagePosition: (featured.media.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-                    video: featured.media.video ? {
-                        src: safeString(featured.media.video.src),
-                        file: featured.media.video.file ? {
-                            url: safelyExtractImageUrl(featured.media.video.file)
-                        } : undefined,
-                        title: safeString(featured.media.video.title),
-                        description: safeString(featured.media.video.description)
-                    } : undefined
-                } : {
-                    image: {
-                        url: "/placeholder-image.svg",
-                        alt: featured.title || "Project image"
-                    },
-                    imagePosition: "center" as const
-                };
+                // Process media structure (supports both array and single media)
+                const processedMedia = safelyProcessMedia(featured.media, featured.title);
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
@@ -227,28 +289,8 @@ export function adaptPortfolioData(data: any) {
                 };
             })(),
             items: (data.projects.items || []).map((project: any) => {
-                // Process media structure
-                const processedMedia = project.media ? {
-                    image: project.media.image ? {
-                        url: safelyExtractImageUrl(project.media.image),
-                        alt: project.title || "Project image"
-                    } : undefined,
-                    imagePosition: (project.media.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-                    video: project.media.video ? {
-                        src: safeString(project.media.video.src),
-                        file: project.media.video.file ? {
-                            url: safelyExtractImageUrl(project.media.video.file)
-                        } : undefined,
-                        title: safeString(project.media.video.title),
-                        description: safeString(project.media.video.description)
-                    } : undefined
-                } : {
-                    image: {
-                        url: "/placeholder-image.svg",
-                        alt: project.title || "Project image"
-                    },
-                    imagePosition: "center" as const
-                };
+                // Process media structure (supports both array and single media)
+                const processedMedia = safelyProcessMedia(project.media, project.title);
 
                 return {
                     title: safeString(project.title, "Project"),

@@ -816,3 +816,10 @@ html:not(.dark) .driver-active-element {
     max-width: 764px !important;
     width: 100% !important;
 }
+
+/* Mobile demo mode styling */
+.mobile-demo-active [data-tour="mobile-navigation"] {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}

@@ -10,7 +10,7 @@
  * Supported timezones in IANA format.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "supportedTimezones". 
+ * via the `definition` "supportedTimezones".
  */
 export type SupportedTimezones =
   | 'Pacific/Midway'
@@ -232,6 +232,27 @@ export interface Portfolio {
     imagePosition?:
       | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
       | null;
+    /**
+     * Controls the aspect ratio (width to height ratio) of the hero image. This applies to both mobile and desktop views.
+     */
+    aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+    /**
+     * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
+     */
+    imageZoom?: number | null;
+    /**
+     * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
+     */
+    imageFinePosition?: {
+      /**
+       * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
+       */
+      x?: number | null;
+      /**
+       * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+       */
+      y?: number | null;
+    };
   };
   /**
    * Configure your portfolio projects section
@@ -290,41 +311,75 @@ export interface Portfolio {
           }[]
         | null;
       /**
-       * Configure image and/or video for your featured project. Video will take priority if both are provided.
+       * Add multiple images and/or videos for your featured project. If you add multiple items, they will be displayed in a carousel.
        */
-      media?: {
-        /**
-         * Screenshot or thumbnail of your project (used as fallback or video poster)
-         */
-        image?: (number | null) | Media;
-        /**
-         * Controls how the image is positioned within its container when cropped
-         */
-        imagePosition?:
-          | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
-          | null;
-        /**
-         * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
-         */
-        video?: {
-          /**
-           * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
-           */
-          src?: string | null;
-          /**
-           * Alternative: Upload a video file directly (will override URL if both provided)
-           */
-          file?: (number | null) | Media;
-          /**
-           * Optional: Title displayed above the video player
-           */
-          title?: string | null;
-          /**
-           * Optional: Description displayed below the video title
-           */
-          description?: string | null;
-        };
-      };
+      media?:
+        | {
+            /**
+             * Screenshot or thumbnail of your project (used as fallback or video poster)
+             */
+            image?: (number | null) | Media;
+            /**
+             * Controls how the image is positioned within its container when cropped
+             */
+            imagePosition?:
+              | (
+                  | 'center'
+                  | 'top'
+                  | 'bottom'
+                  | 'left'
+                  | 'right'
+                  | 'top-left'
+                  | 'top-right'
+                  | 'bottom-left'
+                  | 'bottom-right'
+                )
+              | null;
+            /**
+             * Controls the aspect ratio of this media item. Applies to both images and videos.
+             */
+            aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+            /**
+             * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
+             */
+            imageZoom?: number | null;
+            /**
+             * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
+             */
+            imageFinePosition?: {
+              /**
+               * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
+               */
+              x?: number | null;
+              /**
+               * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+               */
+              y?: number | null;
+            };
+            /**
+             * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
+             */
+            video?: {
+              /**
+               * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
+               */
+              src?: string | null;
+              /**
+               * Alternative: Upload a video file directly (will override URL if both provided)
+               */
+              file?: (number | null) | Media;
+              /**
+               * Optional: Title displayed above the video player
+               */
+              title?: string | null;
+              /**
+               * Optional: Description displayed below the video title
+               */
+              description?: string | null;
+            };
+            id?: string | null;
+          }[]
+        | null;
     };
     /**
      * Additional projects to display in your portfolio
@@ -368,51 +423,75 @@ export interface Portfolio {
               }[]
             | null;
           /**
-           * Configure image and/or video for this project. Video will take priority if both are provided.
+           * Add multiple images and/or videos for this project. If you add multiple items, they will be displayed in a carousel.
            */
-          media?: {
-            /**
-             * Screenshot or thumbnail of your project (used as fallback or video poster)
-             */
-            image?: (number | null) | Media;
-            /**
-             * Controls how the image is positioned within its container when cropped
-             */
-            imagePosition?:
-              | (
-                  | 'center'
-                  | 'top'
-                  | 'bottom'
-                  | 'left'
-                  | 'right'
-                  | 'top-left'
-                  | 'top-right'
-                  | 'bottom-left'
-                  | 'bottom-right'
-                )
-              | null;
-            /**
-             * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
-             */
-            video?: {
-              /**
-               * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
-               */
-              src?: string | null;
-              /**
-               * Alternative: Upload a video file directly (will override URL if both provided)
-               */
-              file?: (number | null) | Media;
-              /**
-               * Optional: Title displayed above the video player
-               */
-              title?: string | null;
-              /**
-               * Optional: Description displayed below the video title
-               */
-              description?: string | null;
-            };
-          };
+          media?:
+            | {
+                /**
+                 * Screenshot or thumbnail of your project (used as fallback or video poster)
+                 */
+                image?: (number | null) | Media;
+                /**
+                 * Controls how the image is positioned within its container when cropped
+                 */
+                imagePosition?:
+                  | (
+                      | 'center'
+                      | 'top'
+                      | 'bottom'
+                      | 'left'
+                      | 'right'
+                      | 'top-left'
+                      | 'top-right'
+                      | 'bottom-left'
+                      | 'bottom-right'
+                    )
+                  | null;
+                /**
+                 * Controls the aspect ratio of this media item. Applies to both images and videos.
+                 */
+                aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+                /**
+                 * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
+                 */
+                imageZoom?: number | null;
+                /**
+                 * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
+                 */
+                imageFinePosition?: {
+                  /**
+                   * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
+                   */
+                  x?: number | null;
+                  /**
+                   * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+                   */
+                  y?: number | null;
+                };
+                /**
+                 * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
+                 */
+                video?: {
+                  /**
+                   * YouTube URL (e.g., https://youtube.com/watch?v=...) or direct video file URL. Supports YouTube, Vimeo, and direct MP4/WebM files.
+                   */
+                  src?: string | null;
+                  /**
+                   * Alternative: Upload a video file directly (will override URL if both provided)
+                   */
+                  file?: (number | null) | Media;
+                  /**
+                   * Optional: Title displayed above the video player
+                   */
+                  title?: string | null;
+                  /**
+                   * Optional: Description displayed below the video title
+                   */
+                  description?: string | null;
+                };
+                id?: string | null;
+              }[]
+            | null;
           id?: string | null;
         }[]
       | null;
@@ -483,6 +562,27 @@ export interface Portfolio {
     imagePosition?:
       | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
       | null;
+    /**
+     * Controls the aspect ratio (width to height ratio) of the about image. This applies to both mobile and desktop views.
+     */
+    aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+    /**
+     * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
+     */
+    imageZoom?: number | null;
+    /**
+     * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
+     */
+    imageFinePosition?: {
+      /**
+       * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
+       */
+      x?: number | null;
+      /**
+       * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+       */
+      y?: number | null;
+    };
   };
   /**
    * Configure the contact section of your portfolio
@@ -659,6 +759,14 @@ export interface PortfolioSelect<T extends boolean = true> {
         githubUrl?: T;
         image?: T;
         imagePosition?: T;
+        aspectRatio?: T;
+        imageZoom?: T;
+        imageFinePosition?:
+          | T
+          | {
+              x?: T;
+              y?: T;
+            };
       };
   projects?:
     | T
@@ -689,6 +797,14 @@ export interface PortfolioSelect<T extends boolean = true> {
                 | {
                     image?: T;
                     imagePosition?: T;
+                    aspectRatio?: T;
+                    imageZoom?: T;
+                    imageFinePosition?:
+                      | T
+                      | {
+                          x?: T;
+                          y?: T;
+                        };
                     video?:
                       | T
                       | {
@@ -697,6 +813,7 @@ export interface PortfolioSelect<T extends boolean = true> {
                           title?: T;
                           description?: T;
                         };
+                    id?: T;
                   };
             };
         items?:
@@ -722,6 +839,14 @@ export interface PortfolioSelect<T extends boolean = true> {
                 | {
                     image?: T;
                     imagePosition?: T;
+                    aspectRatio?: T;
+                    imageZoom?: T;
+                    imageFinePosition?:
+                      | T
+                      | {
+                          x?: T;
+                          y?: T;
+                        };
                     video?:
                       | T
                       | {
@@ -730,6 +855,7 @@ export interface PortfolioSelect<T extends boolean = true> {
                           title?: T;
                           description?: T;
                         };
+                    id?: T;
                   };
               id?: T;
             };
@@ -761,6 +887,14 @@ export interface PortfolioSelect<T extends boolean = true> {
             };
         image?: T;
         imagePosition?: T;
+        aspectRatio?: T;
+        imageZoom?: T;
+        imageFinePosition?:
+          | T
+          | {
+              x?: T;
+              y?: T;
+            };
       };
   contact?:
     | T

@@ -466,25 +466,6 @@ export function createResponsiveIconSize(
 }
 
 /**
- * Aspect ratio mapping utility
- */
-export const aspectRatioMap = {
-    square: "aspect-square",
-    landscape: "aspect-[16/10]",
-    portrait: "aspect-[3/4]",
-} as const;
-
-/**
- * Maps aspect ratio prop to Tailwind CSS class
- */
-export function getAspectRatioClass(aspectRatio: string): string {
-    if (aspectRatio in aspectRatioMap) {
-        return aspectRatioMap[aspectRatio as keyof typeof aspectRatioMap];
-    }
-    return aspectRatio; // Return as-is for custom aspect ratios
-}
-
-/**
  * Responsive container patterns for different layouts
  */
 export const responsiveContainers = {

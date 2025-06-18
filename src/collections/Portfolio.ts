@@ -234,6 +234,108 @@ export const Portfolio: CollectionConfig = {
                         description: "Controls how the hero image is positioned within its container when cropped",
                     },
                 },
+                {
+                    name: "aspectRatio",
+                    type: "select",
+                    label: "Hero Image Aspect Ratio",
+                    defaultValue: "landscape",
+                    dbName: "hero_aspect_ratio",
+                    options: [
+                        {
+                            label: "Square (1:1)",
+                            value: "square",
+                        },
+                        {
+                            label: "Landscape (16:9)",
+                            value: "landscape",
+                        },
+                        {
+                            label: "Portrait (3:4)",
+                            value: "portrait",
+                        },
+                        {
+                            label: "Wide (21:9)",
+                            value: "21/9",
+                        },
+                        {
+                            label: "Classic (4:3)",
+                            value: "4/3",
+                        },
+                        {
+                            label: "Golden Ratio (1.618:1)",
+                            value: "1.618/1",
+                        },
+                    ],
+                    admin: {
+                        description: "Controls the aspect ratio (width to height ratio) of the hero image. This applies to both mobile and desktop views.",
+                    },
+                },
+                {
+                    name: "imageZoom",
+                    type: "number",
+                    label: "Image Zoom (%)",
+                    min: 50,
+                    max: 200,
+                    admin: {
+                        description: "Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.",
+                        placeholder: "Leave empty for default (100%)",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                    validate: (value: number | null | undefined) => {
+                        if (value === null || value === undefined) return true;
+                        if (value < 50 || value > 200) {
+                            return "Zoom must be between 50% and 200%";
+                        }
+                        return true;
+                    },
+                },
+                {
+                    name: "imageFinePosition",
+                    type: "group",
+                    label: "Fine Position Control (Advanced)",
+                    admin: {
+                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                    fields: [
+                        {
+                            name: "x",
+                            type: "number",
+                            label: "Horizontal Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: (value: number | null | undefined) => {
+                                if (value === null || value === undefined) return true;
+                                if (value < 0 || value > 100) {
+                                    return "Position must be between 0% and 100%";
+                                }
+                                return true;
+                            },
+                        },
+                        {
+                            name: "y",
+                            type: "number",
+                            label: "Vertical Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: (value: number | null | undefined) => {
+                                if (value === null || value === undefined) return true;
+                                if (value < 0 || value > 100) {
+                                    return "Position must be between 0% and 100%";
+                                }
+                                return true;
+                            },
+                        },
+                    ],
+                },
             ],
         },
         {
@@ -344,10 +446,10 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "media",
-                            type: "group",
+                            type: "array",
                             label: "Project Media",
                             admin: {
-                                description: "Configure image and/or video for your featured project. Video will take priority if both are provided.",
+                                description: "Add multiple images and/or videos for your featured project. If you add multiple items, they will be displayed in a carousel.",
                             },
                             fields: [
                                 {
@@ -406,6 +508,112 @@ export const Portfolio: CollectionConfig = {
                                     admin: {
                                         description: "Controls how the image is positioned within its container when cropped",
                                     },
+                                },
+                                {
+                                    name: "aspectRatio",
+                                    type: "select",
+                                    label: "Media Aspect Ratio",
+                                    defaultValue: "landscape",
+                                    dbName: "media_aspect_ratio",
+                                    options: [
+                                        {
+                                            label: "Square (1:1)",
+                                            value: "square",
+                                        },
+                                        {
+                                            label: "Landscape (16:9)",
+                                            value: "landscape",
+                                        },
+                                        {
+                                            label: "Portrait (3:4)",
+                                            value: "portrait",
+                                        },
+                                        {
+                                            label: "Wide (21:9)",
+                                            value: "21/9",
+                                        },
+                                        {
+                                            label: "Classic (4:3)",
+                                            value: "4/3",
+                                        },
+                                        {
+                                            label: "Golden Ratio (1.618:1)",
+                                            value: "1.618/1",
+                                        },
+                                    ],
+                                    admin: {
+                                        description: "Controls the aspect ratio of this media item. Applies to both images and videos.",
+                                    },
+                                },
+                                {
+                                    name: "imageZoom",
+                                    type: "number",
+                                    label: "Image Zoom (%)",
+                                    min: 50,
+                                    max: 200,
+                                    admin: {
+                                        description: "Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.",
+                                        placeholder: "Leave empty for default (100%)",
+                                        condition: (data, siblingData) => {
+                                            return !!siblingData?.image;
+                                        },
+                                    },
+                                    validate: (value: number | null | undefined) => {
+                                        if (value === null || value === undefined) return true;
+                                        if (value < 50 || value > 200) {
+                                            return "Zoom must be between 50% and 200%";
+                                        }
+                                        return true;
+                                    },
+                                },
+                                {
+                                    name: "imageFinePosition",
+                                    type: "group",
+                                    label: "Fine Position Control (Advanced)",
+                                    admin: {
+                                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
+                                        condition: (data, siblingData) => {
+                                            return !!siblingData?.image;
+                                        },
+                                    },
+                                    fields: [
+                                        {
+                                            name: "x",
+                                            type: "number",
+                                            label: "Horizontal Position (%)",
+                                            min: 0,
+                                            max: 100,
+                                            admin: {
+                                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
+                                                placeholder: "Leave empty for preset position",
+                                            },
+                                            validate: (value: number | null | undefined) => {
+                                                if (value === null || value === undefined) return true;
+                                                if (value < 0 || value > 100) {
+                                                    return "Position must be between 0% and 100%";
+                                                }
+                                                return true;
+                                            },
+                                        },
+                                        {
+                                            name: "y",
+                                            type: "number",
+                                            label: "Vertical Position (%)",
+                                            min: 0,
+                                            max: 100,
+                                            admin: {
+                                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
+                                                placeholder: "Leave empty for preset position",
+                                            },
+                                            validate: (value: number | null | undefined) => {
+                                                if (value === null || value === undefined) return true;
+                                                if (value < 0 || value > 100) {
+                                                    return "Position must be between 0% and 100%";
+                                                }
+                                                return true;
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     name: "video",
@@ -528,10 +736,10 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "media",
-                            type: "group",
+                            type: "array",
                             label: "Project Media",
                             admin: {
-                                description: "Configure image and/or video for this project. Video will take priority if both are provided.",
+                                description: "Add multiple images and/or videos for this project. If you add multiple items, they will be displayed in a carousel.",
                             },
                             fields: [
                                 {
@@ -591,6 +799,112 @@ export const Portfolio: CollectionConfig = {
                                         description: "Controls how the image is positioned within its container when cropped",
                                     },
                                 },
+                                {
+                                    name: "aspectRatio",
+                                    type: "select",
+                                    label: "Media Aspect Ratio",
+                                    defaultValue: "landscape",
+                                    dbName: "media_aspect_ratio",
+                                    options: [
+                                        {
+                                            label: "Square (1:1)",
+                                            value: "square",
+                                        },
+                                        {
+                                            label: "Landscape (16:9)",
+                                            value: "landscape",
+                                        },
+                                        {
+                                            label: "Portrait (3:4)",
+                                            value: "portrait",
+                                        },
+                                        {
+                                            label: "Wide (21:9)",
+                                            value: "21/9",
+                                        },
+                                        {
+                                            label: "Classic (4:3)",
+                                            value: "4/3",
+                                        },
+                                        {
+                                            label: "Golden Ratio (1.618:1)",
+                                            value: "1.618/1",
+                                        },
+                                    ],
+                                    admin: {
+                                        description: "Controls the aspect ratio of this media item. Applies to both images and videos.",
+                                    },
+                                },
+                                {
+                                    name: "imageZoom",
+                                    type: "number",
+                                    label: "Image Zoom (%)",
+                                    min: 50,
+                                    max: 200,
+                                    admin: {
+                                        description: "Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.",
+                                        placeholder: "Leave empty for default (100%)",
+                                        condition: (data, siblingData) => {
+                                            return !!siblingData?.image;
+                                        },
+                                    },
+                                    validate: (value: number | null | undefined) => {
+                                        if (value === null || value === undefined) return true;
+                                        if (value < 50 || value > 200) {
+                                            return "Zoom must be between 50% and 200%";
+                                        }
+                                        return true;
+                                    },
+                                },
+                                                {
+                    name: "imageFinePosition",
+                    type: "group",
+                    label: "Fine Position Control (Advanced)",
+                    admin: {
+                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
+                        condition: (data, siblingData) => {
+                            return !!siblingData?.image;
+                        },
+                    },
+                    fields: [
+                        {
+                            name: "x",
+                            type: "number",
+                            label: "Horizontal Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: (value: number | null | undefined) => {
+                                if (value === null || value === undefined) return true;
+                                if (value < 0 || value > 100) {
+                                    return "Position must be between 0% and 100%";
+                                }
+                                return true;
+                            },
+                        },
+                        {
+                            name: "y",
+                            type: "number",
+                            label: "Vertical Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: (value: number | null | undefined) => {
+                                if (value === null || value === undefined) return true;
+                                if (value < 0 || value > 100) {
+                                    return "Position must be between 0% and 100%";
+                                }
+                                return true;
+                            },
+                        },
+                    ],
+                },
                                 {
                                     name: "video",
                                     type: "group",
@@ -800,6 +1114,108 @@ export const Portfolio: CollectionConfig = {
                     admin: {
                         description: "Controls how the about image is positioned within its container when cropped",
                     },
+                },
+                {
+                    name: "aspectRatio",
+                    type: "select",
+                    label: "About Image Aspect Ratio",
+                    defaultValue: "portrait",
+                    dbName: "about_aspect_ratio",
+                    options: [
+                        {
+                            label: "Square (1:1)",
+                            value: "square",
+                        },
+                        {
+                            label: "Landscape (16:9)",
+                            value: "landscape",
+                        },
+                        {
+                            label: "Portrait (3:4)",
+                            value: "portrait",
+                        },
+                        {
+                            label: "Wide (21:9)",
+                            value: "21/9",
+                        },
+                        {
+                            label: "Classic (4:3)",
+                            value: "4/3",
+                        },
+                        {
+                            label: "Golden Ratio (1.618:1)",
+                            value: "1.618/1",
+                        },
+                    ],
+                    admin: {
+                        description: "Controls the aspect ratio (width to height ratio) of the about image. This applies to both mobile and desktop views.",
+                    },
+                },
+                {
+                    name: "imageZoom",
+                    type: "number",
+                    label: "Image Zoom (%)",
+                    min: 50,
+                    max: 200,
+                    admin: {
+                        description: "Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.",
+                        placeholder: "Leave empty for default (100%)",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                    validate: (value: number | null | undefined) => {
+                        if (value === null || value === undefined) return true;
+                        if (value < 50 || value > 200) {
+                            return "Zoom must be between 50% and 200%";
+                        }
+                        return true;
+                    },
+                },
+                {
+                    name: "imageFinePosition",
+                    type: "group",
+                    label: "Fine Position Control (Advanced)",
+                    admin: {
+                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                    fields: [
+                        {
+                            name: "x",
+                            type: "number",
+                            label: "Horizontal Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: (value: number | null | undefined) => {
+                                if (value === null || value === undefined) return true;
+                                if (value < 0 || value > 100) {
+                                    return "Position must be between 0% and 100%";
+                                }
+                                return true;
+                            },
+                        },
+                        {
+                            name: "y",
+                            type: "number",
+                            label: "Vertical Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: (value: number | null | undefined) => {
+                                if (value === null || value === undefined) return true;
+                                if (value < 0 || value > 100) {
+                                    return "Position must be between 0% and 100%";
+                                }
+                                return true;
+                            },
+                        },
+                    ],
                 },
             ],
         },

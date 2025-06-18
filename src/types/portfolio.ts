@@ -18,6 +18,12 @@ export interface Hero {
     githubUrl: string;
     image: string;
     imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    imageZoom?: number;
+    imageFinePosition?: {
+        x?: number;
+        y?: number;
+    };
     ctaText: string;
     ctaLink: string;
     secondaryCtaText: string;
@@ -31,6 +37,12 @@ export interface About {
     interests: string[];
     image: string;
     imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    imageZoom?: number;
+    imageFinePosition?: {
+        x?: number;
+        y?: number;
+    };
     technologiesHeading: string;
     interestsHeading: string;
 }
@@ -39,28 +51,37 @@ export interface Technology {
     name: string;
 }
 
+// Individual media item
+export interface MediaItem {
+    image?: {
+        url?: string;
+        alt?: string;
+    } | any;
+    imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    imageZoom?: number;
+    imageFinePosition?: {
+        x?: number;
+        y?: number;
+    };
+    video?: {
+        src?: string;
+        file?: {
+            url?: string;
+        } | any;
+        title?: string;
+        description?: string;
+    };
+}
+
 export interface ProjectItem {
     title: string;
     description: Array<{ text: string }>;
     projectUrl?: string;
     codeUrl?: string;
     
-    // New consolidated media structure
-    media?: {
-        image?: {
-            url?: string;
-            alt?: string;
-        } | any;
-        imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
-        video?: {
-            src?: string;
-            file?: {
-                url?: string;
-            } | any;
-            title?: string;
-            description?: string;
-        };
-    };
+    // Updated media structure - can be single media or array of media
+    media?: MediaItem | MediaItem[];
     
     technologies?: Technology[];
 }
