@@ -133,7 +133,10 @@ export function SimpleMedia({
 
     // Image handling
     const shouldShowPlaceholder =
-        !imageSrc || imageError || imageSrc === "/placeholder-image.svg";
+        !imageSrc ||
+        imageError ||
+        imageSrc === "/placeholder-image.svg" ||
+        !imageSrc.trim();
 
     if (shouldShowPlaceholder) {
         return (

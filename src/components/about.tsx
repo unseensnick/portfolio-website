@@ -147,7 +147,7 @@ export function About({
     );
 
     return (
-        <SectionWrapper id="about" title={title} data-tour="about-section">
+        <SectionWrapper id="about" title={title}>
             <div className={container}>
                 {renderImage()}
                 {renderContent()}

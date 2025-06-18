@@ -184,7 +184,6 @@ export function Hero({
                     ? "min-h-[85vh] flex items-center pt-8 pb-16"
                     : "min-h-[90vh] flex items-center"
             )}
-            data-tour="hero-section"
         >
             {isMobile ? renderMobileLayout() : renderDesktopLayout()}
         </SectionWrapper>

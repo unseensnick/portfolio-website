@@ -2,7 +2,6 @@
 
 import { TourControls } from "@/components/tour-controls";
 import { MobileOverrideProvider, useIsMobile } from "@/hooks/use-mobile";
-import { createConditionalClasses } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
 interface MobileDemoWrapperProps {
@@ -68,17 +67,18 @@ export function MobileDemoWrapper({
 
     const content = (
         <div
-            className={createConditionalClasses(
-                forceMobileView,
-                "flex justify-center bg-muted/80 dark:bg-slate-900/90 min-h-screen relative"
-            )}
+            className={
+                forceMobileView
+                    ? "flex justify-center bg-muted/80 dark:bg-slate-900/90 min-h-screen relative"
+                    : ""
+            }
         >
             <div
-                className={createConditionalClasses(
-                    forceMobileView,
-                    "max-w-[764px] w-full bg-background relative",
-                    "w-full"
-                )}
+                className={
+                    forceMobileView
+                        ? "max-w-[764px] w-full bg-background relative"
+                        : "w-full"
+                }
                 style={forceMobileView ? { minHeight: "100vh" } : {}}
             >
                 {children}

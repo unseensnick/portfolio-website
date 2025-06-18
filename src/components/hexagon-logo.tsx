@@ -1,7 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, commonClasses, createResponsiveText } from "@/lib/utils";
+import { cn, commonClasses } from "@/lib/utils";
 
 interface HexagonLogoProps {
     logoText?: string;
@@ -51,7 +51,7 @@ export function HexagonLogo({
             onClick={onClick}
         >
             {/* Simplified hexagon with responsive sizing */}
-            <div className={cn("relative", isMobile ? "w-8 h-8" : "w-12 h-12")}>
+            <div className="relative w-8 h-8 md:w-12 md:h-12">
                 {/* Outer hexagon with gradient */}
                 <div
                     className={cn(
@@ -83,7 +83,7 @@ export function HexagonLogo({
                 <div
                     className={cn(
                         "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary font-bold font-mono",
-                        isMobile ? "text-xs" : "text-base"
+                        "text-xs md:text-base"
                     )}
                 >
                     &lt;/&gt;
@@ -92,12 +92,7 @@ export function HexagonLogo({
 
             {/* Logo text with split typography */}
             <div className="flex flex-col">
-                <div
-                    className={cn(
-                        createResponsiveText("subheading", isMobile),
-                        "font-semibold leading-none"
-                    )}
-                >
+                <div className="text-lg md:text-xl lg:text-2xl font-semibold leading-none">
                     <span className="text-muted-foreground">{firstPart}</span>
                     <span
                         className={cn(
@@ -110,12 +105,7 @@ export function HexagonLogo({
                     </span>
                 </div>
 
-                <span
-                    className={cn(
-                        "text-muted-foreground font-medium leading-none mt-1",
-                        isMobile ? "text-xs" : "text-sm"
-                    )}
-                >
+                <span className="text-xs md:text-sm text-muted-foreground font-medium leading-none mt-1">
                     {subtitle}
                 </span>
             </div>

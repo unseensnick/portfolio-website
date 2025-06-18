@@ -11,23 +11,21 @@ interface FooterProps {
  * Responsive footer with extra mobile padding for bottom navigation
  */
 export function Footer({
-    copyright = "© 2024 All rights reserved.",
+    copyright = "© 2025 All rights reserved.",
 }: FooterProps) {
     const isMobile = useIsMobile();
 
-    const footerClasses = cn(
-        "border-t border-border",
-        isMobile ? "bg-background/50 backdrop-blur-sm" : ""
-    );
-
-    const contentClasses = cn(
-        "text-center text-muted-foreground",
-        isMobile ? "px-6 py-8 text-xs" : "max-w-6xl mx-auto px-8 py-12 text-sm"
-    );
-
     return (
-        <footer className={footerClasses} data-tour="footer">
-            <div className={contentClasses}>{copyright}</div>
+        <footer
+            className={cn(
+                "border-t border-border",
+                isMobile && "bg-background/50 backdrop-blur-sm"
+            )}
+            data-tour="footer"
+        >
+            <div className="text-center text-muted-foreground px-6 py-8 text-xs md:max-w-6xl md:mx-auto md:px-8 md:py-12 md:text-sm">
+                {copyright}
+            </div>
             {/* Extra padding for mobile navigation bar */}
             {isMobile && <div className="h-24 pb-safe"></div>}
         </footer>

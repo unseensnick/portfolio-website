@@ -225,12 +225,7 @@ export function Projects({
     };
 
     return (
-        <SectionWrapper
-            id="projects"
-            title={title}
-            description={description}
-            data-tour="projects-section"
-        >
+        <SectionWrapper id="projects" title={title} description={description}>
             <div data-tour="featured-project" className="mb-12 lg:mb-24">
                 {!isMobile && featured && (
                     <ProjectItem {...featured} isMobile={isMobile} />
