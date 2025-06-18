@@ -1,7 +1,7 @@
 "use client";
 
-import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
+import { SimpleMedia } from "@/components/shared/simple-media";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -82,7 +82,7 @@ export function About({
 
     const renderImage = () => (
         <div className={isMobile ? "mx-auto max-w-sm" : "lg:col-span-2"}>
-            <ResponsiveMedia
+            <SimpleMedia
                 media={aboutMedia}
                 alt="About"
                 aspectRatio={aspectRatio}

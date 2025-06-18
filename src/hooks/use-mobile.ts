@@ -40,13 +40,7 @@ export function useIsMobile(breakpoint: number = 768): boolean {
     const [isMobile, setIsMobile] = useState<boolean>(false);
     
     // Safely get override value - will be null if no provider exists (which is fine)
-    let mobileOverride: boolean | null = null;
-    try {
-        mobileOverride = useContext(MobileOverrideContext);
-    } catch (error) {
-        // If Context reading fails completely, just ignore override
-        mobileOverride = null;
-    }
+    const mobileOverride = useContext(MobileOverrideContext);
 
     useEffect(() => {
         // Skip setup if running on server

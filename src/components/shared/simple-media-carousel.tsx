@@ -1,6 +1,5 @@
 "use client";
 
-import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import {
     Carousel,
     CarouselApi,
@@ -9,12 +8,12 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { MediaItem } from "@/types/portfolio";
 import { useEffect, useRef, useState } from "react";
+import { SimpleMedia } from "./simple-media";
 
-interface ProjectMediaCarouselProps {
+interface SimpleMediaCarouselProps {
     media?: MediaItem | MediaItem[];
     title: string;
     aspectRatio?: "square" | "landscape" | "portrait" | string;
@@ -22,22 +21,17 @@ interface ProjectMediaCarouselProps {
     priority?: boolean;
 }
 
-/**
- * Project media component that automatically uses a carousel when multiple media files are present
- * Falls back to single ResponsiveMedia component for single media files
- */
-export function ProjectMediaCarousel({
+export function SimpleMediaCarousel({
     media,
     title,
     aspectRatio = "landscape",
     className = "",
     priority = false,
-}: ProjectMediaCarouselProps) {
-    const isMobile = useIsMobile();
+}: SimpleMediaCarouselProps) {
     const [api, setApi] = useState<CarouselApi>();
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Handle keyboard navigation
+    // Keyboard navigation
     useEffect(() => {
         if (!api || !containerRef.current) return;
 
@@ -52,33 +46,14 @@ export function ProjectMediaCarousel({
         };
 
         const container = containerRef.current;
-
-        // Add event listeners
         container.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            container.removeEventListener("keydown", handleKeyDown);
-        };
+        return () => container.removeEventListener("keydown", handleKeyDown);
     }, [api]);
 
-    // Handle mouse enter to enable keyboard navigation
-    const handleMouseEnter = () => {
-        if (containerRef.current) {
-            containerRef.current.focus();
-        }
-    };
-
-    // Handle click to enable keyboard navigation
-    const handleClick = () => {
-        if (containerRef.current) {
-            containerRef.current.focus();
-        }
-    };
-
-    // Handle the case where media is undefined or empty
+    // Handle undefined/empty media
     if (!media) {
         return (
-            <ResponsiveMedia
+            <SimpleMedia
                 media={undefined}
                 alt={title}
                 aspectRatio={aspectRatio}
@@ -88,13 +63,13 @@ export function ProjectMediaCarousel({
         );
     }
 
-    // Convert single media to array for uniform handling
+    // Convert to array for uniform handling
     const mediaArray = Array.isArray(media) ? media : [media];
 
-    // If only one media item, render it directly without carousel
+    // Single media item - no carousel needed
     if (mediaArray.length === 1) {
         return (
-            <ResponsiveMedia
+            <SimpleMedia
                 media={mediaArray[0]}
                 alt={title}
                 aspectRatio={mediaArray[0]?.aspectRatio || aspectRatio}
@@ -104,19 +79,16 @@ export function ProjectMediaCarousel({
         );
     }
 
-    // Multiple media items - use carousel with keyboard support
+    // Multiple media items - use carousel
     return (
         <div
             ref={containerRef}
-            className={cn(
-                "relative group outline-none focus:outline-none focus-visible:outline-none",
-                className
-            )}
+            className={cn("relative group", className)}
             tabIndex={0}
             role="region"
             aria-label={`${title} media gallery with ${mediaArray.length} items`}
-            onMouseEnter={handleMouseEnter}
-            onClick={handleClick}
+            onMouseEnter={() => containerRef.current?.focus()}
+            onClick={() => containerRef.current?.focus()}
         >
             <Carousel
                 setApi={setApi}
@@ -129,50 +101,34 @@ export function ProjectMediaCarousel({
                 <CarouselContent>
                     {mediaArray.map((mediaItem, index) => (
                         <CarouselItem key={index}>
-                            <ResponsiveMedia
+                            <SimpleMedia
                                 media={mediaItem}
                                 alt={`${title} - Item ${index + 1} of ${mediaArray.length}`}
                                 aspectRatio={
                                     mediaItem?.aspectRatio || aspectRatio
                                 }
-                                priority={priority && index === 0} // Only prioritize first image
+                                priority={priority && index === 0}
                             />
                         </CarouselItem>
                     ))}
                 </CarouselContent>
 
-                {/* Navigation buttons - positioned inside the image container */}
+                {/* Navigation controls */}
                 {mediaArray.length > 1 && (
                     <>
                         <CarouselPrevious
-                            className={cn(
-                                "absolute top-1/2 left-3 -translate-y-1/2 z-10",
-                                "size-9 bg-black/20 hover:bg-black/40 border-0",
-                                "backdrop-blur-sm text-white hover:text-white",
-                                "transition-all duration-200 outline-none focus:outline-none focus-visible:outline-none",
-                                "shadow-none focus:shadow-none focus-visible:shadow-none",
-                                "opacity-0 group-hover:opacity-100 focus:opacity-100",
-                                isMobile && "opacity-100" // Always visible on mobile
-                            )}
+                            className="absolute top-1/2 left-3 -translate-y-1/2 z-10 size-9 bg-black/20 hover:bg-black/40 border-0 backdrop-blur-sm text-white hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200 md:opacity-100"
                             aria-label="Previous image"
                         />
                         <CarouselNext
-                            className={cn(
-                                "absolute top-1/2 right-3 -translate-y-1/2 z-10",
-                                "size-9 bg-black/20 hover:bg-black/40 border-0",
-                                "backdrop-blur-sm text-white hover:text-white",
-                                "transition-all duration-200 outline-none focus:outline-none focus-visible:outline-none",
-                                "shadow-none focus:shadow-none focus-visible:shadow-none",
-                                "opacity-0 group-hover:opacity-100 focus:opacity-100",
-                                isMobile && "opacity-100" // Always visible on mobile
-                            )}
+                            className="absolute top-1/2 right-3 -translate-y-1/2 z-10 size-9 bg-black/20 hover:bg-black/40 border-0 backdrop-blur-sm text-white hover:text-white opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200 md:opacity-100"
                             aria-label="Next image"
                         />
                     </>
                 )}
             </Carousel>
 
-            {/* Media counter indicator - only show for multiple items */}
+            {/* Item counter */}
             {mediaArray.length > 1 && (
                 <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium z-10">
                     {mediaArray.length} items

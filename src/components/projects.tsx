@@ -1,9 +1,9 @@
 "use client";
 
 import { ButtonGroup } from "@/components/shared/button-group";
-import { ProjectMediaCarousel } from "@/components/shared/project-media-carousel";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
+import { SimpleMediaCarousel } from "@/components/shared/simple-media-carousel";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
@@ -67,7 +67,7 @@ function ProjectItem({
     }
 
     const renderMedia = () => (
-        <ProjectMediaCarousel
+        <SimpleMediaCarousel
             media={media}
             title={title}
             aspectRatio="landscape"

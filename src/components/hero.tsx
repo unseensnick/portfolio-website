@@ -1,8 +1,8 @@
 "use client";
 
 import { ButtonGroup } from "@/components/shared/button-group";
-import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
+import { SimpleMedia } from "@/components/shared/simple-media";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
     cn,
@@ -90,7 +90,7 @@ export function Hero({
         <div className="w-full">
             {/* Hero image with decorative blur effect */}
             <div className="relative mb-8 mx-auto max-w-sm">
-                <ResponsiveMedia
+                <SimpleMedia
                     media={heroMedia}
                     alt="Hero"
                     aspectRatio={aspectRatio}
@@ -161,7 +161,7 @@ export function Hero({
             </div>
 
             <div className="relative group">
-                <ResponsiveMedia
+                <SimpleMedia
                     media={heroMedia}
                     alt="Hero"
                     aspectRatio={aspectRatio}
