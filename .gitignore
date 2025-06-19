@@ -49,4 +49,5 @@ media/*
 !media/*.json
 !media/*.js
 !media/*.ts
+!media/.gitkeep
 public/_next-video
