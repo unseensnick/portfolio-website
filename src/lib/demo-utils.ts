@@ -3,6 +3,9 @@
  */
 import { logger } from "@/lib/utils";
 
+// Track if we've already logged demo mode status to avoid spam
+let hasLoggedDemoMode = false;
+
 /**
  * Checks if demo mode is enabled via environment variable
  */
@@ -48,11 +51,12 @@ export function getDemoModeIndicator(): string {
 }
 
 /**
- * Logs demo mode status for debugging
+ * Logs demo mode status for debugging - only once to avoid spam
  */
 export function logDemoModeStatus(isDemo: boolean, source: "env" | "url" | "disabled"): void {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development" && !hasLoggedDemoMode && isDemo) {
         const demoLogger = logger.createFeatureLogger("Demo Mode");
-        demoLogger.log(`${isDemo ? "Enabled" : "Disabled"} (source: ${source})`);
+        demoLogger.log(`Enabled (source: ${source})`);
+        hasLoggedDemoMode = true;
     }
 } 
