@@ -4,12 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMounted } from "@/hooks/use-mounted";
 import { tourControls } from "@/lib/guided-tour";
-import {
-    cn,
-    commonClasses,
-    createResponsiveButtonVariant,
-    createResponsiveIconSize,
-} from "@/lib/utils";
+import { cn, commonClasses } from "@/lib/utils";
 import {
     Monitor,
     Play,
@@ -30,10 +25,6 @@ interface TourControlsProps {
     onMobileToggle?: (mobile: boolean) => void;
 }
 
-/**
- * Tour control buttons for starting manual or automated tours
- * Supports desktop, mobile, and compact variants
- */
 export function TourControls({
     className,
     variant = "desktop",
@@ -77,7 +68,7 @@ export function TourControls({
         }
     }, [onMobileToggle]);
 
-    // Helper to setup driver object with cleanup (eliminates duplication)
+    // Helper to setup driver object with cleanup
     const setupDriverWithCleanup = (driverObj: any) => {
         if (!driverObj) {
             setIsRunning(false);
@@ -172,17 +163,14 @@ export function TourControls({
                                                     )
                                                 }
                                                 size="sm"
-                                                variant={createResponsiveButtonVariant(
+                                                variant={
                                                     !currentMobileView
-                                                )}
+                                                        ? "default"
+                                                        : "outline"
+                                                }
                                                 className="flex-1 justify-center gap-2"
                                             >
-                                                <Monitor
-                                                    className={createResponsiveIconSize(
-                                                        "xs",
-                                                        isMobile
-                                                    )}
-                                                />
+                                                <Monitor className="size-3 md:size-4" />
                                                 Desktop
                                             </Button>
                                             <Button
@@ -192,17 +180,14 @@ export function TourControls({
                                                     )
                                                 }
                                                 size="sm"
-                                                variant={createResponsiveButtonVariant(
+                                                variant={
                                                     currentMobileView
-                                                )}
+                                                        ? "default"
+                                                        : "outline"
+                                                }
                                                 className="flex-1 justify-center gap-2"
                                             >
-                                                <Smartphone
-                                                    className={createResponsiveIconSize(
-                                                        "xs",
-                                                        isMobile
-                                                    )}
-                                                />
+                                                <Smartphone className="size-3 md:size-4" />
                                                 Mobile
                                             </Button>
                                         </div>
@@ -252,7 +237,7 @@ export function TourControls({
     // Mobile variant with better touch targets
     if (variant === "mobile" || (variant === "desktop" && isMobile)) {
         return (
-            <div className={`flex flex-col gap-3 ${className}`}>
+            <div className={cn("flex flex-col gap-3", className)}>
                 <div className="flex items-center gap-2 mb-2">
                     <Zap className="size-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">
@@ -312,29 +297,19 @@ export function TourControls({
                 <Button
                     onClick={() => handleMobileToggleClick(false)}
                     size="sm"
-                    variant={createResponsiveButtonVariant(!currentMobileView)}
+                    variant={!currentMobileView ? "default" : "outline"}
                     className="h-8 px-3 text-xs"
                 >
-                    <Monitor
-                        className={cn(
-                            createResponsiveIconSize("xs", isMobile),
-                            "mr-1"
-                        )}
-                    />
+                    <Monitor className="size-3 md:size-4 mr-1" />
                     Desktop
                 </Button>
                 <Button
                     onClick={() => handleMobileToggleClick(true)}
                     size="sm"
-                    variant={createResponsiveButtonVariant(currentMobileView)}
+                    variant={currentMobileView ? "default" : "outline"}
                     className="h-8 px-3 text-xs"
                 >
-                    <Smartphone
-                        className={cn(
-                            createResponsiveIconSize("xs", isMobile),
-                            "mr-1"
-                        )}
-                    />
+                    <Smartphone className="size-3 md:size-4 mr-1" />
                     Mobile
                 </Button>
             </div>

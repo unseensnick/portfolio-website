@@ -1,15 +1,21 @@
 "use client";
 
-import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
+import { SimpleMedia } from "@/components/shared/simple-media";
 import { TechBadgeGroup } from "@/components/tech-badge";
-import { useIsMobile } from "@/hooks/use-mobile";
+import {
+    useIsMobile,
+    useIsMobileOrTablet,
+    useIsTablet,
+} from "@/hooks/use-mobile";
 import {
     cn,
+    commonClasses,
     createContentWrapper,
     createResponsiveLayout,
     createResponsiveText,
 } from "@/lib/utils";
+import { MediaItem } from "@/types/portfolio";
 
 function InterestItem({ text }: { text: string }) {
     return (
@@ -26,14 +32,26 @@ interface AboutProps {
     technologies?: string[];
     interests?: string[];
     image?: string;
+    imagePosition?:
+        | "center"
+        | "top"
+        | "bottom"
+        | "left"
+        | "right"
+        | "top-left"
+        | "top-right"
+        | "bottom-left"
+        | "bottom-right";
+    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    imageZoom?: number;
+    imageFinePosition?: {
+        x?: number;
+        y?: number;
+    };
     technologiesHeading?: string;
     interestsHeading?: string;
 }
 
-/**
- * About section with responsive layout using utility patterns
- * Mobile: stacked layout, Desktop: two-column grid
- */
 export function About({
     title = "About Me",
     paragraphs = [
@@ -42,31 +60,61 @@ export function About({
     technologies = ["React", "TypeScript", "Next.js"],
     interests = ["Web Development", "UI/UX Design", "Open Source"],
     image,
+    imagePosition = "center",
+    aspectRatio = "portrait",
+    imageZoom,
+    imageFinePosition,
     technologiesHeading = "Technologies",
     interestsHeading = "Interests",
 }: AboutProps) {
     const isMobile = useIsMobile();
-    const { container, content, spacing } = createContentWrapper(isMobile);
+    const isTablet = useIsTablet();
+    const isMobileOrTablet = useIsMobileOrTablet();
 
-    // Create media structure for ResponsiveMedia
-    const aboutMedia = image
-        ? {
-              image: {
+    // Use mobile layout for both mobile and tablet, desktop layout only for desktop
+    const { container, content, spacing } =
+        createContentWrapper(isMobileOrTablet);
+
+    // Create MediaItem structure for ResponsiveMedia - always create it to show placeholder if no image
+    const aboutMedia: MediaItem = {
+        image: image
+            ? {
                   url: image,
                   alt: "About",
+              }
+            : {
+                  url: "/placeholder-image.svg",
+                  alt: "About placeholder image",
               },
-          }
-        : undefined;
+        imagePosition,
+        aspectRatio,
+        imageZoom,
+        imageFinePosition,
+    };
 
-    const renderImage = () => (
-        <div className={isMobile ? "mx-auto max-w-sm" : "lg:col-span-2"}>
-            <ResponsiveMedia
-                media={aboutMedia}
-                alt="About"
-                aspectRatio={isMobile ? "square" : "portrait"}
-            />
-        </div>
-    );
+    const renderImage = () => {
+        // Determine image container size based on screen size
+        let containerClass = "";
+        if (isMobile) {
+            containerClass = "mx-auto max-w-xs"; // Smaller on mobile
+        } else if (isTablet) {
+            containerClass = "mx-auto max-w-sm"; // Medium on tablet
+        } else {
+            containerClass = "lg:col-span-2"; // Full size on desktop
+        }
+
+        return (
+            <div className={containerClass}>
+                <div className="relative">
+                    <SimpleMedia media={aboutMedia} alt="About" />
+                    {/* Decorative blur effect like hero section */}
+                    <div
+                        className={`absolute -inset-2 ${commonClasses.backgroundGradient} rounded-2xl -z-10 opacity-30 blur-lg`}
+                    ></div>
+                </div>
+            </div>
+        );
+    };
 
     const renderContent = () => (
         <div className={cn(content, spacing)}>
@@ -123,7 +171,7 @@ export function About({
     );
 
     return (
-        <SectionWrapper id="about" title={title} data-tour="about-section">
+        <SectionWrapper id="about" title={title}>
             <div className={container}>
                 {renderImage()}
                 {renderContent()}

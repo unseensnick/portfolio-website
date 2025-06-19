@@ -1,4 +1,3 @@
-import { demoData } from "@/lib/demo-data";
 import { logDemoModeStatus, shouldUseDemoMode } from "@/lib/demo-utils";
 import { logger } from "@/lib/utils";
 import type { PortfolioData } from "@/types/portfolio";
@@ -28,67 +27,99 @@ const fallbackData = {
         ],
     },
     hero: {
-        greeting: "Hello, I'm",
-        title: "A Developer",
-        description: "Please add content through the PayloadCMS admin panel",
+        greeting: "Hello There! I'm",
+        title: "UnseenSnick",
+        description: "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs.",
         githubUrl: "https://github.com",
         image: "/placeholder-image.svg",
+        imagePosition: "center" as const,
+        aspectRatio: "landscape" as const,
         ctaText: "View GitHub",
         ctaLink: "https://github.com",
         secondaryCtaText: "View Projects",
         secondaryCtaLink: "#projects",
     },
     about: {
-        title: "About Me",
-        paragraphs: ["Please add content through the PayloadCMS admin panel"],
-        technologies: ["JavaScript", "TypeScript", "React", "Next.js"],
-        interests: ["Web Development", "UI/UX Design"],
+        title: "About",
+        paragraphs: ["Welcome to my portfolio! I'm a passionate developer who loves creating modern web applications.", "I specialize in JavaScript and React, always eager to learn new technologies and tackle interesting challenges.", "When I'm not coding, you'll find me exploring new tools, contributing to open source, or brainstorming the next big project."],
+        technologies: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS", "PostgreSQL"],
+        interests: ["Open Source", "Web Development", "UI/UX Design", "Problem Solving", "Continuous Learning"],
         image: "/placeholder-image.svg",
-        technologiesHeading: "Technologies",
-        interestsHeading: "Interests",
+        imagePosition: "center" as const,
+        aspectRatio: "portrait" as const,
+        technologiesHeading: "Technologies & Tools",
+        interestsHeading: "When I'm Not Coding",
     },
     projects: {
         title: "My Projects",
+        description: "Here are some of my recent projects showcasing my skills and creativity",
         featured: {
             title: "Featured Project",
-            description: [{ text: "Please add content through the PayloadCMS admin panel" }],
-            projectUrl: "#",
-            codeUrl: "#",
+            description: [
+                { text: "This is a showcase of my best work, demonstrating modern web development practices and clean, responsive design." },
+                { text: "Built with the latest technologies to deliver an exceptional user experience." }
+            ],
+            projectUrl: undefined,
+            codeUrl: undefined,
             media: {
                 image: {
                     url: "/placeholder-image.svg",
                     alt: "Featured project placeholder"
-                }
+                },
+                imagePosition: "center" as const,
+                aspectRatio: "landscape" as const
             },
             technologies: [
                 { name: "React" },
                 { name: "TypeScript" },
-                { name: "Tailwind CSS" },
+                { name: "Next.js" }
             ],
         },
         items: [
             {
-                title: "Sample Project",
-                description: [{ text: "Please add content through the PayloadCMS admin panel" }],
-                projectUrl: "#",
-                codeUrl: "#",
+                title: "Example Project 1",
+                description: [{ text: "A sample project showcasing modern development practices and responsive design." }],
+                projectUrl: undefined,
+                codeUrl: undefined, 
                 media: {
                     image: {
                         url: "/placeholder-image.svg",
-                        alt: "Sample project placeholder"
-                    }
+                        alt: "Example project 1"
+                    },
+                    imagePosition: "center" as const,
+                    aspectRatio: "landscape" as const
                 },
-                technologies: [{ name: "Next.js" }, { name: "JavaScript" }],
+                technologies: [
+                    { name: "React" },
+                    { name: "CSS" }
+                ],
             },
+            {
+                title: "Example Project 2",
+                description: [{ text: "Another sample project demonstrating full-stack development capabilities." }],
+                projectUrl: undefined,
+                codeUrl: undefined,
+                media: {
+                    image: {
+                        url: "/placeholder-image.svg", 
+                        alt: "Example project 2"
+                    },
+                    imagePosition: "center" as const,
+                    aspectRatio: "landscape" as const
+                },
+                technologies: [
+                    { name: "Node.js" },
+                    { name: "MongoDB" }
+                ],
+            }
         ],
-        description: "Here are some of my recent projects",
         viewMoreText: "Want to see more of my work?",
-        viewAllLink: "#",
+        viewAllLink: "",
     },
     contact: {
         title: "Get In Touch",
-        description: "Please add content through the PayloadCMS admin panel",
-        email: "example@example.com",
+        description: "Feel free to reach out for collaborations or just a friendly hello",
+        email: "hello@example.com",
         github: "https://github.com",
         emailSubtitle: "Email",
         githubSubtitle: "GitHub",
@@ -100,25 +131,51 @@ const fallbackData = {
     },
 };
 
-function safeNumber(value: any, min?: number, max?: number): number | undefined {
-    if (value === null || value === undefined || value === "") return undefined;
-    
-    const num = typeof value === "number" ? value : Number(value);
-    if (isNaN(num)) return undefined;
-    
-    if (min !== undefined && num < min) return undefined;
-    if (max !== undefined && num > max) return undefined;
-    
-    return num;
+/**
+ * Enhanced media processing with improved placeholder fallbacks
+ * Ensures projects always have media, using placeholder when none provided
+ */
+function processMediaItem(mediaItem: any, title: string = "Project"): any {
+    if (!mediaItem) {
+        return {
+            image: {
+                url: "/placeholder-image.svg",
+                alt: `${title} placeholder image`
+            },
+            imagePosition: "center" as const,
+            aspectRatio: "landscape" as const
+        };
+    }
+
+    const imageUrl = safelyExtractImageUrl(mediaItem.image);
+    const hasValidImage = imageUrl && imageUrl !== "";
+
+    return {
+        image: {
+            url: hasValidImage ? imageUrl : "/placeholder-image.svg",
+            alt: `${title} ${hasValidImage ? "" : "placeholder "}image`
+        },
+        imagePosition: (mediaItem.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+        aspectRatio: safeString(mediaItem.aspectRatio, "landscape"),
+        imageZoom: typeof mediaItem.imageZoom === "number" ? mediaItem.imageZoom : undefined,
+        imageFinePosition: (mediaItem.imageFinePosition?.x !== undefined || mediaItem.imageFinePosition?.y !== undefined) 
+            ? { x: mediaItem.imageFinePosition?.x, y: mediaItem.imageFinePosition?.y } 
+            : undefined,
+        video: mediaItem.video ? {
+            src: safeString(mediaItem.video.src),
+            file: mediaItem.video.file ? {
+                url: safelyExtractImageUrl(mediaItem.video.file)
+            } : undefined,
+            title: safeString(mediaItem.video.title),
+            description: safeString(mediaItem.video.description)
+        } : undefined
+    };
 }
-
-
 
 /**
  * Transforms raw PayloadCMS data into the format expected by components
  */
 export function adaptPortfolioData(data: any) {
-    // Validate required sections exist before processing
     if (
         !data ||
         !data.nav ||
@@ -141,73 +198,77 @@ export function adaptPortfolioData(data: any) {
         return fallbackData;
     }
 
+    const portfolioLogger = logger.createFeatureLogger("Portfolio");
+    portfolioLogger.log("Processing projects data:", {
+        hasProjects: !!data.projects,
+        hasFeatured: !!data.projects?.featured,
+        itemsCount: data.projects?.items?.length || 0,
+        featuredMedia: data.projects?.featured?.media,
+        firstItemMedia: data.projects?.items?.[0]?.media
+    });
+
     return {
         nav: {
             logo: safeString(data.nav.logo, "Portfolio"),
             subtitle: safeString(data.nav.subtitle, "Developer"),
-            logoSplitAt: safeNumber(data.nav.logoSplitAt, 0, 50),
+            logoSplitAt: typeof data.nav.logoSplitAt === "number" ? data.nav.logoSplitAt : undefined,
             links: safelyProcessNavLinks(data.nav.links),
         },
         hero: {
-            greeting: safeString(data.hero.greeting, "Hello, I'm"),
-            title: safeString(data.hero.title, "A Developer"),
-            description: safeString(data.hero.description, "Welcome to my portfolio"),
+            greeting: safeString(data.hero.greeting, "Hello There! I'm"),
+            title: safeString(data.hero.title, "UnseenSnick"),
+            description: safeString(data.hero.description, "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs."),
             githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
             image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
-            ctaText: safeString(data.hero.ctaText, "View GitHub"),
-            ctaLink: safeString(data.hero.ctaLink, "https://github.com"),
-            secondaryCtaText: safeString(data.hero.secondaryCtaText, "View Projects"),
-            secondaryCtaLink: safeString(data.hero.secondaryCtaLink, "#projects"),
+            imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.hero.aspectRatio, "landscape"),
+            imageZoom: typeof data.hero.imageZoom === "number" ? data.hero.imageZoom : undefined,
+            imageFinePosition: (data.hero.imageFinePosition?.x !== undefined || data.hero.imageFinePosition?.y !== undefined) 
+                ? { x: data.hero.imageFinePosition?.x, y: data.hero.imageFinePosition?.y } 
+                : undefined,
+            ctaText: "View GitHub",
+            ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
+            secondaryCtaText: "View Projects",
+            secondaryCtaLink: "#projects",
         },
         about: {
-            title: safeString(data.about.title, "About Me"),
-            paragraphs: safelyExtractParagraphs(data.about.paragraphs),
-            technologies: safelyExtractNames(data.about.technologies),
-            interests: safelyExtractNames(data.about.interests),
+            title: safeString(data.about.title, "About"),
+            paragraphs: safelyExtractParagraphs(data.about.paragraphs) || ["Tell us about yourself..."],
+            technologies: safelyExtractNames(data.about.technologies) || [],
+            interests: safelyExtractNames(data.about.interests) || [],
             image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
-            technologiesHeading: safeString(data.about.technologiesHeading, "Technologies"),
-            interestsHeading: safeString(data.about.interestsHeading, "Interests"),
+            imagePosition: (data.about.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.about.aspectRatio, "portrait"),
+            imageZoom: typeof data.about.imageZoom === "number" ? data.about.imageZoom : undefined,
+            imageFinePosition: (data.about.imageFinePosition?.x !== undefined || data.about.imageFinePosition?.y !== undefined) 
+                ? { x: data.about.imageFinePosition?.x, y: data.about.imageFinePosition?.y } 
+                : undefined,
+            technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
+            interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),
         },
         projects: {
             title: safeString(data.projects.title, "My Projects"),
             featured: (() => {
                 const featured = data.projects.featured;
                 if (!featured) {
-                    return {
-                        title: "Featured Project",
-                        description: [{ text: "A showcase of my best work" }],
-                        projectUrl: undefined,
-                        codeUrl: undefined,
-                        media: {
-                            image: {
-                                url: "/placeholder-image.svg",
-                                alt: "Featured project placeholder"
-                            }
-                        },
-                        technologies: [],
-                    };
+                    portfolioLogger.log("No featured project found, using fallback");
+                    return fallbackData.projects.featured;
                 }
 
-                // Process media structure
-                const processedMedia = featured.media ? {
-                    image: featured.media.image ? {
-                        url: safelyExtractImageUrl(featured.media.image),
-                        alt: featured.title || "Project image"
-                    } : undefined,
-                    video: featured.media.video ? {
-                        src: safeString(featured.media.video.src),
-                        file: featured.media.video.file ? {
-                            url: safelyExtractImageUrl(featured.media.video.file)
-                        } : undefined,
-                        title: safeString(featured.media.video.title),
-                        description: safeString(featured.media.video.description)
-                    } : undefined
-                } : {
-                    image: {
-                        url: "/placeholder-image.svg",
-                        alt: featured.title || "Project image"
+                let processedMedia;
+                
+                if (Array.isArray(featured.media)) {
+                    if (featured.media.length === 0) {
+                        processedMedia = processMediaItem(null, featured.title);
+                        portfolioLogger.log(`Empty media array for featured project "${featured.title}", using placeholder`);
+                    } else {
+                        processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.title));
                     }
-                };
+                } else {
+                    processedMedia = processMediaItem(featured.media, featured.title);
+                }
+                
+                portfolioLogger.log("Processed featured media:", processedMedia);
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
@@ -218,40 +279,44 @@ export function adaptPortfolioData(data: any) {
                     technologies: safelyProcessTechnologies(featured.technologies),
                 };
             })(),
-            items: (data.projects.items || []).map((project: any) => {
-                // Process media structure
-                const processedMedia = project.media ? {
-                    image: project.media.image ? {
-                        url: safelyExtractImageUrl(project.media.image),
-                        alt: project.title || "Project image"
-                    } : undefined,
-                    video: project.media.video ? {
-                        src: safeString(project.media.video.src),
-                        file: project.media.video.file ? {
-                            url: safelyExtractImageUrl(project.media.video.file)
-                        } : undefined,
-                        title: safeString(project.media.video.title),
-                        description: safeString(project.media.video.description)
-                    } : undefined
-                } : {
-                    image: {
-                        url: "/placeholder-image.svg",
-                        alt: project.title || "Project image"
+            items: (() => {
+                const items = data.projects.items || [];
+                if (items.length === 0) {
+                    portfolioLogger.log("No project items found, using fallback items");
+                    return fallbackData.projects.items;
+                }
+                
+                const processedItems = items.map((project: any) => {
+                    let processedMedia;
+                    
+                    if (Array.isArray(project.media)) {
+                        if (project.media.length === 0) {
+                            processedMedia = processMediaItem(null, project.title);
+                            portfolioLogger.log(`Empty media array for project "${project.title}", using placeholder`);
+                        } else {
+                            processedMedia = project.media.map((item: any) => processMediaItem(item, project.title));
+                        }
+                    } else {
+                        processedMedia = processMediaItem(project.media, project.title);
                     }
-                };
-
-                return {
-                    title: safeString(project.title, "Project"),
-                    description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
-                    projectUrl: safeString(project.projectUrl),
-                    codeUrl: safeString(project.codeUrl),
-                    media: processedMedia,
-                    technologies: safelyProcessTechnologies(project.technologies),
-                };
-            }),
+                    
+                    portfolioLogger.log(`Processed media for project "${project.title}":`, processedMedia);
+                    
+                    return {
+                        title: safeString(project.title, "Project"),
+                        description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
+                        projectUrl: safeString(project.projectUrl),
+                        codeUrl: safeString(project.codeUrl),
+                        media: processedMedia,
+                        technologies: safelyProcessTechnologies(project.technologies),
+                    };
+                });
+                
+                return processedItems;
+            })(),
             description: safeString(data.projects.description, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
-            viewAllLink: safeString(data.projects.viewAllLink),
+            viewAllLink: safeString(data.projects.viewAllLink, ""),
         },
         contact: {
             title: safeString(data.contact.title, "Get In Touch"),
@@ -269,22 +334,17 @@ export function adaptPortfolioData(data: any) {
     };
 }
 
-/**
- * Fetches portfolio data from PayloadCMS with error handling and fallbacks
- * Supports demo mode for showcasing the portfolio
- */
+// ===== API FUNCTIONS =====
 export async function getPortfolioData(
     draft: boolean = false,
     searchParams?: { [key: string]: string | string[] | undefined }
 ): Promise<PortfolioData> {
-    // Check if demo mode should be used
-    const useDemoMode = shouldUseDemoMode(searchParams);
+    const requestId = Math.random().toString(36).substr(2, 9);
     
+    const useDemoMode = shouldUseDemoMode(searchParams);
     if (useDemoMode) {
         logDemoModeStatus(true, searchParams?.demo === "true" ? "url" : "env");
-        return demoData;
     }
-    const requestId = Math.random().toString(36).substr(2, 9);
     const apiLogger = logger.createApiLogger("Portfolio", requestId);
     
     try {
@@ -332,7 +392,6 @@ export async function getPortfolioData(
                     apiLogger.error("Could not read error body");
                 }
 
-                // Try published content if draft request fails
                 if (draft) {
                     return getPortfolioData(false);
                 }
@@ -341,22 +400,17 @@ export async function getPortfolioData(
             }
 
             const result = await response.json();
-
-
             const portfolioDoc = result.docs?.[0];
 
             if (!portfolioDoc) {
                 apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
 
-                // Try draft mode if no published docs found
                 if (!draft && result.totalDocs === 0) {
                     return getPortfolioData(true);
                 }
 
                 throw new Error("No portfolio documents found");
             }
-
-
 
             return adaptPortfolioData(portfolioDoc);
 
@@ -368,7 +422,6 @@ export async function getPortfolioData(
     } catch (error) {
         apiLogger.error("Error fetching portfolio data:", error);
 
-        // Fallback from draft to published on network errors
         if (draft && (error instanceof Error && (
             error.name === 'AbortError' || 
             error.message.includes('fetch') ||

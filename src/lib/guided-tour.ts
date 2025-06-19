@@ -3,22 +3,11 @@ import { logger } from "@/lib/utils";
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 
-// ===== TOUR TIMING CONSTANTS =====
-// These constants control various timing aspects of the guided tour for easy tweaking
-
-
-
-/** Default step duration for automated tours (in milliseconds) */
-const DEFAULT_AUTOMATED_STEP_DURATION = 4000; // 4 seconds
-
-// Create tour logger instance
+// ===== TOUR CONFIGURATION =====
+const DEFAULT_AUTOMATED_STEP_DURATION = 4000;
 const tourLogger = logger.createFeatureLogger("Tour");
 
-
-
-/**
- * Improved viewport detection with margin for better UX
- */
+// ===== UTILITY FUNCTIONS =====
 function isElementProperlyVisible(element: Element): boolean {
     const rect = element.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
@@ -33,9 +22,6 @@ function isElementProperlyVisible(element: Element): boolean {
     return isInViewport && hasSize && isVisible;
 }
 
-/**
- * Handles scrolling with calculated delay before showing popover
- */
 async function handleScrollingWithDelay(element: Element, step: any): Promise<void> {
     const isVisible = isElementProperlyVisible(element);
     const extraTime = isVisible ? 0 : 200;
@@ -51,7 +37,6 @@ async function handleScrollingWithDelay(element: Element, step: any): Promise<vo
         await new Promise(resolve => setTimeout(resolve, 800 + extraTime));
     }
     
-    // Show popover after scroll completes
     setTimeout(() => {
         const popover = document.querySelector('.driver-popover');
         if (popover) {
@@ -60,9 +45,6 @@ async function handleScrollingWithDelay(element: Element, step: any): Promise<vo
     }, 100);
 }
 
-/**
- * Temporarily shows navigation elements for tour demonstration
- */
 function showNavigationForTour(stepTitle: string): () => void {
     tourLogger.log(`Attempting to show navigation for: ${stepTitle}`);
     
@@ -73,9 +55,6 @@ function showNavigationForTour(stepTitle: string): () => void {
     return () => {};
 }
 
-/**
- * Shows section navigation for tour step
- */
 function showSectionNavForTour(): () => void {
     tourLogger.log('[Tour] Attempting to show section navigation...');
     
@@ -87,17 +66,14 @@ function showSectionNavForTour(): () => void {
     
     tourLogger.log('[Tour] Section navigation found, making it visible');
     
-    // Store original styles
     const originalDisplay = sectionNav.style.display;
     const originalOpacity = sectionNav.style.opacity;
     const originalPointerEvents = sectionNav.style.pointerEvents;
     
-    // Make visible for tour
     sectionNav.style.display = 'flex';
     sectionNav.style.opacity = '1';
     sectionNav.style.pointerEvents = 'auto';
     
-    // Return cleanup function
     return () => {
         tourLogger.log('[Tour] Restoring section navigation original state');
         sectionNav.style.display = originalDisplay;
@@ -106,9 +82,22 @@ function showSectionNavForTour(): () => void {
     };
 }
 
-/**
- * Tour step configuration for the portfolio website
- */
+function findTourElement(selector: string, title: string): Element {
+    const element = document.querySelector(selector);
+    if (!element) {
+        tourLogger.warn(`Element not found for step "${title}": ${selector}`);
+        const tourElements = document.querySelectorAll('[data-tour]');
+        tourLogger.log('Available tour elements:', Array.from(tourElements).map(el => ({
+            selector: el.getAttribute('data-tour'),
+            tag: el.tagName,
+            classes: el.className
+        })));
+        return document.body;
+    }
+    return element;
+}
+
+// ===== TOUR STEPS CONFIGURATION =====
 const tourSteps = [
     {
         element: '#home',
@@ -286,7 +275,12 @@ export function createGuidedTour(automated: boolean = false) {
     
     const config = {
         ...tourConfig,
-        steps: tourSteps,
+        steps: tourSteps.map(step => ({
+            ...step,
+            element: step.element === 'body' && step.special === 'mobile-navigation' 
+                ? step.element 
+                : () => findTourElement(step.element, step.popover.title)
+        })),
         ...(automated && {
             // For automated tours (showcase videos)
             allowKeyboardControl: false,
@@ -701,4 +695,4 @@ export const tourControls = {
     shouldShow: shouldShowTour,
     markSeen: markTourAsSeen,
     isDemoMode: isDemoMode
-}; 
+};

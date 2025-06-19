@@ -2,17 +2,14 @@
 
 import { ButtonGroup } from "@/components/shared/button-group";
 import { ResponsiveCard } from "@/components/shared/responsive-card";
-import { ResponsiveMedia } from "@/components/shared/responsive-media";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
+import { SimpleMediaCarousel } from "@/components/shared/simple-media-carousel";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
+import { MediaItem, Technology } from "@/types/portfolio";
 import { ExternalLink, Github } from "lucide-react";
-
-interface Technology {
-    name: string;
-}
 
 interface ProjectItemProps {
     title: string;
@@ -21,30 +18,10 @@ interface ProjectItemProps {
     codeUrl?: string;
     technologies?: Technology[];
 
-    // New consolidated media structure
-    media?: {
-        image?:
-            | {
-                  url?: string;
-                  alt?: string;
-              }
-            | any;
-        video?: {
-            src?: string;
-            file?:
-                | {
-                      url?: string;
-                  }
-                | any;
-            title?: string;
-            description?: string;
-        };
-    };
+    // Updated media structure - can be single media or array of media
+    media?: MediaItem | MediaItem[];
 }
 
-/**
- * Unified project item component that adapts to mobile/desktop layouts
- */
 function ProjectItem({
     title,
     description,
@@ -83,7 +60,11 @@ function ProjectItem({
     }
 
     const renderMedia = () => (
-        <ResponsiveMedia media={media} alt={title} aspectRatio="landscape" />
+        <SimpleMediaCarousel
+            media={media}
+            title={title}
+            aspectRatio="landscape"
+        />
     );
 
     const renderContent = () => (
@@ -165,46 +146,15 @@ function ProjectItem({
     );
 }
 
-interface ProjectItem {
-    title: string;
-    description: Array<{ text: string }>;
-    projectUrl?: string;
-    codeUrl?: string;
-    technologies?: Technology[];
-
-    // New consolidated media structure
-    media?: {
-        image?:
-            | {
-                  url?: string;
-                  alt?: string;
-              }
-            | any;
-        video?: {
-            src?: string;
-            file?:
-                | {
-                      url?: string;
-                  }
-                | any;
-            title?: string;
-            description?: string;
-        };
-    };
-}
-
 interface ProjectsProps {
     title?: string;
-    featured?: ProjectItem;
-    items?: ProjectItem[];
+    featured?: ProjectItemProps;
+    items?: ProjectItemProps[];
     viewAllLink?: string;
     description?: string;
     viewMoreText?: string;
 }
 
-/**
- * Projects section with responsive layout using utility patterns
- */
 export function Projects({
     title = "Projects",
     featured = {
@@ -254,12 +204,7 @@ export function Projects({
     };
 
     return (
-        <SectionWrapper
-            id="projects"
-            title={title}
-            description={description}
-            data-tour="projects-section"
-        >
+        <SectionWrapper id="projects" title={title} description={description}>
             <div data-tour="featured-project" className="mb-12 lg:mb-24">
                 {!isMobile && featured && (
                     <ProjectItem {...featured} isMobile={isMobile} />
