@@ -199,13 +199,15 @@ export function adaptPortfolioData(data: any) {
     }
 
     const portfolioLogger = logger.createFeatureLogger("Portfolio");
-    portfolioLogger.log("Processing projects data:", {
-        hasProjects: !!data.projects,
-        hasFeatured: !!data.projects?.featured,
-        itemsCount: data.projects?.items?.length || 0,
-        featuredMedia: data.projects?.featured?.media,
-        firstItemMedia: data.projects?.items?.[0]?.media
-    });
+    
+    // Only log when there are actual projects or issues, not for every request
+    const hasRealProjects = data.projects?.items?.some((item: any) => 
+        item.media && Array.isArray(item.media) && item.media.length > 0
+    );
+    
+    if (!hasRealProjects && process.env.NODE_ENV === "development") {
+        portfolioLogger.log("Using placeholder data (no media found)");
+    }
 
     return {
         nav: {
@@ -251,7 +253,6 @@ export function adaptPortfolioData(data: any) {
             featured: (() => {
                 const featured = data.projects.featured;
                 if (!featured) {
-                    portfolioLogger.log("No featured project found, using fallback");
                     return fallbackData.projects.featured;
                 }
 
@@ -260,15 +261,12 @@ export function adaptPortfolioData(data: any) {
                 if (Array.isArray(featured.media)) {
                     if (featured.media.length === 0) {
                         processedMedia = processMediaItem(null, featured.title);
-                        portfolioLogger.log(`Empty media array for featured project "${featured.title}", using placeholder`);
                     } else {
                         processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.title));
                     }
                 } else {
                     processedMedia = processMediaItem(featured.media, featured.title);
                 }
-                
-                portfolioLogger.log("Processed featured media:", processedMedia);
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
@@ -282,7 +280,6 @@ export function adaptPortfolioData(data: any) {
             items: (() => {
                 const items = data.projects.items || [];
                 if (items.length === 0) {
-                    portfolioLogger.log("No project items found, using fallback items");
                     return fallbackData.projects.items;
                 }
                 
@@ -292,15 +289,12 @@ export function adaptPortfolioData(data: any) {
                     if (Array.isArray(project.media)) {
                         if (project.media.length === 0) {
                             processedMedia = processMediaItem(null, project.title);
-                            portfolioLogger.log(`Empty media array for project "${project.title}", using placeholder`);
                         } else {
                             processedMedia = project.media.map((item: any) => processMediaItem(item, project.title));
                         }
                     } else {
                         processedMedia = processMediaItem(project.media, project.title);
                     }
-                    
-                    portfolioLogger.log(`Processed media for project "${project.title}":`, processedMedia);
                     
                     return {
                         title: safeString(project.title, "Project"),
