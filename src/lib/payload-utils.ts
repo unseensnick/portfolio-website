@@ -20,10 +20,10 @@ const fallbackData = {
         subtitle: "Developer",
         logoSplitAt: undefined,
         links: [
-            { label: "Home", href: "#home" },
-            { label: "Projects", href: "#projects" },
-            { label: "About", href: "#about" },
-            { label: "Contact", href: "#contact" },
+            { label: "Home", href: "#home", icon: "home" },
+            { label: "Projects", href: "#projects", icon: "FolderOpen" },
+            { label: "About", href: "#about", icon: "User" },
+            { label: "Contact", href: "#contact", icon: "Mail" },
         ],
     },
     hero: {

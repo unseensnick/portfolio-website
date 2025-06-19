@@ -5,11 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useMounted } from "@/hooks/use-mounted";
 import { scrollToSection } from "@/lib/navigation-utils";
 import { cn, commonClasses } from "@/lib/utils";
-
-interface NavLink {
-    href: string;
-    label: string;
-}
+import { NavLink } from "@/types/portfolio";
 
 interface MobileNavProps {
     navLinks?: NavLink[];
@@ -24,7 +20,6 @@ export function MobileNav({ navLinks = [] }: MobileNavProps) {
     const isMobile = useIsMobile(900);
     const mounted = useMounted();
 
-    // Use custom hook for active section management
     const { activeSection, sections } = useActiveSection({
         navLinks,
         offset: 0,
@@ -32,7 +27,6 @@ export function MobileNav({ navLinks = [] }: MobileNavProps) {
         enabled: isMobile && mounted,
     });
 
-    // Prevent hydration mismatch by not rendering until mounted
     if (!mounted || !isMobile) return null;
 
     const handleNavigationClick = (sectionId: string) => {
@@ -66,8 +60,7 @@ export function MobileNav({ navLinks = [] }: MobileNavProps) {
                             className={cn(
                                 `relative flex flex-col items-center gap-1 px-3 py-2 rounded-lg ${commonClasses.transition}`,
                                 "min-w-0 flex-1 max-w-20",
-                                // Enhanced touch targets for iPhone
-                                "min-h-[44px]",
+                                "min-h-[44px]", // iPhone touch target requirement
                                 isActive
                                     ? "text-primary bg-primary/10"
                                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -89,7 +82,6 @@ export function MobileNav({ navLinks = [] }: MobileNavProps) {
                                 {section.label}
                             </span>
 
-                            {/* Active indicator - positioned at the bottom of the nav container */}
                             {isActive && (
                                 <div
                                     className={cn(

@@ -188,13 +188,17 @@ export function createResponsiveIconSize(
 
 export const sectionIconMap: Record<string, LucideIcon> = {
     home: Home,
-    about: User,
     projects: FolderOpen,
+    about: User,
     contact: Mail,
+    Home: Home,
+    FolderOpen: FolderOpen,
+    User: User,
+    Mail: Mail,
 };
 
-export function getSectionIcon(sectionId: string): LucideIcon {
-    return sectionIconMap[sectionId] || Home;
+export function getSectionIcon(iconName: string): LucideIcon {
+    return sectionIconMap[iconName] || Home;
 }
 
 export function createResponsiveCardPadding(isMobile: boolean): string {

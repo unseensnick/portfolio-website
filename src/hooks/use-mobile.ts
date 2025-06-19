@@ -69,13 +69,18 @@ export function useIsMobile(breakpoint: number = 768): boolean {
 /**
  * Detects if viewport is tablet-sized (768px - 1024px)
  * Returns true for tablet breakpoint range
+ * Respects mobile override for demo mode consistency
  */
 export function useIsTablet(): boolean {
     const [isTablet, setIsTablet] = useState<boolean>(false);
+    const mobileOverride = useContext(MobileOverrideContext);
 
     useEffect(() => {
         // Skip setup if running on server
         if (typeof window === "undefined") return;
+        
+        // If override is set, don't set up native detection
+        if (mobileOverride !== null) return;
 
         const checkTablet = () => {
             const width = window.innerWidth;
@@ -89,21 +94,27 @@ export function useIsTablet(): boolean {
         window.addEventListener("resize", checkTablet);
 
         return () => window.removeEventListener("resize", checkTablet);
-    }, []);
+    }, [mobileOverride]);
 
-    return isTablet;
+    // If mobile is forced, tablet is false. Otherwise use native detection
+    return mobileOverride !== null ? false : isTablet;
 }
 
 /**
  * Returns true if viewport should use mobile-style layout
  * This includes both mobile (<768px) and tablet (768px-1024px) for hero section
+ * Respects mobile override for demo mode consistency
  */
 export function useIsMobileOrTablet(): boolean {
     const [isMobileOrTablet, setIsMobileOrTablet] = useState<boolean>(false);
+    const mobileOverride = useContext(MobileOverrideContext);
 
     useEffect(() => {
         // Skip setup if running on server
         if (typeof window === "undefined") return;
+        
+        // If override is set, don't set up native detection
+        if (mobileOverride !== null) return;
 
         const checkMobileOrTablet = () => {
             setIsMobileOrTablet(window.innerWidth < 1024);
@@ -116,7 +127,8 @@ export function useIsMobileOrTablet(): boolean {
         window.addEventListener("resize", checkMobileOrTablet);
 
         return () => window.removeEventListener("resize", checkMobileOrTablet);
-    }, []);
+    }, [mobileOverride]);
 
-    return isMobileOrTablet;
+    // If mobile is forced, return true. Otherwise use native detection
+    return mobileOverride !== null ? mobileOverride : isMobileOrTablet;
 }
