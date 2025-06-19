@@ -4,11 +4,7 @@ import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection } from "@/lib/navigation-utils";
 import { commonClasses } from "@/lib/utils";
-
-interface NavLink {
-    href: string;
-    label: string;
-}
+import { NavLink } from "@/types/portfolio";
 
 interface SectionNavigationProps {
     navLinks?: NavLink[];
@@ -21,7 +17,6 @@ interface SectionNavigationProps {
 export function SectionNavigation({ navLinks = [] }: SectionNavigationProps) {
     const isMobile = useIsMobile();
 
-    // Use custom hook for active section management
     const { activeSection, sections } = useActiveSection({
         navLinks,
         offset: 100,

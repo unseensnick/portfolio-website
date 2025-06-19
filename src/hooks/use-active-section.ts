@@ -2,14 +2,8 @@
 
 import { setupScrollListener } from "@/lib/navigation-utils";
 import { getSectionIcon } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
+import { NavLink } from "@/types/portfolio";
 import { useEffect, useState } from "react";
-
-interface NavLink {
-    href: string;
-    label: string;
-    icon?: string | LucideIcon;
-}
 
 interface UseActiveSectionOptions {
     navLinks: NavLink[];
@@ -35,25 +29,21 @@ export function useActiveSection({
         navLinks[0]?.href?.replace("#", "") || "home"
     );
 
-    // Map nav links to sections for scroll listener (needs string icons)
     const scrollSections = navLinks.map((link) => {
         const sectionId = link.href.replace("#", "");
         return {
             id: sectionId,
             label: link.label,
-            icon: typeof link.icon === "string" ? link.icon : sectionId,
+            icon: link.icon || sectionId,
         };
     });
 
-    // Map nav links to sections for components (needs LucideIcon components)
     const sections = navLinks.map((link) => {
         const sectionId = link.href.replace("#", "");
         return {
             id: sectionId,
             label: link.label,
-            icon: typeof link.icon === "string" ? getSectionIcon(link.icon) : 
-                  typeof link.icon === "function" ? link.icon : 
-                  getSectionIcon(sectionId), // Fallback to section ID mapping
+            icon: getSectionIcon(link.icon || sectionId),
         };
     });
 
