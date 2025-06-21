@@ -8,27 +8,21 @@ let hasLoggedDemoMode = false;
 
 /**
  * Checks if demo mode is enabled via environment variable
+ * @returns true if NEXT_PUBLIC_DEMO_MODE is set to "true"
  */
 export function isDemoModeEnabled(): boolean {
     return process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 }
 
 /**
- * Checks if demo mode is requested via URL parameter
- */
-export function isDemoModeRequested(searchParams: URLSearchParams | { [key: string]: string | string[] | undefined }): boolean {
-    if (searchParams instanceof URLSearchParams) {
-        return searchParams.get("demo") === "true";
-    }
-    return searchParams.demo === "true";
-}
-
-/**
  * Determines if demo mode should be active based on environment and URL parameters
+ * Environment variable takes precedence over URL parameters
+ * @param searchParams - URL search parameters to check for demo=true
+ * @returns true if demo mode should be active
  */
 export function shouldUseDemoMode(searchParams?: URLSearchParams | { [key: string]: string | string[] | undefined }): boolean {
     // Environment variable takes precedence
-    if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
+    if (isDemoModeEnabled()) {
         return true;
     }
     

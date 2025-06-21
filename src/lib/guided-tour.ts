@@ -621,6 +621,7 @@ export function startAutomatedTour(driverObj: any, stepDuration: number = DEFAUL
 
 /**
  * Check if demo mode is active via URL parameter or environment
+ * Uses centralized demo mode detection from demo-utils
  */
 function isDemoMode(): boolean {
     if (typeof window === 'undefined') return false;

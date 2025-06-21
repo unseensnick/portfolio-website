@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useDemoMode } from "@/hooks/use-demo-mode";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMounted } from "@/hooks/use-mounted";
 import { tourControls } from "@/lib/guided-tour";
@@ -36,6 +37,7 @@ export function TourControls({
     const [globalMobileState, setGlobalMobileState] = useState(false);
     const isMobile = useIsMobile();
     const mounted = useMounted();
+    const isDemoMode = useDemoMode();
 
     // Use global mobile state if no props provided (when used in site header)
     const currentMobileView = onMobileToggle
@@ -98,6 +100,11 @@ export function TourControls({
         tourControls.reset();
         setShowMobileModal(false);
     };
+
+    // Early return if demo mode is not active (after all hooks)
+    if (!isDemoMode) {
+        return null;
+    }
 
     // Compact variant for mobile header
     if (variant === "compact") {

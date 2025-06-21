@@ -1,13 +1,14 @@
 import { RefreshRouteOnSave } from "@/components/RefreshRouteOnSave";
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
+import { DemoModeIndicator } from "@/components/demo-mode-indicator";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { MobileDemoWrapper } from "@/components/mobile-demo-wrapper";
 import { Projects } from "@/components/projects";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SiteHeader } from "@/components/site-header";
-import { getDemoModeIndicator, shouldUseDemoMode } from "@/lib/demo-utils";
+import { shouldUseDemoMode } from "@/lib/demo-utils";
 import { getPortfolioData } from "@/lib/payload-utils";
 import { commonClasses } from "@/lib/utils";
 import { draftMode } from "next/headers";
@@ -61,13 +62,7 @@ export default async function Home({
                                 Draft Mode
                             </div>
                         )}
-                        {isDemo && (
-                            <div
-                                className={`absolute ${isDraft ? "top-16" : "top-4"} right-4 z-50 bg-primary text-primary-foreground px-3 py-1 rounded text-sm font-medium shadow-lg`}
-                            >
-                                {getDemoModeIndicator()}
-                            </div>
-                        )}
+                        <DemoModeIndicator offset={isDraft} />
 
                         <div id="home" className="relative z-10">
                             <Hero {...data.hero} />
