@@ -1,6 +1,7 @@
 "use client";
 
 import { TourControls } from "@/components/tour-controls";
+import { useDemoMode } from "@/hooks/use-demo-mode";
 import { MobileOverrideProvider, useIsMobile } from "@/hooks/use-mobile";
 import React, { useEffect, useState } from "react";
 
@@ -22,6 +23,7 @@ export function MobileDemoWrapper({
 }: MobileDemoWrapperProps) {
     const [forceMobileView, setForceMobileView] = useState(false);
     const isNativeMobile = useIsMobile(900);
+    const isDemoMode = useDemoMode();
 
     // Expose mobile toggle function globally for tour integration
     useEffect(() => {
@@ -111,15 +113,18 @@ export function MobileDemoWrapper({
                 content
             )}
 
-            {/* Desktop tour controls - hide in both demo mobile mode and native mobile view */}
-            {showTourControls && !forceMobileView && !isNativeMobile && (
-                <div className="fixed bottom-4 right-4 z-50">
-                    <TourControls
-                        variant="desktop"
-                        onMobileToggle={handleMobileToggle}
-                    />
-                </div>
-            )}
+            {/* Desktop tour controls - only show when demo mode is active */}
+            {isDemoMode &&
+                showTourControls &&
+                !forceMobileView &&
+                !isNativeMobile && (
+                    <div className="fixed bottom-4 right-4 z-50">
+                        <TourControls
+                            variant="desktop"
+                            onMobileToggle={handleMobileToggle}
+                        />
+                    </div>
+                )}
         </>
     );
 }
