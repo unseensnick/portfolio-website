@@ -1,6 +1,5 @@
 "use client";
 
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { MediaItem } from "@/types/portfolio";
 import Image from "next/image";
@@ -83,6 +82,24 @@ function getImagePosition(
     return positions[fallbackPosition || "center"] || "center center";
 }
 
+// Simple aspect ratio component
+function AspectRatio({ 
+    ratio, 
+    className, 
+    children 
+}: { 
+    ratio: number; 
+    className?: string; 
+    children: React.ReactNode; 
+}) {
+    return (
+        <div className={cn("relative w-full", className)}>
+            <div style={{ paddingBottom: `${(1 / ratio) * 100}%` }} />
+            <div className="absolute inset-0">{children}</div>
+        </div>
+    );
+}
+
 export function SimpleMedia({
     media,
     alt,
@@ -148,16 +165,18 @@ export function SimpleMedia({
                     className
                 )}
             >
-                <div className="text-center p-4">
-                    <div className="w-12 h-12 rounded-full bg-muted-foreground/10 flex items-center justify-center mx-auto mb-3">
-                        <div className="w-6 h-6 rounded-full bg-muted-foreground/20" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center p-4">
+                        <div className="w-12 h-12 rounded-full bg-muted-foreground/10 flex items-center justify-center mx-auto mb-3">
+                            <div className="w-6 h-6 rounded-full bg-muted-foreground/20" />
+                        </div>
+                        <p className="text-sm font-medium text-muted-foreground">
+                            Placeholder Image
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">
+                            Add content via PayloadCMS
+                        </p>
                     </div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                        Placeholder Image
-                    </p>
-                    <p className="text-xs text-muted-foreground/70">
-                        Add content via PayloadCMS
-                    </p>
                 </div>
             </AspectRatio>
         );

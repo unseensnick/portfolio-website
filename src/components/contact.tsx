@@ -4,7 +4,6 @@ import { ButtonGroup } from "@/components/shared/button-group";
 import { IconCard, ResponsiveCard } from "@/components/shared/responsive-card";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { formatExternalUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
 import { Github, Mail } from "lucide-react";
 
@@ -42,7 +41,7 @@ export function Contact({
         },
         {
             text: "View GitHub",
-            href: formatExternalUrl(github),
+            href: github.startsWith("http") ? github : `https://${github}`,
             icon: Github,
             external: true,
             variant: "outline" as const,
@@ -66,7 +65,7 @@ export function Contact({
                     title="GitHub"
                     subtitle={githubSubtitle}
                     linkText={github}
-                    linkHref={github}
+                    linkHref={github.startsWith("http") ? github : `https://${github}`}
                     isExternal={true}
                 />
             </div>

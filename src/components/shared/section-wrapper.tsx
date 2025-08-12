@@ -18,7 +18,6 @@ interface SectionWrapperProps {
     className?: string;
     titleClassName?: string;
     descriptionClassName?: string;
-    "data-tour"?: string;
 }
 
 /**
@@ -32,7 +31,6 @@ export function SectionWrapper({
     className = "",
     titleClassName = "",
     descriptionClassName = "",
-    ...props
 }: SectionWrapperProps) {
     const isMobile = useIsMobile();
 
@@ -60,7 +58,6 @@ export function SectionWrapper({
                 createResponsiveSpacing("sectionPadding", isMobile),
                 className
             )}
-            {...props}
         >
             <div
                 className={cn(

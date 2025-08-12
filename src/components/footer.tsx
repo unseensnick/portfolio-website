@@ -21,7 +21,6 @@ export function Footer({
                 "border-t border-border",
                 isMobile && "bg-background/50 backdrop-blur-sm"
             )}
-            data-tour="footer"
         >
             <div className="text-center text-muted-foreground px-6 py-8 text-xs md:max-w-6xl md:mx-auto md:px-8 md:py-12 md:text-sm">
                 {copyright}

@@ -1,8 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { safelyExtractNames } from "@/lib/payload-safe-helpers";
 import { cn, createResponsiveBadge, createResponsiveGap } from "@/lib/utils";
 
 interface TechBadgeProps {
@@ -22,10 +20,9 @@ export function TechBadge({
     isMobile = false,
 }: TechBadgeProps) {
     return (
-        <Badge
-            variant="secondary"
+        <span
             className={cn(
-                "rounded-full font-medium transition-colors duration-300 flex-shrink-0",
+                "inline-block rounded-full font-medium transition-colors duration-300 flex-shrink-0",
                 "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary",
                 "dark:bg-primary/25 dark:text-foreground",
                 "dark:hover:bg-primary/35 dark:hover:text-foreground",
@@ -34,7 +31,7 @@ export function TechBadge({
             )}
         >
             {text}
-        </Badge>
+        </span>
     );
 }
 
@@ -47,8 +44,18 @@ interface TechBadgeGroupProps {
 }
 
 /**
+ * Simple helper to extract technology names safely
+ */
+function extractTechnologyNames(technologies: string[] | { name?: string }[]): string[] {
+    if (!technologies || !Array.isArray(technologies)) return [];
+    
+    return technologies
+        .map(tech => typeof tech === "string" ? tech : tech?.name)
+        .filter((name): name is string => Boolean(name && name.trim()));
+}
+
+/**
  * Displays technology badges with natural wrapping and optional row limiting
- * Uses safe helpers to handle PayloadCMS live preview null values
  */
 export function TechBadgeGroup({
     technologies = [],
@@ -58,7 +65,7 @@ export function TechBadgeGroup({
     showCount = true,
 }: TechBadgeGroupProps) {
     const isMobile = useIsMobile();
-    const validTechnologies = safelyExtractNames(technologies);
+    const validTechnologies = extractTechnologyNames(technologies);
 
     if (validTechnologies.length === 0) return null;
 
@@ -94,17 +101,16 @@ export function TechBadgeGroup({
             ))}
 
             {hiddenCount > 0 && showCount && (
-                <Badge
-                    variant="outline"
+                <span
                     className={cn(
-                        "rounded-full font-medium transition-colors duration-300 flex-shrink-0",
-                        "text-muted-foreground border-muted-foreground/30 hover:bg-muted/50",
+                        "inline-block rounded-full font-medium transition-colors duration-300 flex-shrink-0",
+                        "text-muted-foreground border border-muted-foreground/30 hover:bg-muted/50",
                         "dark:text-foreground/70 dark:bg-muted/50 dark:hover:bg-muted/70 dark:hover:text-foreground dark:border-none",
                         createResponsiveBadge("md", isMobile)
                     )}
                 >
                     +{hiddenCount} more
-                </Badge>
+                </span>
             )}
         </div>
     );

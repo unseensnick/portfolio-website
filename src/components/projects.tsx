@@ -6,7 +6,7 @@ import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMediaCarousel } from "@/components/shared/simple-media-carousel";
 import { TechBadgeGroup } from "@/components/tech-badge";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { formatExternalUrl } from "@/lib/url-utils";
+import { formatExternalUrl } from "@/lib/utils";
 import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
 import { MediaItem, Technology } from "@/types/portfolio";
 import { ExternalLink, Github } from "lucide-react";
@@ -205,12 +205,12 @@ export function Projects({
 
     return (
         <SectionWrapper id="projects" title={title} description={description}>
-            <div data-tour="featured-project" className="mb-12 lg:mb-24">
+            <div className="mb-12 lg:mb-24">
                 {!isMobile && featured && (
                     <ProjectItem {...featured} isMobile={isMobile} />
                 )}
             </div>
-            <div data-tour="project-grid">
+            <div>
                 <div
                     className={createResponsiveSpacing("projectGrid", isMobile)}
                 >

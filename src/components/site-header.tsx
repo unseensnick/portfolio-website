@@ -3,13 +3,16 @@
 import { HexagonLogo } from "@/components/hexagon-logo";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { TourControls } from "@/components/tour-controls";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSection } from "@/lib/navigation-utils";
-import { commonClasses } from "@/lib/utils";
-import { NavLink } from "@/types/portfolio";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
+
+interface NavLink {
+    label: string;
+    href: string;
+}
 
 interface SiteHeaderProps {
     logo?: string;
@@ -24,10 +27,15 @@ interface SiteHeaderProps {
 export function SiteHeader({
     logo = "YourName",
     subtitle = "Web Developer",
-    navLinks = [],
+    navLinks = [
+        { label: "Home", href: "#home" },
+        { label: "Projects", href: "#projects" },
+        { label: "About", href: "#about" },
+        { label: "Contact", href: "#contact" },
+    ],
     logoSplitAt,
 }: SiteHeaderProps) {
-    const isMobile = useIsMobile(900);
+    const isMobile = useIsMobile();
     const [isLogoHovered, setIsLogoHovered] = useState(false);
 
     const { activeSection } = useActiveSection({
@@ -51,7 +59,6 @@ export function SiteHeader({
         <>
             <header
                 className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 flex w-full items-center border-b border-border/50"
-                data-tour="navigation"
             >
                 <div className="flex h-20 w-full items-center justify-between px-8">
                     <div
@@ -75,7 +82,6 @@ export function SiteHeader({
                         {!isMobile && (
                             <nav
                                 className="flex items-center gap-8"
-                                data-tour="desktop-navigation"
                             >
                                 {navLinks.map((link) => {
                                     const sectionId = link.href.replace(
@@ -91,19 +97,21 @@ export function SiteHeader({
                                             onClick={(e) =>
                                                 handleNavClick(e, link.href)
                                             }
-                                            className={`text-sm font-medium ${commonClasses.transition} relative group ${
+                                            className={cn(
+                                                "text-sm font-medium relative group transition-colors",
                                                 isActive
                                                     ? "text-primary"
                                                     : "text-foreground/80 hover:text-primary"
-                                            }`}
+                                            )}
                                         >
                                             {link.label}
                                             <span
-                                                className={`absolute -bottom-1 left-0 h-0.5 bg-primary ${commonClasses.transition} ${
+                                                className={cn(
+                                                    "absolute -bottom-1 left-0 h-0.5 bg-primary transition-all",
                                                     isActive
                                                         ? "w-full"
                                                         : "w-0 group-hover:w-full"
-                                                }`}
+                                                )}
                                             />
                                         </button>
                                     );
@@ -111,10 +119,7 @@ export function SiteHeader({
                             </nav>
                         )}
 
-                        <div className="flex items-center gap-2">
-                            {isMobile && <TourControls variant="compact" />}
-                            <ThemeToggle />
-                        </div>
+                        <ThemeToggle />
                     </div>
                 </div>
             </header>

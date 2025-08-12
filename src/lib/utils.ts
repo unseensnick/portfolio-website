@@ -236,90 +236,6 @@ export function createFullScreenCenteredLayout(): string {
     return `min-h-screen ${commonClasses.flexCenter} bg-muted/50 p-4`;
 }
 
-// ===== PRODUCTION LOGGING =====
-const isDevMode = process.env.NODE_ENV === "development";
-
-export const logger = {
-    createApiLogger: (service: string, requestId: string) => ({
-        error: (message: string, ...args: any[]) => 
-            isDevMode && console.error(`[${service} API ${requestId}] ${message}`, ...args),
-        warn: (message: string, ...args: any[]) => 
-            isDevMode && console.warn(`[${service} API ${requestId}] ${message}`, ...args),
-        log: (message: string, ...args: any[]) => 
-            isDevMode && console.log(`[${service} API ${requestId}] ${message}`, ...args),
-    }),
-    
-    createFeatureLogger: (feature: string) => ({
-        error: (message: string, ...args: any[]) => 
-            isDevMode && console.error(`[${feature}] ${message}`, ...args),
-        warn: (message: string, ...args: any[]) => 
-            isDevMode && console.warn(`[${feature}] ${message}`, ...args),
-        log: (message: string, ...args: any[]) => 
-            isDevMode && console.log(`[${feature}] ${message}`, ...args),
-    }),
-} as const;
-
-// ===== VALIDATION UTILITIES =====
-export const validators = {
-    required: (value: string, fieldName: string): string | null => {
-        return !value ? `${fieldName} is required` : null;
-    },
-    
-    minLength: (value: string, min: number, fieldName: string): string | null => {
-        return value.length < min ? `${fieldName} must be at least ${min} characters long` : null;
-    },
-    
-    passwordMatch: (password: string, confirmPassword: string): string | null => {
-        return password !== confirmPassword ? "Passwords do not match" : null;
-    },
-    
-    validateField: (value: string, validations: Array<() => string | null>): string | null => {
-        for (const validation of validations) {
-            const error = validation();
-            if (error) return error;
-        }
-        return null;
-    },
-} as const;
-
-export function createPasswordField(
-    value: string,
-    onChange: (value: string) => void,
-    showPassword: boolean,
-    toggleShowPassword: () => void,
-    options: {
-        id: string;
-        placeholder: string;
-        error?: string;
-        disabled?: boolean;
-    }
-) {
-    return {
-        inputProps: {
-            id: options.id,
-            type: showPassword ? "text" : "password",
-            value,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value),
-            placeholder: options.placeholder,
-            className: cn(
-                "pr-10",
-                options.error && "border-destructive focus:border-destructive"
-            ),
-            disabled: options.disabled,
-        },
-        toggleButtonProps: {
-            type: "button" as const,
-            variant: "ghost" as const,
-            size: "sm" as const,
-            className: "absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent",
-            onClick: toggleShowPassword,
-            disabled: options.disabled,
-        },
-        showPassword,
-        error: options.error,
-    };
-}
-
 // ===== CONDITIONAL UTILITIES =====
 export function createConditionalClasses(
     condition: boolean,
@@ -327,4 +243,26 @@ export function createConditionalClasses(
     falseClasses: string = ""
 ): string {
     return condition ? trueClasses : falseClasses;
+}
+
+// URL formatting helper
+export function formatExternalUrl(url: string): string {
+    if (!url) return "#";
+    
+    // Handle relative URLs
+    if (url.startsWith("/") || url.startsWith("#")) {
+        return url;
+    }
+    
+    // Handle email links
+    if (url.startsWith("mailto:")) {
+        return url;
+    }
+    
+    // Add https:// if no protocol is specified
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        return `https://${url}`;
+    }
+    
+    return url;
 }

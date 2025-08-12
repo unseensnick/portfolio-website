@@ -2,7 +2,6 @@
 
 import { Card } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { formatExternalUrl } from "@/lib/url-utils";
 import {
     cn,
     commonClasses,
@@ -12,6 +11,7 @@ import {
     createResponsiveIconSize,
     createResponsiveSpacing,
     createResponsiveText,
+    formatExternalUrl,
 } from "@/lib/utils";
 import { ExternalLink, LucideIcon } from "lucide-react";
 import Link from "next/link";

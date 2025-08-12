@@ -44,7 +44,6 @@ export function MobileNav({ navLinks = [] }: MobileNavProps) {
                 paddingLeft: "max(1rem, env(safe-area-inset-left))",
                 paddingRight: "max(1rem, env(safe-area-inset-right))",
             }}
-            data-tour="mobile-navigation"
         >
             <div className="flex items-center justify-around px-4 py-3 relative">
                 {sections.map((section) => {

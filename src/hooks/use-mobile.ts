@@ -1,134 +1,76 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-// Create a context to override mobile detection (completely optional)
-const MobileOverrideContext = createContext<boolean | null>(null);
-
-// Root provider component (optional - only used when override needed)
-export function MobileDetectionProvider({ children }: { children: React.ReactNode }) {
-    return React.createElement(
-        MobileOverrideContext.Provider,
-        { value: null },
-        children
-    );
-}
-
-// Provider component to force mobile mode (used for demos)  
-export function MobileOverrideProvider({ 
-    children, 
-    forceMobile = false 
-}: { 
-    children: React.ReactNode; 
-    forceMobile?: boolean; 
-}) {
-    return React.createElement(
-        MobileOverrideContext.Provider,
-        { value: forceMobile },
-        children
-    );
-}
+import { useEffect, useState } from "react";
 
 /**
- * Detects if viewport is mobile-sized (default: <768px)
- * Safe for SSR - always returns false on server
- * Safe for any context - works with or without provider
- * Can be overridden via MobileOverrideProvider for demo purposes
- * Native mobile detection works alongside override functionality
+ * Hook to detect mobile screen sizes (< 768px)
  */
-export function useIsMobile(breakpoint: number = 768): boolean {
-    const [isMobile, setIsMobile] = useState<boolean>(false);
-    
-    // Safely get override value - will be null if no provider exists (which is fine)
-    const mobileOverride = useContext(MobileOverrideContext);
+export function useIsMobile(): boolean {
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        // Skip setup if running on server
-        if (typeof window === "undefined") return;
-        
-        // If override is set, don't set up native detection
-        if (mobileOverride !== null) return;
-
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < breakpoint);
+        const checkIsMobile = () => {
+            setIsMobile(window.innerWidth < 768);
         };
 
-        // Initial check
-        checkMobile();
-        
-        // Set up listener for native mobile detection
-        window.addEventListener("resize", checkMobile);
+        // Check on mount
+        checkIsMobile();
 
-        return () => window.removeEventListener("resize", checkMobile);
-    }, [breakpoint, mobileOverride]);
+        // Add event listener
+        window.addEventListener("resize", checkIsMobile);
 
-    // Return override value if set, otherwise return native detection
-    return mobileOverride !== null ? mobileOverride : isMobile;
+        // Cleanup
+        return () => window.removeEventListener("resize", checkIsMobile);
+    }, []);
+
+    return isMobile;
 }
 
 /**
- * Detects if viewport is tablet-sized (768px - 1024px)
- * Returns true for tablet breakpoint range
- * Respects mobile override for demo mode consistency
+ * Hook to detect tablet screen sizes (768px - 1024px)
  */
 export function useIsTablet(): boolean {
-    const [isTablet, setIsTablet] = useState<boolean>(false);
-    const mobileOverride = useContext(MobileOverrideContext);
+    const [isTablet, setIsTablet] = useState(false);
 
     useEffect(() => {
-        // Skip setup if running on server
-        if (typeof window === "undefined") return;
-        
-        // If override is set, don't set up native detection
-        if (mobileOverride !== null) return;
-
-        const checkTablet = () => {
+        const checkIsTablet = () => {
             const width = window.innerWidth;
             setIsTablet(width >= 768 && width < 1024);
         };
 
-        // Initial check
-        checkTablet();
-        
-        // Set up listener
-        window.addEventListener("resize", checkTablet);
+        // Check on mount
+        checkIsTablet();
 
-        return () => window.removeEventListener("resize", checkTablet);
-    }, [mobileOverride]);
+        // Add event listener
+        window.addEventListener("resize", checkIsTablet);
 
-    // If mobile is forced, tablet is false. Otherwise use native detection
-    return mobileOverride !== null ? false : isTablet;
+        // Cleanup
+        return () => window.removeEventListener("resize", checkIsTablet);
+    }, []);
+
+    return isTablet;
 }
 
 /**
- * Returns true if viewport should use mobile-style layout
- * This includes both mobile (<768px) and tablet (768px-1024px) for hero section
- * Respects mobile override for demo mode consistency
+ * Hook to detect mobile or tablet screen sizes (< 1024px)
  */
 export function useIsMobileOrTablet(): boolean {
-    const [isMobileOrTablet, setIsMobileOrTablet] = useState<boolean>(false);
-    const mobileOverride = useContext(MobileOverrideContext);
+    const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
 
     useEffect(() => {
-        // Skip setup if running on server
-        if (typeof window === "undefined") return;
-        
-        // If override is set, don't set up native detection
-        if (mobileOverride !== null) return;
-
-        const checkMobileOrTablet = () => {
+        const checkIsMobileOrTablet = () => {
             setIsMobileOrTablet(window.innerWidth < 1024);
         };
 
-        // Initial check
-        checkMobileOrTablet();
-        
-        // Set up listener
-        window.addEventListener("resize", checkMobileOrTablet);
+        // Check on mount
+        checkIsMobileOrTablet();
 
-        return () => window.removeEventListener("resize", checkMobileOrTablet);
-    }, [mobileOverride]);
+        // Add event listener
+        window.addEventListener("resize", checkIsMobileOrTablet);
 
-    // If mobile is forced, return true. Otherwise use native detection
-    return mobileOverride !== null ? mobileOverride : isMobileOrTablet;
+        // Cleanup
+        return () => window.removeEventListener("resize", checkIsMobileOrTablet);
+    }, []);
+
+    return isMobileOrTablet;
 }

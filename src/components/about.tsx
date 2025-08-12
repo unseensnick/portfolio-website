@@ -75,7 +75,7 @@ export function About({
     const { container, content, spacing } =
         createContentWrapper(isMobileOrTablet);
 
-    // Create MediaItem structure for ResponsiveMedia - always create it to show placeholder if no image
+    // Create MediaItem structure for SimpleMedia - always create it to show placeholder if no image
     const aboutMedia: MediaItem = {
         image: image
             ? {
@@ -118,7 +118,7 @@ export function About({
 
     const renderContent = () => (
         <div className={cn(content, spacing)}>
-            <div className="space-y-4" data-tour="about-paragraphs">
+            <div className="space-y-4">
                 {paragraphs.map((paragraph, index) => (
                     <p
                         key={index}
@@ -132,7 +132,7 @@ export function About({
                 ))}
             </div>
 
-            <div className="space-y-4" data-tour="technologies">
+            <div className="space-y-4">
                 <h3
                     className={cn(
                         "font-semibold text-foreground",
@@ -147,7 +147,7 @@ export function About({
                 />
             </div>
 
-            <div className="space-y-4" data-tour="interests">
+            <div className="space-y-4">
                 <h3
                     className={cn(
                         "font-semibold text-foreground",

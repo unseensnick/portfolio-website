@@ -77,7 +77,7 @@ export function Hero({
         },
     ];
 
-    // Create MediaItem structure for ResponsiveMedia
+    // Create MediaItem structure for SimpleMedia
     const heroMedia: MediaItem | undefined = image
         ? {
               image: {
@@ -124,7 +124,7 @@ export function Hero({
                         </p>
                     </div>
 
-                    <div data-tour="hero-cta">
+                    <div>
                         <ButtonGroup
                             buttons={buttons}
                             fullWidthMobile={true}
@@ -157,7 +157,7 @@ export function Hero({
                     </p>
                 </div>
 
-                <div data-tour="hero-cta">
+                <div>
                     <ButtonGroup buttons={buttons} fullWidthMobile={false} />
                 </div>
             </div>
