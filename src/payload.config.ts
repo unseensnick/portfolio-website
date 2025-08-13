@@ -2,6 +2,7 @@ import { postgresAdapter } from "@payloadcms/db-postgres";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { uploadthingStorage } from "@payloadcms/storage-uploadthing";
 import path from "path";
 import { buildConfig } from "payload";
 import sharp from "sharp";
@@ -69,5 +70,17 @@ export default buildConfig({
             },
         },
     }),
-    plugins: [payloadCloudPlugin()],
+    plugins: [
+        payloadCloudPlugin(),
+        uploadthingStorage({
+            collections: {
+                media: true,
+            },
+            options: {
+                token: process.env.UPLOADTHING_TOKEN,
+                acl: "public-read",
+            },
+            clientUploads: true,
+        }),
+    ],
 });
