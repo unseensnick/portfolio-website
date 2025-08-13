@@ -219,7 +219,21 @@ export interface Portfolio {
     /**
      * Brief description about yourself or your services
      */
-    description: string;
+    description: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
     /**
      * Your GitHub profile URL (with or without https://)
      */
@@ -281,17 +295,23 @@ export interface Portfolio {
        */
       title: string;
       /**
-       * Detailed description of your featured project (multiple paragraphs for better formatting)
+       * Detailed description of your featured project
        */
-      description?:
-        | {
-            /**
-             * Content for this paragraph
-             */
-            text: string;
-            id?: string | null;
-          }[]
-        | null;
+      content?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
       /**
        * URL to the live demo of your project (with or without https://)
        */
@@ -393,17 +413,23 @@ export interface Portfolio {
            */
           title: string;
           /**
-           * Detailed description of this project (multiple paragraphs for better formatting)
+           * Detailed description of this project
            */
-          description?:
-            | {
-                /**
-                 * Content for this paragraph
-                 */
-                text: string;
-                id?: string | null;
-              }[]
-            | null;
+          content?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
           /**
            * URL to the live demo of this project (with or without https://)
            */
@@ -519,17 +545,23 @@ export interface Portfolio {
      */
     interestsHeading: string;
     /**
-     * Text paragraphs describing yourself and your background
+     * Text content describing yourself and your background
      */
-    paragraphs?:
-      | {
-          /**
-           * Content for this paragraph
-           */
-          text: string;
-          id?: string | null;
-        }[]
-      | null;
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
     /**
      * List of technologies, languages, and tools you're proficient with
      */
@@ -788,12 +820,7 @@ export interface PortfolioSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              description?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
+              content?: T;
               projectUrl?: T;
               codeUrl?: T;
               technologies?:
@@ -830,12 +857,7 @@ export interface PortfolioSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              description?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
+              content?: T;
               projectUrl?: T;
               codeUrl?: T;
               technologies?:
@@ -877,12 +899,7 @@ export interface PortfolioSelect<T extends boolean = true> {
         title?: T;
         technologiesHeading?: T;
         interestsHeading?: T;
-        paragraphs?:
-          | T
-          | {
-              text?: T;
-              id?: T;
-            };
+        content?: T;
         technologies?:
           | T
           | {

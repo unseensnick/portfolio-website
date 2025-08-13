@@ -14,7 +14,7 @@ export interface Nav {
 export interface Hero {
     greeting: string;
     title: string;
-    description: string;
+    description: any;
     githubUrl: string;
     image: string;
     imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
@@ -32,7 +32,7 @@ export interface Hero {
 
 export interface About {
     title: string;
-    paragraphs: string[];
+    content: any;
     technologies: string[];
     interests: string[];
     image: string;
@@ -76,7 +76,7 @@ export interface MediaItem {
 
 export interface ProjectItem {
     title: string;
-    description: Array<{ text: string }>;
+    content: any;
     projectUrl?: string;
     codeUrl?: string;
     

@@ -193,7 +193,7 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "description",
-                    type: "textarea",
+                    type: "richText",
                     required: true,
                     label: "Hero Description",
                     admin: {
@@ -344,23 +344,12 @@ export const Portfolio: CollectionConfig = {
                             },
                         },
                         {
-                            name: "description",
-                            type: "array",
+                            name: "content",
+                            type: "richText",
                             label: "Project Description",
                             admin: {
-                                description: "Detailed description of your featured project (multiple paragraphs for better formatting)",
+                                description: "Detailed description of your featured project",
                             },
-                            fields: [
-                                {
-                                    name: "text",
-                                    type: "textarea",
-                                    required: true,
-                                    label: "Paragraph Text",
-                                    admin: {
-                                        description: "Content for this paragraph",
-                                    },
-                                },
-                            ],
                         },
                         {
                             name: "projectUrl",
@@ -616,23 +605,12 @@ export const Portfolio: CollectionConfig = {
                             },
                         },
                         {
-                            name: "description",
-                            type: "array",
+                            name: "content",
+                            type: "richText",
                             label: "Project Description",
                             admin: {
-                                description: "Detailed description of this project (multiple paragraphs for better formatting)",
+                                description: "Detailed description of this project",
                             },
-                            fields: [
-                                {
-                                    name: "text",
-                                    type: "textarea",
-                                    required: true,
-                                    label: "Paragraph Text",
-                                    admin: {
-                                        description: "Content for this paragraph",
-                                    },
-                                },
-                            ],
                         },
                         {
                             name: "projectUrl",
@@ -919,23 +897,12 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "paragraphs",
-                    type: "array",
-                    label: "About Paragraphs",
+                    name: "content",
+                    type: "richText",
+                    label: "About Content",
                     admin: {
-                        description: "Text paragraphs describing yourself and your background",
+                        description: "Text content describing yourself and your background",
                     },
-                    fields: [
-                        {
-                            name: "text",
-                            type: "textarea",
-                            required: true,
-                            label: "Paragraph Text",
-                            admin: {
-                                description: "Content for this paragraph",
-                            },
-                        },
-                    ],
                 },
                 {
                     name: "technologies",

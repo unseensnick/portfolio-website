@@ -1,3 +1,0 @@
-# This file ensures the media/ directory is tracked by git
-# The media directory is crucial for PayloadCMS file uploads
-# Keep this file to preserve the directory structure 

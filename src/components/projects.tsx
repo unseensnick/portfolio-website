@@ -5,6 +5,7 @@ import { ResponsiveCard } from "@/components/shared/responsive-card";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMediaCarousel } from "@/components/shared/simple-media-carousel";
 import { TechBadgeGroup } from "@/components/tech-badge";
+import { RichText } from '@payloadcms/richtext-lexical/react';
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
@@ -13,7 +14,7 @@ import { ExternalLink, Github } from "lucide-react";
 
 interface ProjectItemProps {
     title: string;
-    description: Array<{ text: string }>;
+    content: any;
     projectUrl?: string;
     codeUrl?: string;
     technologies?: Technology[];
@@ -24,7 +25,7 @@ interface ProjectItemProps {
 
 function ProjectItem({
     title,
-    description,
+    content,
     projectUrl,
     codeUrl,
     technologies,
@@ -78,19 +79,21 @@ function ProjectItem({
                 >
                     {title}
                 </h3>
-                <div className="space-y-4">
-                    {description.map((paragraph, index) => (
-                        <p
-                            key={index}
-                            className={cn(
-                                "text-muted-foreground leading-relaxed",
-                                createResponsiveText("body", isMobile)
-                            )}
-                        >
-                            {paragraph.text}
-                        </p>
-                    ))}
-                </div>
+                {content ? (
+                    <div className={cn(
+                        "text-muted-foreground leading-relaxed [&>p]:mb-4 [&>p:last-child]:mb-0",
+                        createResponsiveText("body", isMobile)
+                    )}>
+                        <RichText data={content} />
+                    </div>
+                ) : (
+                    <p className={cn(
+                        "text-muted-foreground leading-relaxed",
+                        createResponsiveText("body", isMobile)
+                    )}>
+                        Project description
+                    </p>
+                )}
 
                 {technologies && technologies.length > 0 && (
                     <TechBadgeGroup
@@ -159,7 +162,7 @@ export function Projects({
     title = "Projects",
     featured = {
         title: "Featured Project",
-        description: [{ text: "A showcase of my best work" }],
+        content: null,
         projectUrl: "#",
         codeUrl: "#",
     },

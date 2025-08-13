@@ -4,8 +4,6 @@ import type { PortfolioData } from "@/types/portfolio";
 import {
     safelyExtractImageUrl,
     safelyExtractNames,
-    safelyExtractParagraphs,
-    safelyExtractProjectDescriptions,
     safelyProcessNavLinks,
     safelyProcessTechnologies,
     safeString
@@ -29,7 +27,7 @@ const fallbackData = {
     hero: {
         greeting: "Hello There! I'm",
         title: "UnseenSnick",
-        description: "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs.",
+        description: null,
         githubUrl: "https://github.com",
         image: "/placeholder-image.svg",
         imagePosition: "center" as const,
@@ -41,7 +39,7 @@ const fallbackData = {
     },
     about: {
         title: "About",
-        paragraphs: ["Welcome to my portfolio! I'm a passionate developer who loves creating modern web applications.", "I specialize in JavaScript and React, always eager to learn new technologies and tackle interesting challenges.", "When I'm not coding, you'll find me exploring new tools, contributing to open source, or brainstorming the next big project."],
+        content: null,
         technologies: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS", "PostgreSQL"],
         interests: ["Open Source", "Web Development", "UI/UX Design", "Problem Solving", "Continuous Learning"],
         image: "/placeholder-image.svg",
@@ -55,10 +53,7 @@ const fallbackData = {
         description: "Here are some of my recent projects showcasing my skills and creativity",
         featured: {
             title: "Featured Project",
-            description: [
-                { text: "This is a showcase of my best work, demonstrating modern web development practices and clean, responsive design." },
-                { text: "Built with the latest technologies to deliver an exceptional user experience." }
-            ],
+            content: null,
             projectUrl: undefined,
             codeUrl: undefined,
             media: {
@@ -78,7 +73,7 @@ const fallbackData = {
         items: [
             {
                 title: "Example Project 1",
-                description: [{ text: "A sample project showcasing modern development practices and responsive design." }],
+                content: null,
                 projectUrl: undefined,
                 codeUrl: undefined, 
                 media: {
@@ -95,8 +90,8 @@ const fallbackData = {
                 ],
             },
             {
-                title: "Example Project 2",
-                description: [{ text: "Another sample project demonstrating full-stack development capabilities." }],
+                title: "Example Project 2", 
+                content: null,
                 projectUrl: undefined,
                 codeUrl: undefined,
                 media: {
@@ -219,7 +214,7 @@ export function adaptPortfolioData(data: any) {
         hero: {
             greeting: safeString(data.hero.greeting, "Hello There! I'm"),
             title: safeString(data.hero.title, "UnseenSnick"),
-            description: safeString(data.hero.description, "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs."),
+            description: data.hero.description || null,
             githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
             image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
             imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
@@ -235,7 +230,7 @@ export function adaptPortfolioData(data: any) {
         },
         about: {
             title: safeString(data.about.title, "About"),
-            paragraphs: safelyExtractParagraphs(data.about.paragraphs) || ["Tell us about yourself..."],
+            content: data.about.content || null,
             technologies: safelyExtractNames(data.about.technologies) || [],
             interests: safelyExtractNames(data.about.interests) || [],
             image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
@@ -270,7 +265,7 @@ export function adaptPortfolioData(data: any) {
 
                 return {
                     title: safeString(featured.title, "Featured Project"),
-                    description: safelyExtractProjectDescriptions(featured.description) || [{ text: "A showcase of my best work" }],
+                    content: featured.content || null,
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
                     media: processedMedia,
@@ -298,7 +293,7 @@ export function adaptPortfolioData(data: any) {
                     
                     return {
                         title: safeString(project.title, "Project"),
-                        description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
+                        content: project.content || null,
                         projectUrl: safeString(project.projectUrl),
                         codeUrl: safeString(project.codeUrl),
                         media: processedMedia,
