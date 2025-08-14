@@ -8,6 +8,8 @@ import {
     safelyProcessTechnologies,
     safeString
 } from "./payload-safe-helpers";
+// PayloadCMS Local API imports removed due to typing issues
+// Keeping fetch-based approach but with improved PayloadCMS 3.0 draft handling
 
 /**
  * Default data used when PayloadCMS is unavailable
@@ -337,8 +339,7 @@ export async function getPortfolioData(
     const apiLogger = logger.createApiLogger("Portfolio", requestId);
     
     try {
-        const baseUrl =
-            process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
+        const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
 
         const params = new URLSearchParams({
             limit: "1",
@@ -351,72 +352,46 @@ export async function getPortfolioData(
 
         const apiUrl = `${baseUrl}/api/portfolio?${params.toString()}`;
 
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            // Simplified caching - no manual cache management needed with PayloadCMS handling drafts
+            cache: draft ? "no-store" : "force-cache",
+            next: draft ? { revalidate: 0 } : { revalidate: 60 },
+        });
 
-
-        const headers: HeadersInit = {
-            "Content-Type": "application/json",
-        };
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-        try {
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers,
-                signal: controller.signal,
-                cache: draft ? "no-store" : "force-cache",
-                next: draft ? { revalidate: 0 } : { revalidate: 60 },
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                apiLogger.error(`HTTP Error: ${response.status} ${response.statusText}`);
-
-                try {
-                    const errorText = await response.text();
-                    apiLogger.error("Error body:", errorText);
-                } catch {
-                    apiLogger.error("Could not read error body");
-                }
-
-                if (draft) {
-                    return getPortfolioData(false);
-                }
-
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        if (!response.ok) {
+            apiLogger.error(`HTTP Error: ${response.status} ${response.statusText}`);
+            
+            if (draft) {
+                return getPortfolioData(false);
             }
 
-            const result = await response.json();
-            const portfolioDoc = result.docs?.[0];
-
-            if (!portfolioDoc) {
-                apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
-
-                if (!draft && result.totalDocs === 0) {
-                    return getPortfolioData(true);
-                }
-
-                throw new Error("No portfolio documents found");
-            }
-
-            return adaptPortfolioData(portfolioDoc);
-
-        } catch (fetchError) {
-            clearTimeout(timeoutId);
-            throw fetchError;
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+
+        const result = await response.json();
+        const portfolioDoc = result.docs?.[0];
+
+        if (!portfolioDoc) {
+            apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
+
+            if (!draft && result.totalDocs === 0) {
+                return getPortfolioData(true);
+            }
+
+            throw new Error("No portfolio documents found");
+        }
+
+        return adaptPortfolioData(portfolioDoc);
 
     } catch (error) {
         apiLogger.error("Error fetching portfolio data:", error);
 
-        if (draft && (error instanceof Error && (
-            error.name === 'AbortError' || 
-            error.message.includes('fetch') ||
-            error.message.includes('network') ||
-            error.message.includes('timeout')
-        ))) {
+        if (draft && error instanceof Error) {
+            apiLogger.warn("Draft fetch failed, falling back to published content");
             return getPortfolioData(false);
         }
 

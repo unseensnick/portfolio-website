@@ -45,6 +45,8 @@ next-env.d.ts
 # Misc
 /legacy code
 src/app/debug-portfolio
+ClAUDE.md
+
 # next-video
 media/*
 !media/*.json

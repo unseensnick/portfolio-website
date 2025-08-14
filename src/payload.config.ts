@@ -21,12 +21,22 @@ export default buildConfig({
         importMap: {
             baseDir: path.resolve(dirname),
         },
-        // Live preview breakpoints for different devices
+        // PayloadCMS 3.0 Live Preview Configuration
         livePreview: {
+            // Dynamic URL generation for live preview
+            url: ({ collectionConfig, locale }) => {
+                const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
+                
+                // All collections use the root path with draft parameter
+                return `${baseUrl}/?draft=true${locale ? `&locale=${locale}` : ''}`;
+            },
+            // Specify which collections should have live preview
+            collections: ['portfolio'],
+            // Device breakpoints for responsive preview
             breakpoints: [
                 {
                     label: "Mobile",
-                    name: "mobile",
+                    name: "mobile", 
                     width: 375,
                     height: 667,
                 },

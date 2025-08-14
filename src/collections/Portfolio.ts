@@ -43,14 +43,7 @@ export const Portfolio: CollectionConfig = {
     admin: {
         useAsTitle: "title",
         defaultColumns: ["title", "updatedAt"],
-        livePreview: {
-            url: ({ locale }) => {
-                const baseUrl =
-                    process.env.NEXT_PUBLIC_PAYLOAD_URL ||
-                    "http://localhost:3000";
-                return `${baseUrl}?draft=true&locale=${locale || "en"}`;
-            },
-        },
+        // Live preview configuration moved to main payload.config.ts
     },
     access: {
         read: ({ req }) => {
