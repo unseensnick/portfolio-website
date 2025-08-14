@@ -8,8 +8,12 @@ import {
     safelyProcessTechnologies,
     safeString
 } from "./payload-safe-helpers";
+
 // PayloadCMS Local API imports removed due to typing issues
 // Keeping fetch-based approach but with improved PayloadCMS 3.0 draft handling
+
+// Session-based logging cache to prevent spam
+const logCache = new Set<string>();
 
 /**
  * Default data used when PayloadCMS is unavailable
@@ -197,13 +201,17 @@ export function adaptPortfolioData(data: any) {
 
     const portfolioLogger = logger.createFeatureLogger("Portfolio");
     
-    // Only log when there are actual projects or issues, not for every request
+    // Only log once per session to avoid spam during development
     const hasRealProjects = data.projects?.items?.some((item: any) => 
         item.media && Array.isArray(item.media) && item.media.length > 0
     );
     
     if (!hasRealProjects && process.env.NODE_ENV === "development") {
-        portfolioLogger.log("Using placeholder data (no media found)");
+        const placeholderKey = "portfolio-placeholder";
+        if (!logCache.has(placeholderKey)) {
+            portfolioLogger.log("Using placeholder data (no media found)");
+            logCache.add(placeholderKey);
+        }
     }
 
     return {
@@ -376,13 +384,30 @@ export async function getPortfolioData(
         const portfolioDoc = result.docs?.[0];
 
         if (!portfolioDoc) {
-            apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
-
-            if (!draft && result.totalDocs === 0) {
-                return getPortfolioData(true);
+            // Only log once per session to avoid spam during development
+            const sessionKey = "portfolio-empty";
+            if (!logCache.has(sessionKey)) {
+                apiLogger.warn(`No portfolio documents found. Total docs: ${result.totalDocs}`);
+                logCache.add(sessionKey);
             }
 
-            throw new Error("No portfolio documents found");
+            // If no documents found at all, return fallback data with helpful message
+            if (result.totalDocs === 0) {
+                const fallbackKey = "portfolio-empty-fallback";
+                if (!logCache.has(fallbackKey)) {
+                    apiLogger.warn("No portfolio documents exist in database - using fallback data. Create a portfolio document in the admin panel.");
+                    logCache.add(fallbackKey);
+                }
+                return fallbackData;
+            }
+
+            // If documents exist but none returned, might be access control issue
+            if (result.totalDocs > 0) {
+                apiLogger.warn(`${result.totalDocs} documents exist but none accessible - check access control or document status`);
+            }
+
+            apiLogger.warn("No documents found, using fallback data");
+            return fallbackData;
         }
 
         return adaptPortfolioData(portfolioDoc);

@@ -47,24 +47,39 @@ export const Portfolio: CollectionConfig = {
     },
     access: {
         read: ({ req }) => {
+            // If there is a user logged in,
+            // let them retrieve all documents
             if (req.user) return true;
 
-            // Allow draft access for live preview
-            if (req.query && req.query.draft === "true") {
-                return true;
-            }
-
+            // If there is no user,
+            // restrict the documents that are returned
+            // to only those where `_status` is equal to `published`
+            // or where `_status` does not exist (for existing documents)
             return {
-                _status: {
-                    equals: "published",
-                },
+                or: [
+                    {
+                        _status: {
+                            equals: "published",
+                        },
+                    },
+                    {
+                        _status: {
+                            exists: false,
+                        },
+                    },
+                ],
             };
+        },
+        readVersions: ({ req }) => {
+            // Only authenticated users can read document versions
+            return Boolean(req.user);
         },
     },
     versions: {
+        maxPerDoc: 100, // Limit versions to prevent database bloat
         drafts: {
             autosave: {
-                interval: 375, // Fast autosave for responsive live preview
+                interval: 800, // Recommended autosave interval (800ms)
             },
         },
     },

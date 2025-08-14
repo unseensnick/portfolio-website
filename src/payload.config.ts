@@ -24,7 +24,7 @@ export default buildConfig({
         // PayloadCMS 3.0 Live Preview Configuration
         livePreview: {
             // Dynamic URL generation for live preview
-            url: ({ collectionConfig, locale }) => {
+            url: ({ locale }) => {
                 const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
                 
                 // All collections use the root path with draft parameter
@@ -57,7 +57,9 @@ export default buildConfig({
     },
     collections: [Users, Media, Portfolio],
     editor: lexicalEditor(),
-    secret: process.env.PAYLOAD_SECRET || "",
+    secret: process.env.PAYLOAD_SECRET || (() => {
+        throw new Error("PAYLOAD_SECRET environment variable is required for security");
+    })(),
     typescript: {
         outputFile: path.resolve(dirname, "payload-types.ts"),
     },

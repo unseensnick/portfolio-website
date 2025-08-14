@@ -15,6 +15,7 @@ import React from "react";
 
 /**
  * Checks if we should show draft content from PayloadCMS
+ * Only allows draft access in admin context to prevent cache bypass abuse
  * Live preview is handled by PayloadCMS's built-in draft system
  */
 function shouldShowDraft(
