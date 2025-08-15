@@ -223,15 +223,15 @@ export function adaptPortfolioData(data: any) {
         },
         hero: {
             greeting: safeString(data.hero.greeting, "Hello There! I'm"),
-            title: safeString(data.hero.title, "UnseenSnick"),
-            description: data.hero.description || null,
+            title: safeString(data.hero.heroTitle, "UnseenSnick"),
+            description: data.hero.heroDescription || null,
             githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
-            image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
-            imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(data.hero.aspectRatio, "landscape"),
-            imageZoom: typeof data.hero.imageZoom === "number" ? data.hero.imageZoom : undefined,
-            imageFinePosition: (data.hero.imageFinePosition?.x !== undefined || data.hero.imageFinePosition?.y !== undefined) 
-                ? { x: data.hero.imageFinePosition?.x, y: data.hero.imageFinePosition?.y } 
+            image: safelyExtractImageUrl(data.hero.heroImage) || "/placeholder-image.svg",
+            imagePosition: (data.hero.heroImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.hero.heroAspectRatio, "landscape"),
+            imageZoom: typeof data.hero.heroImageZoom === "number" ? data.hero.heroImageZoom : undefined,
+            imageFinePosition: (data.hero.x !== undefined || data.hero.y !== undefined) 
+                ? { x: data.hero.x, y: data.hero.y } 
                 : undefined,
             ctaText: "View GitHub",
             ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
@@ -239,22 +239,22 @@ export function adaptPortfolioData(data: any) {
             secondaryCtaLink: "#projects",
         },
         about: {
-            title: safeString(data.about.title, "About"),
+            title: safeString(data.about.aboutTitle, "About"),
             content: data.about.content || null,
             technologies: safelyExtractNames(data.about.technologies) || [],
             interests: safelyExtractNames(data.about.interests) || [],
-            image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
-            imagePosition: (data.about.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(data.about.aspectRatio, "portrait"),
-            imageZoom: typeof data.about.imageZoom === "number" ? data.about.imageZoom : undefined,
-            imageFinePosition: (data.about.imageFinePosition?.x !== undefined || data.about.imageFinePosition?.y !== undefined) 
-                ? { x: data.about.imageFinePosition?.x, y: data.about.imageFinePosition?.y } 
+            image: safelyExtractImageUrl(data.about.aboutImage) || "/placeholder-image.svg",
+            imagePosition: (data.about.aboutImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.about.aboutAspectRatio, "portrait"),
+            imageZoom: typeof data.about.aboutImageZoom === "number" ? data.about.aboutImageZoom : undefined,
+            imageFinePosition: (data.about.x !== undefined || data.about.y !== undefined) 
+                ? { x: data.about.x, y: data.about.y } 
                 : undefined,
             technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
             interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),
         },
         projects: {
-            title: safeString(data.projects.title, "My Projects"),
+            title: safeString(data.projects.projectsTitle, "My Projects"),
             featured: (() => {
                 const featured = data.projects.featured;
                 if (!featured) {
@@ -265,16 +265,16 @@ export function adaptPortfolioData(data: any) {
                 
                 if (Array.isArray(featured.media)) {
                     if (featured.media.length === 0) {
-                        processedMedia = processMediaItem(null, featured.title);
+                        processedMedia = processMediaItem(null, featured.featuredTitle);
                     } else {
-                        processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.title));
+                        processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.featuredTitle));
                     }
                 } else {
-                    processedMedia = processMediaItem(featured.media, featured.title);
+                    processedMedia = processMediaItem(featured.media, featured.featuredTitle);
                 }
 
                 return {
-                    title: safeString(featured.title, "Featured Project"),
+                    title: safeString(featured.featuredTitle, "Featured Project"),
                     content: featured.content || null,
                     projectUrl: safeString(featured.projectUrl),
                     codeUrl: safeString(featured.codeUrl),
@@ -293,16 +293,16 @@ export function adaptPortfolioData(data: any) {
                     
                     if (Array.isArray(project.media)) {
                         if (project.media.length === 0) {
-                            processedMedia = processMediaItem(null, project.title);
+                            processedMedia = processMediaItem(null, project.itemTitle);
                         } else {
-                            processedMedia = project.media.map((item: any) => processMediaItem(item, project.title));
+                            processedMedia = project.media.map((item: any) => processMediaItem(item, project.itemTitle));
                         }
                     } else {
-                        processedMedia = processMediaItem(project.media, project.title);
+                        processedMedia = processMediaItem(project.media, project.itemTitle);
                     }
                     
                     return {
-                        title: safeString(project.title, "Project"),
+                        title: safeString(project.itemTitle, "Project"),
                         content: project.content || null,
                         projectUrl: safeString(project.projectUrl),
                         codeUrl: safeString(project.codeUrl),
@@ -313,13 +313,13 @@ export function adaptPortfolioData(data: any) {
                 
                 return processedItems;
             })(),
-            description: safeString(data.projects.description, "Here are some of my recent projects"),
+            description: safeString(data.projects.projectsDescription, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
             viewAllLink: safeString(data.projects.viewAllLink, ""),
         },
         contact: {
-            title: safeString(data.contact.title, "Get In Touch"),
-            description: safeString(data.contact.description, "Feel free to reach out for collaborations or just a friendly hello"),
+            title: safeString(data.contact.contactTitle, "Get In Touch"),
+            description: safeString(data.contact.contactDescription, "Feel free to reach out for collaborations or just a friendly hello"),
             email: safeString(data.contact.email, "example@example.com"),
             github: safeString(data.contact.github, "https://github.com"),
             emailSubtitle: safeString(data.contact.emailSubtitle, "Email"),

@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    tags: Tag;
     portfolio: Portfolio;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     portfolio: PortfolioSelect<false> | PortfolioSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -165,11 +167,39 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  /**
+   * The name of the technology, skill, or interest (e.g., 'React', 'UI Design', 'Photography')
+   */
+  name: string;
+  /**
+   * Categorize this tag to organize how it's used across your portfolio
+   */
+  category: 'technology & tools' | 'hobbies';
+  /**
+   * Optional description or notes about this tag for your reference
+   */
+  description?: string | null;
+  /**
+   * Optional color theme for displaying this tag on your portfolio
+   */
+  color?: ('default' | 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'yellow' | 'pink') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "portfolio".
  */
 export interface Portfolio {
   id: number;
   title: string;
+  /**
+   * Configure your site navigation, logo, and main branding elements
+   */
   nav: {
     /**
      * Main text for your hexagon logo
@@ -205,7 +235,7 @@ export interface Portfolio {
       | null;
   };
   /**
-   * Configure the main hero section at the top of your website
+   * Configure the main hero section at the top of your website - the first thing visitors see
    */
   hero: {
     /**
@@ -215,11 +245,11 @@ export interface Portfolio {
     /**
      * Main title/headline of your hero section
      */
-    title: string;
+    heroTitle: string;
     /**
      * Brief description about yourself or your services
      */
-    description: {
+    heroDescription: {
       root: {
         type: string;
         children: {
@@ -241,47 +271,42 @@ export interface Portfolio {
     /**
      * Featured image for the hero section
      */
-    image?: (number | null) | Media;
+    heroImage?: (number | null) | Media;
     /**
      * Controls how the hero image is positioned within its container when cropped
      */
-    imagePosition?:
+    heroImagePosition?:
       | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
       | null;
     /**
      * Controls the aspect ratio (width to height ratio) of the hero image. This applies to both mobile and desktop views.
      */
-    aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
+    heroAspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
     /**
      * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
      */
-    imageZoom?: number | null;
+    heroImageZoom?: number | null;
     /**
-     * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
+     * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
      */
-    imageFinePosition?: {
-      /**
-       * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
-       */
-      x?: number | null;
-      /**
-       * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
-       */
-      y?: number | null;
-    };
+    x?: number | null;
+    /**
+     * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+     */
+    y?: number | null;
   };
   /**
-   * Configure your portfolio projects section
+   * Configure your portfolio projects section - showcase your best work
    */
   projects: {
     /**
      * Title for the projects section
      */
-    title: string;
+    projectsTitle: string;
     /**
      * Brief introduction to your projects section
      */
-    description: string;
+    projectsDescription: string;
     /**
      * Text displayed above the 'View All on GitHub' button
      */
@@ -293,7 +318,7 @@ export interface Portfolio {
       /**
        * Title of your featured project
        */
-      title: string;
+      featuredTitle: string;
       /**
        * Detailed description of your featured project
        */
@@ -321,17 +346,9 @@ export interface Portfolio {
        */
       codeUrl?: string | null;
       /**
-       * List of technologies used in this project
+       * Select technologies used in this project from your tags list
        */
-      technologies?:
-        | {
-            /**
-             * Name of a technology or tool (e.g., React, Node.js, Tailwind CSS)
-             */
-            name: string;
-            id?: string | null;
-          }[]
-        | null;
+      technologies?: (number | Tag)[] | null;
       /**
        * Add multiple images and/or videos for your featured project. If you add multiple items, they will be displayed in a carousel.
        */
@@ -411,7 +428,7 @@ export interface Portfolio {
           /**
            * Title of this project
            */
-          title: string;
+          itemTitle: string;
           /**
            * Detailed description of this project
            */
@@ -439,17 +456,9 @@ export interface Portfolio {
            */
           codeUrl?: string | null;
           /**
-           * List of technologies used in this project
+           * Select technologies used in this project from your tags list
            */
-          technologies?:
-            | {
-                /**
-                 * Name of a technology or tool (e.g., React, Node.js, Tailwind CSS)
-                 */
-                name: string;
-                id?: string | null;
-              }[]
-            | null;
+          technologies?: (number | Tag)[] | null;
           /**
            * Add multiple images and/or videos for this project. If you add multiple items, they will be displayed in a carousel.
            */
@@ -529,13 +538,13 @@ export interface Portfolio {
     viewAllLink?: string | null;
   };
   /**
-   * Configure the about section of your portfolio
+   * Configure the about section of your portfolio - tell your story and showcase your skills
    */
   about: {
     /**
      * Title for the about section
      */
-    title: string;
+    aboutTitle: string;
     /**
      * Heading for the technologies/skills subsection
      */
@@ -563,73 +572,52 @@ export interface Portfolio {
       [k: string]: unknown;
     } | null;
     /**
-     * List of technologies, languages, and tools you're proficient with
+     * Select technologies and skills you're proficient with from your tags list
      */
-    technologies?:
-      | {
-          /**
-           * Name of a technology or skill (e.g., React, JavaScript, UI Design)
-           */
-          name: string;
-          id?: string | null;
-        }[]
-      | null;
+    technologies?: (number | Tag)[] | null;
     /**
-     * List of your interests and hobbies outside of work
+     * Select your interests and hobbies from your tags list
      */
-    interests?:
-      | {
-          /**
-           * Name of an interest or hobby (e.g., Photography, Hiking, Reading)
-           */
-          name: string;
-          id?: string | null;
-        }[]
-      | null;
+    interests?: (number | Tag)[] | null;
     /**
      * Image to display in the about section (e.g., your photo)
      */
-    image?: (number | null) | Media;
+    aboutImage?: (number | null) | Media;
     /**
      * Controls how the about image is positioned within its container when cropped
      */
-    imagePosition?:
+    aboutImagePosition?:
       | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
       | null;
     /**
      * Controls the aspect ratio (width to height ratio) of the about image. This applies to both mobile and desktop views.
      */
-    aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+    aboutAspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
     /**
      * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
      */
-    imageZoom?: number | null;
+    aboutImageZoom?: number | null;
     /**
-     * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
+     * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
      */
-    imageFinePosition?: {
-      /**
-       * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
-       */
-      x?: number | null;
-      /**
-       * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
-       */
-      y?: number | null;
-    };
+    x?: number | null;
+    /**
+     * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+     */
+    y?: number | null;
   };
   /**
-   * Configure the contact section of your portfolio
+   * Configure the contact section of your portfolio - make it easy for people to reach you
    */
   contact: {
     /**
      * Title for the contact section
      */
-    title: string;
+    contactTitle: string;
     /**
      * Brief introduction to your contact section
      */
-    description: string;
+    contactDescription: string;
     /**
      * Your contact email address
      */
@@ -656,7 +644,7 @@ export interface Portfolio {
     ctaDescription: string;
   };
   /**
-   * Configure the footer section of your portfolio
+   * Configure the footer section of your portfolio - copyright and final details
    */
   footer: {
     /**
@@ -682,6 +670,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: number | Tag;
       } | null)
     | ({
         relationTo: 'portfolio';
@@ -773,6 +765,18 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  description?: T;
+  color?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "portfolio_select".
  */
 export interface PortfolioSelect<T extends boolean = true> {
@@ -796,39 +800,30 @@ export interface PortfolioSelect<T extends boolean = true> {
     | T
     | {
         greeting?: T;
-        title?: T;
-        description?: T;
+        heroTitle?: T;
+        heroDescription?: T;
         githubUrl?: T;
-        image?: T;
-        imagePosition?: T;
-        aspectRatio?: T;
-        imageZoom?: T;
-        imageFinePosition?:
-          | T
-          | {
-              x?: T;
-              y?: T;
-            };
+        heroImage?: T;
+        heroImagePosition?: T;
+        heroAspectRatio?: T;
+        heroImageZoom?: T;
+        x?: T;
+        y?: T;
       };
   projects?:
     | T
     | {
-        title?: T;
-        description?: T;
+        projectsTitle?: T;
+        projectsDescription?: T;
         viewMoreText?: T;
         featured?:
           | T
           | {
-              title?: T;
+              featuredTitle?: T;
               content?: T;
               projectUrl?: T;
               codeUrl?: T;
-              technologies?:
-                | T
-                | {
-                    name?: T;
-                    id?: T;
-                  };
+              technologies?: T;
               media?:
                 | T
                 | {
@@ -856,16 +851,11 @@ export interface PortfolioSelect<T extends boolean = true> {
         items?:
           | T
           | {
-              title?: T;
+              itemTitle?: T;
               content?: T;
               projectUrl?: T;
               codeUrl?: T;
-              technologies?:
-                | T
-                | {
-                    name?: T;
-                    id?: T;
-                  };
+              technologies?: T;
               media?:
                 | T
                 | {
@@ -896,38 +886,24 @@ export interface PortfolioSelect<T extends boolean = true> {
   about?:
     | T
     | {
-        title?: T;
+        aboutTitle?: T;
         technologiesHeading?: T;
         interestsHeading?: T;
         content?: T;
-        technologies?:
-          | T
-          | {
-              name?: T;
-              id?: T;
-            };
-        interests?:
-          | T
-          | {
-              name?: T;
-              id?: T;
-            };
-        image?: T;
-        imagePosition?: T;
-        aspectRatio?: T;
-        imageZoom?: T;
-        imageFinePosition?:
-          | T
-          | {
-              x?: T;
-              y?: T;
-            };
+        technologies?: T;
+        interests?: T;
+        aboutImage?: T;
+        aboutImagePosition?: T;
+        aboutAspectRatio?: T;
+        aboutImageZoom?: T;
+        x?: T;
+        y?: T;
       };
   contact?:
     | T
     | {
-        title?: T;
-        description?: T;
+        contactTitle?: T;
+        contactDescription?: T;
         email?: T;
         emailSubtitle?: T;
         github?: T;

@@ -80,7 +80,9 @@ export const Portfolio: CollectionConfig = {
             name: "nav",
             type: "group",
             label: "Navigation & Logo",
-
+            admin: {
+                description: "Configure your site navigation, logo, and main branding elements"
+            },
             fields: [
                 {
                     name: "logo",
@@ -161,7 +163,7 @@ export const Portfolio: CollectionConfig = {
             type: "group",
             label: "Hero Section",
             admin: {
-                description: "Configure the main hero section at the top of your website",
+                description: "Configure the main hero section at the top of your website - the first thing visitors see",
             },
             fields: [
                 {
@@ -175,7 +177,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "title",
+                    name: "heroTitle",
                     type: "text",
                     required: true,
                     defaultValue: "Full Stack Developer",
@@ -185,7 +187,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "description",
+                    name: "heroDescription",
                     type: "richText",
                     required: true,
                     label: "Hero Description",
@@ -204,7 +206,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "image",
+                    name: "heroImage",
                     type: "upload",
                     relationTo: "media",
                     label: "Hero Image",
@@ -213,7 +215,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "imagePosition",
+                    name: "heroImagePosition",
                     type: "select",
                     label: "Hero Image Position",
                     defaultValue: "center",
@@ -224,7 +226,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "aspectRatio",
+                    name: "heroAspectRatio",
                     type: "select",
                     label: "Hero Image Aspect Ratio",
                     defaultValue: "landscape",
@@ -235,7 +237,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "imageZoom",
+                    name: "heroImageZoom",
                     type: "number",
                     label: "Image Zoom (%)",
                     min: 50,
@@ -243,17 +245,17 @@ export const Portfolio: CollectionConfig = {
                     admin: {
                         description: "Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.",
                         placeholder: "Leave empty for default (100%)",
-                        condition: (data, siblingData) => !!siblingData?.image,
+                        condition: (data, siblingData) => !!siblingData?.heroImage,
                     },
                     validate: createZoomValidator(),
                 },
                 {
-                    name: "imageFinePosition",
-                    type: "group",
+                    type: "collapsible",
                     label: "Fine Position Control (Advanced)",
                     admin: {
+                        initCollapsed: true,
                         description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
-                        condition: (data, siblingData) => !!siblingData?.image,
+                        condition: (data, siblingData) => !!siblingData?.heroImage,
                     },
                     fields: [
                         {
@@ -289,11 +291,11 @@ export const Portfolio: CollectionConfig = {
             type: "group",
             label: "Projects Section",
             admin: {
-                description: "Configure your portfolio projects section",
+                description: "Configure your portfolio projects section - showcase your best work",
             },
             fields: [
                 {
-                    name: "title",
+                    name: "projectsTitle",
                     type: "text",
                     required: true,
                     defaultValue: "Projects",
@@ -303,7 +305,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "description",
+                    name: "projectsDescription",
                     type: "text",
                     required: true,
                     label: "Section Description",
@@ -328,7 +330,7 @@ export const Portfolio: CollectionConfig = {
                     },
                     fields: [
                         {
-                            name: "title",
+                            name: "featuredTitle",
                             type: "text",
                             required: true,
                             label: "Project Title",
@@ -362,22 +364,19 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "technologies",
-                            type: "array",
+                            type: "relationship",
+                            relationTo: "tags" as any,
+                            hasMany: true,
                             label: "Technologies Used",
-                            admin: {
-                                description: "List of technologies used in this project",
-                            },
-                            fields: [
-                                {
-                                    name: "name",
-                                    type: "text",
-                                    required: true,
-                                    label: "Technology Name",
-                                    admin: {
-                                        description: "Name of a technology or tool (e.g., React, Node.js, Tailwind CSS)",
-                                    },
+                            filterOptions: {
+                                category: {
+                                    equals: "technology",
                                 },
-                            ],
+                            },
+                            admin: {
+                                description: "Select technologies used in this project from your tags list",
+                                allowCreate: true,
+                            },
                         },
                         {
                             name: "media",
@@ -589,7 +588,7 @@ export const Portfolio: CollectionConfig = {
                     },
                     fields: [
                         {
-                            name: "title",
+                            name: "itemTitle",
                             type: "text",
                             required: true,
                             label: "Project Title",
@@ -623,22 +622,19 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "technologies",
-                            type: "array",
+                            type: "relationship",
+                            relationTo: "tags" as any,
+                            hasMany: true,
                             label: "Technologies Used",
-                            admin: {
-                                description: "List of technologies used in this project",
-                            },
-                            fields: [
-                                {
-                                    name: "name",
-                                    type: "text",
-                                    required: true,
-                                    label: "Technology Name",
-                                    admin: {
-                                        description: "Name of a technology or tool (e.g., React, Node.js, Tailwind CSS)",
-                                    },
+                            filterOptions: {
+                                category: {
+                                    equals: "technology",
                                 },
-                            ],
+                            },
+                            admin: {
+                                description: "Select technologies used in this project from your tags list",
+                                allowCreate: true,
+                            },
                         },
                         {
                             name: "media",
@@ -856,11 +852,11 @@ export const Portfolio: CollectionConfig = {
             type: "group",
             label: "About Section",
             admin: {
-                description: "Configure the about section of your portfolio",
+                description: "Configure the about section of your portfolio - tell your story and showcase your skills",
             },
             fields: [
                 {
-                    name: "title",
+                    name: "aboutTitle",
                     type: "text",
                     required: true,
                     defaultValue: "About",
@@ -899,44 +895,38 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "technologies",
-                    type: "array",
+                    type: "relationship",
+                    relationTo: "tags" as any,
+                    hasMany: true,
                     label: "Technologies & Skills",
-                    admin: {
-                        description: "List of technologies, languages, and tools you're proficient with",
-                    },
-                    fields: [
-                        {
-                            name: "name",
-                            type: "text",
-                            required: true,
-                            label: "Technology Name",
-                            admin: {
-                                description: "Name of a technology or skill (e.g., React, JavaScript, UI Design)",
-                            },
+                    filterOptions: {
+                        category: {
+                            in: ["technology", "skill"],
                         },
-                    ],
+                    },
+                    admin: {
+                        description: "Select technologies and skills you're proficient with from your tags list",
+                        allowCreate: true,
+                    },
                 },
                 {
                     name: "interests",
-                    type: "array",
+                    type: "relationship",
+                    relationTo: "tags" as any,
+                    hasMany: true,
                     label: "Interests & Hobbies",
-                    admin: {
-                        description: "List of your interests and hobbies outside of work",
-                    },
-                    fields: [
-                        {
-                            name: "name",
-                            type: "text",
-                            required: true,
-                            label: "Interest/Hobby",
-                            admin: {
-                                description: "Name of an interest or hobby (e.g., Photography, Hiking, Reading)",
-                            },
+                    filterOptions: {
+                        category: {
+                            equals: "interest",
                         },
-                    ],
+                    },
+                    admin: {
+                        description: "Select your interests and hobbies from your tags list",
+                        allowCreate: true,
+                    },
                 },
                 {
-                    name: "image",
+                    name: "aboutImage",
                     type: "upload",
                     relationTo: "media",
                     label: "About Image",
@@ -945,7 +935,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "imagePosition",
+                    name: "aboutImagePosition",
                     type: "select",
                     label: "About Image Position",
                     defaultValue: "center",
@@ -993,7 +983,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "aspectRatio",
+                    name: "aboutAspectRatio",
                     type: "select",
                     label: "About Image Aspect Ratio",
                     defaultValue: "portrait",
@@ -1029,7 +1019,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "imageZoom",
+                    name: "aboutImageZoom",
                     type: "number",
                     label: "Image Zoom (%)",
                     min: 50,
@@ -1037,17 +1027,17 @@ export const Portfolio: CollectionConfig = {
                     admin: {
                         description: "Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.",
                         placeholder: "Leave empty for default (100%)",
-                        condition: (data, siblingData) => !!siblingData?.image,
+                        condition: (data, siblingData) => !!siblingData?.aboutImage,
                     },
                     validate: createZoomValidator(),
                 },
                 {
-                    name: "imageFinePosition",
-                    type: "group",
+                    type: "collapsible",
                     label: "Fine Position Control (Advanced)",
                     admin: {
+                        initCollapsed: true,
                         description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
-                        condition: (data, siblingData) => !!siblingData?.image,
+                        condition: (data, siblingData) => !!siblingData?.aboutImage,
                     },
                     fields: [
                         {
@@ -1083,11 +1073,11 @@ export const Portfolio: CollectionConfig = {
             type: "group",
             label: "Contact Section",
             admin: {
-                description: "Configure the contact section of your portfolio",
+                description: "Configure the contact section of your portfolio - make it easy for people to reach you",
             },
             fields: [
                 {
-                    name: "title",
+                    name: "contactTitle",
                     type: "text",
                     required: true,
                     defaultValue: "Contact",
@@ -1097,7 +1087,7 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "description",
+                    name: "contactDescription",
                     type: "text",
                     required: true,
                     label: "Section Description",
@@ -1169,7 +1159,7 @@ export const Portfolio: CollectionConfig = {
             type: "group",
             label: "Footer Section",
             admin: {
-                description: "Configure the footer section of your portfolio",
+                description: "Configure the footer section of your portfolio - copyright and final details",
             },
             fields: [
                 {
