@@ -7,10 +7,6 @@ export const Users: CollectionConfig = {
     admin: {
         useAsTitle: "email",
     },
-    access: {
-        // Prevent account creation by non-admin users (single-admin portfolio site)
-        create: ({ req }) => Boolean(req.user),
-    },
     auth: {
         forgotPassword: {
             generateEmailHTML: generateForgotPasswordEmail,
