@@ -304,7 +304,7 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "description",
-                    type: "textarea",
+                    type: "text",
                     required: true,
                     label: "Section Description",
                     admin: {
@@ -1098,7 +1098,7 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "description",
-                    type: "textarea",
+                    type: "text",
                     required: true,
                     label: "Section Description",
                     admin: {
@@ -1155,7 +1155,7 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "ctaDescription",
-                    type: "textarea",
+                    type: "text",
                     required: true,
                     label: "CTA Description",
                     admin: {
