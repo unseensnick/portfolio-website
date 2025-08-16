@@ -121,40 +121,21 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "links",
-                    type: "array",
+                    name: "navigationLinks",
+                    type: "relationship",
+                    relationTo: "navigationLinks",
+                    hasMany: true,
                     label: "Navigation Links",
-                    admin: {
-                        description: "Links to display in the navigation menu",
+                    filterOptions: {
+                        category: {
+                            equals: "main",
+                        },
                     },
-                    fields: [
-                        {
-                            name: "href",
-                            type: "text",
-                            required: true,
-                            label: "Link URL",
-                            admin: {
-                                description: "URL or anchor link (e.g., #about) for this navigation item",
-                            },
-                        },
-                        {
-                            name: "label",
-                            type: "text",
-                            required: true,
-                            label: "Link Text",
-                            admin: {
-                                description: "Text to display for this navigation link",
-                            },
-                        },
-                        {
-                            name: "icon",
-                            type: "text",
-                            label: "Icon Name",
-                            admin: {
-                                description: "Optional icon name (from Lucide icons library)",
-                            },
-                        },
-                    ],
+                    admin: {
+                        description: "Select navigation links to display in the main menu",
+                        allowCreate: true,
+                        sortOptions: "order",
+                    },
                 },
             ],
         },
@@ -197,12 +178,17 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "githubUrl",
-                    type: "text",
-                    required: true,
-                    defaultValue: "https://github.com/yourusername",
+                    type: "relationship",
+                    relationTo: "navigationLinks",
                     label: "GitHub URL",
+                    filterOptions: {
+                        category: {
+                            equals: "social",
+                        },
+                    },
                     admin: {
-                        description: "Your GitHub profile URL (with or without https://)",
+                        description: "Select your GitHub link from social navigation links",
+                        allowCreate: true,
                     },
                 },
                 {
@@ -348,18 +334,32 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "projectUrl",
-                            type: "text",
+                            type: "relationship",
+                            relationTo: "navigationLinks",
                             label: "Live Demo URL",
+                            filterOptions: {
+                                category: {
+                                    equals: "social",
+                                },
+                            },
                             admin: {
-                                description: "URL to the live demo of your project (with or without https://)",
+                                description: "Select live demo link from social navigation links",
+                                allowCreate: true,
                             },
                         },
                         {
                             name: "codeUrl",
-                            type: "text",
+                            type: "relationship",
+                            relationTo: "navigationLinks",
                             label: "Source Code URL",
+                            filterOptions: {
+                                category: {
+                                    equals: "social",
+                                },
+                            },
                             admin: {
-                                description: "URL to the source code repository (with or without https://)",
+                                description: "Select source code repository link from social navigation links",
+                                allowCreate: true,
                             },
                         },
                         {
@@ -370,7 +370,7 @@ export const Portfolio: CollectionConfig = {
                             label: "Technologies Used",
                             filterOptions: {
                                 category: {
-                                    equals: "technology",
+                                    equals: "technology & tools",
                                 },
                             },
                             admin: {
@@ -614,10 +614,17 @@ export const Portfolio: CollectionConfig = {
                         },
                         {
                             name: "codeUrl",
-                            type: "text",
+                            type: "relationship",
+                            relationTo: "navigationLinks",
                             label: "Source Code URL",
+                            filterOptions: {
+                                category: {
+                                    equals: "social",
+                                },
+                            },
                             admin: {
-                                description: "URL to the source code repository (with or without https://)",
+                                description: "Select source code repository link from social navigation links",
+                                allowCreate: true,
                             },
                         },
                         {
@@ -628,7 +635,7 @@ export const Portfolio: CollectionConfig = {
                             label: "Technologies Used",
                             filterOptions: {
                                 category: {
-                                    equals: "technology",
+                                    equals: "technology & tools",
                                 },
                             },
                             admin: {
@@ -839,10 +846,17 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "viewAllLink",
-                    type: "text",
+                    type: "relationship",
+                    relationTo: "navigationLinks",
                     label: "View All Projects URL",
+                    filterOptions: {
+                        category: {
+                            equals: "social",
+                        },
+                    },
                     admin: {
-                        description: "URL to view all your projects (typically your GitHub profile)",
+                        description: "Select link to view all projects from social navigation links",
+                        allowCreate: true,
                     },
                 },
             ],
@@ -901,7 +915,7 @@ export const Portfolio: CollectionConfig = {
                     label: "Technologies & Skills",
                     filterOptions: {
                         category: {
-                            in: ["technology", "skill"],
+                            equals: "technology & tools",
                         },
                     },
                     admin: {
@@ -917,7 +931,7 @@ export const Portfolio: CollectionConfig = {
                     label: "Interests & Hobbies",
                     filterOptions: {
                         category: {
-                            equals: "interest",
+                            equals: "hobbies",
                         },
                     },
                     admin: {
@@ -1097,11 +1111,17 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "email",
-                    type: "email",
-                    required: true,
+                    type: "relationship",
+                    relationTo: "navigationLinks",
                     label: "Email Address",
+                    filterOptions: {
+                        category: {
+                            equals: "social",
+                        },
+                    },
                     admin: {
-                        description: "Your contact email address",
+                        description: "Select your email contact from social navigation links",
+                        allowCreate: true,
                     },
                 },
                 {
@@ -1116,11 +1136,17 @@ export const Portfolio: CollectionConfig = {
                 },
                 {
                     name: "github",
-                    type: "text",
-                    required: true,
+                    type: "relationship",
+                    relationTo: "navigationLinks",
                     label: "GitHub Username",
+                    filterOptions: {
+                        category: {
+                            equals: "social",
+                        },
+                    },
                     admin: {
-                        description: "Your GitHub username or full URL",
+                        description: "Select your GitHub profile from social navigation links",
+                        allowCreate: true,
                     },
                 },
                 {

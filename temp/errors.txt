@@ -1,0 +1,391 @@
+hot-reloader-app.js:197 [Fast Refresh] rebuilding
+report-hmr-latency.js:14 [Fast Refresh] done in 1169ms
+hot-reloader-app.js:197 [Fast Refresh] rebuilding
+report-hmr-latency.js:14 [Fast Refresh] done in 1399ms
+ %c%s%c [Portfolio] Using placeholder data (no media found) background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  
+:3000/api/portfolio/2?depth=0&fallback-locale=null:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+:3000/api/tags:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+layout.css?v=1755367089310:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+page.css:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+_app-pages-browser_node_modules_payloadcms_richtext-lexical_dist_exports_client_Field-6OZARKAL_js.c…:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+utils.ts:258  Server  [Portfolio] Using placeholder data (no media found)
+index.js:5120  PATCH http://localhost:3000/api/portfolio/2?depth=0&fallback-locale=null 400 (Bad Request)
+patch @ index.js:5120
+eval @ index.js:18572
+await in eval
+eval @ index.js:29234
+R @ index.js:2671
+executeDispatch @ react-dom-client.development.js:16922
+runWithFiberInDEV @ react-dom-client.development.js:873
+processDispatchQueue @ react-dom-client.development.js:16972
+eval @ react-dom-client.development.js:17573
+batchedUpdates$1 @ react-dom-client.development.js:3313
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:17126
+dispatchEvent @ react-dom-client.development.js:21309
+dispatchDiscreteEvent @ react-dom-client.development.js:21277
+
+
+
+--------------------------------------------------------------
+
+npm run dev                                                                                                                                                                                                                                           22.16.0
+
+> portfolio-website@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.4.6
+   - Local:        http://localhost:3000
+   - Network:      http://10.10.25.14:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 1541ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1965ms (898 modules)
+[Portfolio] Using placeholder data (no media found)
+ GET / 200 in 2189ms
+ ○ Compiling /api/[...slug] ...
+ ✓ Compiled /api/[...slug] in 5.3s (4651 modules)
+[Portfolio] Using placeholder data (no media found)
+ GET / 200 in 4009ms
+[✓] Pulling schema from database...
+ GET /api/portfolio?limit=1&depth=2 200 in 2517ms
+ GET /api/portfolio?limit=1&depth=2 200 in 8683ms
+[20:03:02] ERROR: Error validating filter options for collection tags
+    err: {
+      "type": "DrizzleQueryError",
+      "message": "Failed query: select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1) and \"tags\".\"category\" in ($2, $3)) order by \"tags\".\"created_at\" desc\nparams: 1,technology,skill: invalid input value for enum enum_tags_category: \"technology\"",
+      "stack":
+          Error: Failed query: select "id", "name", "category", "description", "color", "updated_at", "created_at" from "tags" "tags" where ("tags"."id" in ($1) and "tags"."category" in ($2, $3)) order by "tags"."created_at" desc
+          params: 1,technology,skill
+              at NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:55:15)
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+              at async validateFilterOptions (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/validations.js:428:36)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:104:38)
+              at async Promise.all (index 4)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:292:17)
+              at async Promise.all (index 4)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async beforeChange (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/index.js:22:5)
+              at async updateDocument (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/utilities/update.js:187:18)
+              at async updateByIDOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/updateByID.js:135:22)
+              at async updateByIDHandler (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/endpoints/updateByID.js:28:17)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:179:26)
+              at async eval (webpack-internal:///(rsc)/./node_modules/@payloadcms/next/dist/routes/rest/index.js:27:20)
+              at async AppRouteRouteModule.do (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:38782)
+              at async AppRouteRouteModule.handle (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:45984)
+              at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:206:38)
+              at async AppRouteRouteModule.handleResponse (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:1:183692)
+              at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:268:32)
+              at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:320:13)
+              at async doRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1592:34)
+              at async DevServer.renderToResponseWithComponentsImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1934:13)
+              at async DevServer.renderPageComponent (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2400:24)
+              at async DevServer.renderToResponseImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2440:32)
+              at async DevServer.pipeImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1035:25)
+              at async NextNodeServer.handleCatchallRenderRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\next-server.js:393:17)
+              at async DevServer.handleRequestImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:925:17)
+              at async C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:398:20
+              at async Span.traceAsyncFn (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\trace\trace.js:157:20)
+              at async DevServer.handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:394:24)
+              at async invokeRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:239:21)
+              at async handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:436:24)
+              at async requestHandlerImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:464:13)
+              at async Server.requestListener (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\start-server.js:218:13)
+          caused by: error: invalid input value for enum enum_tags_category: "technology"
+              at C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\pg\lib\client.js:545:17
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:141:18)
+              at async NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:53:16)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+              at async validateFilterOptions (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/validations.js:428:36)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:104:38)
+              at async Promise.all (index 4)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:292:17)
+              at async Promise.all (index 4)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async beforeChange (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/index.js:22:5)
+              at async updateDocument (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/utilities/update.js:187:18)
+              at async updateByIDOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/updateByID.js:135:22)
+              at async updateByIDHandler (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/endpoints/updateByID.js:28:17)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:179:26)
+              at async eval (webpack-internal:///(rsc)/./node_modules/@payloadcms/next/dist/routes/rest/index.js:27:20)
+              at async AppRouteRouteModule.do (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:38782)
+              at async AppRouteRouteModule.handle (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:45984)
+              at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:206:38)
+              at async AppRouteRouteModule.handleResponse (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:1:183692)
+              at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:268:32)
+              at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:320:13)
+              at async doRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1592:34)
+              at async DevServer.renderToResponseWithComponentsImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1934:13)
+              at async DevServer.renderPageComponent (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2400:24)
+              at async DevServer.renderToResponseImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2440:32)
+              at async DevServer.pipeImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1035:25)
+              at async NextNodeServer.handleCatchallRenderRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\next-server.js:393:17)
+              at async DevServer.handleRequestImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:925:17)
+              at async C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:398:20
+              at async Span.traceAsyncFn (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\trace\trace.js:157:20)
+              at async DevServer.handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:394:24)
+              at async invokeRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:239:21)
+              at async handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:436:24)
+              at async requestHandlerImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:464:13)
+              at async Server.requestListener (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\start-server.js:218:13)
+      "query": "select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1) and \"tags\".\"category\" in ($2, $3)) order by \"tags\".\"created_at\" desc",
+      "params": [
+        1,
+        "technology",
+        "skill"
+      ]
+    }
+ PATCH /api/portfolio/2?depth=0&fallback-locale=null 400 in 872ms
+[20:03:02] ERROR: Error validating filter options for collection tags
+    err: {
+      "type": "DrizzleQueryError",
+      "message": "Failed query: select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1) and \"tags\".\"category\" = $2) order by \"tags\".\"created_at\" desc\nparams: 5,interest: current transaction is aborted, commands ignored until end of transaction block",
+      "stack":
+          Error: Failed query: select "id", "name", "category", "description", "color", "updated_at", "created_at" from "tags" "tags" where ("tags"."id" in ($1) and "tags"."category" = $2) order by "tags"."created_at" desc
+          params: 5,interest
+              at NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:55:15)
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+              at async validateFilterOptions (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/validations.js:428:36)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:104:38)
+              at async Promise.all (index 5)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:292:17)
+              at async Promise.all (index 4)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async beforeChange (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/index.js:22:5)
+              at async updateDocument (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/utilities/update.js:187:18)
+              at async updateByIDOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/updateByID.js:135:22)
+              at async updateByIDHandler (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/endpoints/updateByID.js:28:17)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:179:26)
+              at async eval (webpack-internal:///(rsc)/./node_modules/@payloadcms/next/dist/routes/rest/index.js:27:20)
+              at async AppRouteRouteModule.do (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:38782)
+              at async AppRouteRouteModule.handle (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:45984)
+              at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:206:38)
+              at async AppRouteRouteModule.handleResponse (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:1:183692)
+              at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:268:32)
+              at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:320:13)
+              at async doRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1592:34)
+              at async DevServer.renderToResponseWithComponentsImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1934:13)
+              at async DevServer.renderPageComponent (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2400:24)
+              at async DevServer.renderToResponseImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2440:32)
+              at async DevServer.pipeImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1035:25)
+              at async NextNodeServer.handleCatchallRenderRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\next-server.js:393:17)
+              at async DevServer.handleRequestImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:925:17)
+              at async C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:398:20
+              at async Span.traceAsyncFn (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\trace\trace.js:157:20)
+              at async DevServer.handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:394:24)
+              at async invokeRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:239:21)
+              at async handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:436:24)
+              at async requestHandlerImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:464:13)
+              at async Server.requestListener (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\start-server.js:218:13)
+          caused by: error: current transaction is aborted, commands ignored until end of transaction block
+              at C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\pg\lib\client.js:545:17
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:141:18)
+              at async NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:53:16)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+              at async validateFilterOptions (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/validations.js:428:36)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:104:38)
+              at async Promise.all (index 5)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async promise (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/promise.js:292:17)
+              at async Promise.all (index 4)
+              at async traverseFields (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/traverseFields.js:45:5)
+              at async beforeChange (webpack-internal:///(rsc)/./node_modules/payload/dist/fields/hooks/beforeChange/index.js:22:5)
+              at async updateDocument (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/utilities/update.js:187:18)
+              at async updateByIDOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/updateByID.js:135:22)
+              at async updateByIDHandler (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/endpoints/updateByID.js:28:17)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:179:26)
+              at async eval (webpack-internal:///(rsc)/./node_modules/@payloadcms/next/dist/routes/rest/index.js:27:20)
+              at async AppRouteRouteModule.do (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:38782)
+              at async AppRouteRouteModule.handle (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:45984)
+              at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:206:38)
+              at async AppRouteRouteModule.handleResponse (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:1:183692)
+              at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:268:32)
+              at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:320:13)
+              at async doRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1592:34)
+              at async DevServer.renderToResponseWithComponentsImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1934:13)
+              at async DevServer.renderPageComponent (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2400:24)
+              at async DevServer.renderToResponseImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2440:32)
+              at async DevServer.pipeImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1035:25)
+              at async NextNodeServer.handleCatchallRenderRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\next-server.js:393:17)
+              at async DevServer.handleRequestImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:925:17)
+              at async C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:398:20
+              at async Span.traceAsyncFn (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\trace\trace.js:157:20)
+              at async DevServer.handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:394:24)
+              at async invokeRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:239:21)
+              at async handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:436:24)
+              at async requestHandlerImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:464:13)
+              at async Server.requestListener (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\start-server.js:218:13)
+      "query": "select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1) and \"tags\".\"category\" = $2) order by \"tags\".\"created_at\" desc",
+      "params": [
+        5,
+        "interest"
+      ]
+    }
+[20:03:02] ERROR: Error validating filter options for collection tags
+    err: {
+      "type": "DrizzleQueryError",
+      "message": "Failed query: select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1, $2, $3, $4) and \"tags\".\"category\" = $5) order by \"tags\".\"created_at\" desc\nparams: 1,2,3,4,technology: current transaction is aborted, commands ignored until end of transaction block",
+      "stack":
+          Error: Failed query: select "id", "name", "category", "description", "color", "updated_at", "created_at" from "tags" "tags" where ("tags"."id" in ($1, $2, $3, $4) and "tags"."category" = $5) order by "tags"."created_at" desc
+          params: 1,2,3,4,technology
+              at NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:55:15)
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+          caused by: error: current transaction is aborted, commands ignored until end of transaction block
+              at C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\pg\lib\client.js:545:17
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:141:18)
+              at async NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:53:16)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+      "query": "select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1, $2, $3, $4) and \"tags\".\"category\" = $5) order by \"tags\".\"created_at\" desc",
+      "params": [
+        1,
+        2,
+        3,
+        4,
+        "technology"
+      ]
+    }
+[20:03:02] ERROR: Error validating filter options for collection tags
+    err: {
+      "type": "DrizzleQueryError",
+      "message": "Failed query: select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1, $2, $3, $4) and \"tags\".\"category\" = $5) order by \"tags\".\"created_at\" desc\nparams: 1,2,3,4,technology: current transaction is aborted, commands ignored until end of transaction block",
+      "stack":
+          Error: Failed query: select "id", "name", "category", "description", "color", "updated_at", "created_at" from "tags" "tags" where ("tags"."id" in ($1, $2, $3, $4) and "tags"."category" = $5) order by "tags"."created_at" desc
+          params: 1,2,3,4,technology
+              at NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:55:15)
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+          caused by: error: current transaction is aborted, commands ignored until end of transaction block
+              at C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\pg\lib\client.js:545:17
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:141:18)
+              at async NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:53:16)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:123:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+      "query": "select \"id\", \"name\", \"category\", \"description\", \"color\", \"updated_at\", \"created_at\" from \"tags\" \"tags\" where (\"tags\".\"id\" in ($1, $2, $3, $4) and \"tags\".\"category\" = $5) order by \"tags\".\"created_at\" desc",
+      "params": [
+        1,
+        2,
+        3,
+        4,
+        "technology"
+      ]
+    }
+[20:03:02] INFO: The following fields are invalid: About Section > Technologies & Skills, About Section > Interests & Hobbies, Projects Section > Featured Project > Technologies Used, Projects Section > Project Items 1 > Technologies Used
+ POST /api/tags 200 in 18ms
+ POST /api/payload-preferences/collection-portfolio-2 200 in 61ms
+ POST /api/tags 200 in 13ms
+[20:03:26] ERROR: Failed query: select count(*) from "tags" where ("tags"."id" not in ($1, $2, $3, $4) and "tags"."category" = $5)
+params: 1,2,3,4,technology
+    err: {
+      "type": "DrizzleQueryError",
+      "message": "Failed query: select count(*) from \"tags\" where (\"tags\".\"id\" not in ($1, $2, $3, $4) and \"tags\".\"category\" = $5)\nparams: 1,2,3,4,technology: invalid input value for enum enum_tags_category: \"technology\"",
+      "stack":
+          Error: Failed query: select count(*) from "tags" where ("tags"."id" not in ($1, $2, $3, $4) and "tags"."category" = $5)
+          params: 1,2,3,4,technology
+              at NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:55:15)
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async Object.countDistinct (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/postgres/countDistinct.js:11:29)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:112:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+              at async findHandler (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/endpoints/find.js:24:20)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:179:26)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:70:26)
+              at async eval (webpack-internal:///(rsc)/./node_modules/@payloadcms/next/dist/routes/rest/index.js:27:20)
+              at async AppRouteRouteModule.do (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:38782)
+              at async AppRouteRouteModule.handle (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:45984)
+              at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:206:38)
+              at async AppRouteRouteModule.handleResponse (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:1:183692)
+              at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:268:32)
+              at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:320:13)
+              at async doRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1592:34)
+              at async DevServer.renderToResponseWithComponentsImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1934:13)
+              at async DevServer.renderPageComponent (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2400:24)
+              at async DevServer.renderToResponseImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2440:32)
+              at async DevServer.pipeImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1035:25)
+              at async NextNodeServer.handleCatchallRenderRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\next-server.js:393:17)
+              at async DevServer.handleRequestImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:925:17)
+              at async C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:398:20
+              at async Span.traceAsyncFn (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\trace\trace.js:157:20)
+              at async DevServer.handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:394:24)
+              at async invokeRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:239:21)
+              at async handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:436:24)
+              at async requestHandlerImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:464:13)
+              at async Server.requestListener (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\start-server.js:218:13)
+          caused by: error: invalid input value for enum enum_tags_category: "technology"
+              at C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\pg-pool\index.js:45:11
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:141:18)
+              at async NodePgPreparedQuery.queryWithCache (webpack-internal:///(rsc)/./node_modules/drizzle-orm/pg-core/session.js:53:16)
+              at async eval (webpack-internal:///(rsc)/./node_modules/drizzle-orm/node-postgres/session.js:134:22)
+              at async Object.countDistinct (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/postgres/countDistinct.js:11:29)
+              at async find (webpack-internal:///(rsc)/./node_modules/@payloadcms/drizzle/dist/find/findMany.js:112:21)
+              at async findOperation (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/operations/find.js:151:22)
+              at async findHandler (webpack-internal:///(rsc)/./node_modules/payload/dist/collections/endpoints/find.js:24:20)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:179:26)
+              at async handleEndpoints (webpack-internal:///(rsc)/./node_modules/payload/dist/utilities/handleEndpoints.js:70:26)
+              at async eval (webpack-internal:///(rsc)/./node_modules/@payloadcms/next/dist/routes/rest/index.js:27:20)
+              at async AppRouteRouteModule.do (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:38782)
+              at async AppRouteRouteModule.handle (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:5:45984)
+              at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:206:38)
+              at async AppRouteRouteModule.handleResponse (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:1:183692)
+              at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:268:32)
+              at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&page=%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute&appPaths=&pagePath=private-next-app-dir%2F(payload)%2Fapi%2F%5B...slug%5D%2Froute.ts&appDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5Cunseensnick%5CDesktop%5Cprojects%5Ccode%5CJavaScript%5C00_Personal%5Cportfolio-website&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:320:13)
+              at async doRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1592:34)
+              at async DevServer.renderToResponseWithComponentsImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1934:13)
+              at async DevServer.renderPageComponent (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2400:24)
+              at async DevServer.renderToResponseImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:2440:32)
+              at async DevServer.pipeImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:1035:25)
+              at async NextNodeServer.handleCatchallRenderRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\next-server.js:393:17)
+              at async DevServer.handleRequestImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\base-server.js:925:17)
+              at async C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:398:20
+              at async Span.traceAsyncFn (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\trace\trace.js:157:20)
+              at async DevServer.handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\dev\next-dev-server.js:394:24)
+              at async invokeRender (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:239:21)
+              at async handleRequest (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:436:24)
+              at async requestHandlerImpl (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\router-server.js:464:13)
+              at async Server.requestListener (C:\Users\unseensnick\Desktop\projects\code\JavaScript\00_Personal\portfolio-website\node_modules\next\dist\server\lib\start-server.js:218:13)
+      "query": "select count(*) from \"tags\" where (\"tags\".\"id\" not in ($1, $2, $3, $4) and \"tags\".\"category\" = $5)",
+      "params": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "technology"
+      ]
+    }
+ POST /api/tags 500 in 20ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 637ms (4658 modules)
+ GET /_next/static/css/_app-pages-browser_node_modules_payloadcms_richtext-lexical_dist_exports_client_Field-6OZARKAL_js.css 404 in 864ms
+ GET /_next/static/css/app/(payload)/admin/%5B%5B...segments%5D%5D/page.css?v=1755367301603 404 in 865ms
+ GET /_next/static/css/app/(payload)/layout.css?v=1755367089310 404 in 868ms
+ GET /_next/static/chunks/app/(payload)/admin/%5B%5B...segments%5D%5D/chunk-TIQCV7VX.js.map 404 in 229ms
+ ✓ Compiled in 415ms (389 modules)
+[Portfolio] Using placeholder data (no media found)
+ GET / 200 in 33ms

@@ -108,6 +108,26 @@ export function safelyExtractImageUrl(image?: any, fallback?: string): string | 
 }
 
 /**
+ * Extract URL from NavigationLinks relationship object
+ * Handles both direct string URLs and NavigationLinks relationship objects
+ */
+export function safelyExtractUrl(urlData?: any, fallback: string = ""): string {
+    if (!urlData) return fallback;
+    
+    // Direct string URL
+    const directUrl = validateAndTrimString(urlData);
+    if (directUrl) return directUrl;
+    
+    // NavigationLinks relationship object
+    if (typeof urlData === "object" && urlData.href) {
+        const relationshipUrl = validateAndTrimString(urlData.href);
+        if (relationshipUrl) return relationshipUrl;
+    }
+    
+    return fallback;
+}
+
+/**
  * Safe string extraction with fallback
  */
 export function safeString(value?: any, fallback: string = ""): string {

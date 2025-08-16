@@ -4,6 +4,7 @@ import type { PortfolioData } from "@/types/portfolio";
 import {
     safelyExtractImageUrl,
     safelyExtractNames,
+    safelyExtractUrl,
     safelyProcessNavLinks,
     safelyProcessTechnologies,
     safeString
@@ -219,13 +220,13 @@ export function adaptPortfolioData(data: any) {
             logo: safeString(data.nav.logo, "Portfolio"),
             subtitle: safeString(data.nav.subtitle, "Developer"),
             logoSplitAt: typeof data.nav.logoSplitAt === "number" ? data.nav.logoSplitAt : undefined,
-            links: safelyProcessNavLinks(data.nav.links),
+            links: safelyProcessNavLinks(data.nav.navigationLinks),
         },
         hero: {
             greeting: safeString(data.hero.greeting, "Hello There! I'm"),
             title: safeString(data.hero.heroTitle, "UnseenSnick"),
             description: data.hero.heroDescription || null,
-            githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
+            githubUrl: safelyExtractUrl(data.hero.githubUrl, "https://github.com"),
             image: safelyExtractImageUrl(data.hero.heroImage) || "/placeholder-image.svg",
             imagePosition: (data.hero.heroImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
             aspectRatio: safeString(data.hero.heroAspectRatio, "landscape"),
@@ -234,7 +235,7 @@ export function adaptPortfolioData(data: any) {
                 ? { x: data.hero.x, y: data.hero.y } 
                 : undefined,
             ctaText: "View GitHub",
-            ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
+            ctaLink: safelyExtractUrl(data.hero.githubUrl, "https://github.com"),
             secondaryCtaText: "View Projects",
             secondaryCtaLink: "#projects",
         },
@@ -276,8 +277,8 @@ export function adaptPortfolioData(data: any) {
                 return {
                     title: safeString(featured.featuredTitle, "Featured Project"),
                     content: featured.content || null,
-                    projectUrl: safeString(featured.projectUrl),
-                    codeUrl: safeString(featured.codeUrl),
+                    projectUrl: safelyExtractUrl(featured.projectUrl),
+                    codeUrl: safelyExtractUrl(featured.codeUrl),
                     media: processedMedia,
                     technologies: safelyProcessTechnologies(featured.technologies),
                 };
@@ -304,8 +305,8 @@ export function adaptPortfolioData(data: any) {
                     return {
                         title: safeString(project.itemTitle, "Project"),
                         content: project.content || null,
-                        projectUrl: safeString(project.projectUrl),
-                        codeUrl: safeString(project.codeUrl),
+                        projectUrl: safelyExtractUrl(project.projectUrl),
+                        codeUrl: safelyExtractUrl(project.codeUrl),
                         media: processedMedia,
                         technologies: safelyProcessTechnologies(project.technologies),
                     };
@@ -315,13 +316,13 @@ export function adaptPortfolioData(data: any) {
             })(),
             description: safeString(data.projects.projectsDescription, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
-            viewAllLink: safeString(data.projects.viewAllLink, ""),
+            viewAllLink: safelyExtractUrl(data.projects.viewAllLink, ""),
         },
         contact: {
             title: safeString(data.contact.contactTitle, "Get In Touch"),
             description: safeString(data.contact.contactDescription, "Feel free to reach out for collaborations or just a friendly hello"),
-            email: safeString(data.contact.email, "example@example.com"),
-            github: safeString(data.contact.github, "https://github.com"),
+            email: safelyExtractUrl(data.contact.email, "example@example.com"),
+            github: safelyExtractUrl(data.contact.github, "https://github.com"),
             emailSubtitle: safeString(data.contact.emailSubtitle, "Email"),
             githubSubtitle: safeString(data.contact.githubSubtitle, "GitHub"),
             ctaTitle: safeString(data.contact.ctaTitle, "Let's work together"),

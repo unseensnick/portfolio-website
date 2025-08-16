@@ -9,6 +9,7 @@ import sharp from "sharp";
 import { fileURLToPath } from "url";
 
 import { Media } from "./collections/Media";
+import { NavigationLinks } from "./collections/NavigationLinks";
 import { Portfolio } from "./collections/Portfolio";
 import { Tags } from "./collections/Tags";
 import { Users } from "./collections/Users";
@@ -56,7 +57,7 @@ export default buildConfig({
             ],
         },
     },
-    collections: [Users, Media, Tags, Portfolio],
+    collections: [Users, Media, Tags, NavigationLinks, Portfolio],
     editor: lexicalEditor(),
     secret: process.env.PAYLOAD_SECRET || (() => {
         throw new Error("PAYLOAD_SECRET environment variable is required for security");

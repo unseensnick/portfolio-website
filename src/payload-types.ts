@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     tags: Tag;
+    navigationLinks: NavigationLink;
     portfolio: Portfolio;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
+    navigationLinks: NavigationLinksSelect<false> | NavigationLinksSelect<true>;
     portfolio: PortfolioSelect<false> | PortfolioSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -192,6 +194,43 @@ export interface Tag {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigationLinks".
+ */
+export interface NavigationLink {
+  id: number;
+  /**
+   * Text to display for this navigation link (e.g., 'About', 'Projects', 'Contact')
+   */
+  label: string;
+  /**
+   * URL or anchor link (e.g., '#about', '/contact', 'https://github.com/username')
+   */
+  href: string;
+  /**
+   * Categorize this link to organize how it's used across your portfolio
+   */
+  category: 'main' | 'social';
+  /**
+   * Optional icon name from Lucide icons library (e.g., 'user', 'github', 'mail')
+   */
+  icon?: string | null;
+  /**
+   * Order in which this link appears in navigation (lower numbers appear first)
+   */
+  order?: number | null;
+  /**
+   * Check if this link opens in a new tab (for external URLs)
+   */
+  external?: boolean | null;
+  /**
+   * Optional description or notes about this link for your reference
+   */
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "portfolio".
  */
 export interface Portfolio {
@@ -214,25 +253,9 @@ export interface Portfolio {
      */
     subtitle: string;
     /**
-     * Links to display in the navigation menu
+     * Select navigation links to display in the main menu
      */
-    links?:
-      | {
-          /**
-           * URL or anchor link (e.g., #about) for this navigation item
-           */
-          href: string;
-          /**
-           * Text to display for this navigation link
-           */
-          label: string;
-          /**
-           * Optional icon name (from Lucide icons library)
-           */
-          icon?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    navigationLinks?: (number | NavigationLink)[] | null;
   };
   /**
    * Configure the main hero section at the top of your website - the first thing visitors see
@@ -265,9 +288,9 @@ export interface Portfolio {
       [k: string]: unknown;
     };
     /**
-     * Your GitHub profile URL (with or without https://)
+     * Select your GitHub link from social navigation links
      */
-    githubUrl: string;
+    githubUrl?: (number | null) | NavigationLink;
     /**
      * Featured image for the hero section
      */
@@ -338,13 +361,13 @@ export interface Portfolio {
         [k: string]: unknown;
       } | null;
       /**
-       * URL to the live demo of your project (with or without https://)
+       * Select live demo link from social navigation links
        */
-      projectUrl?: string | null;
+      projectUrl?: (number | null) | NavigationLink;
       /**
-       * URL to the source code repository (with or without https://)
+       * Select source code repository link from social navigation links
        */
-      codeUrl?: string | null;
+      codeUrl?: (number | null) | NavigationLink;
       /**
        * Select technologies used in this project from your tags list
        */
@@ -452,9 +475,9 @@ export interface Portfolio {
            */
           projectUrl?: string | null;
           /**
-           * URL to the source code repository (with or without https://)
+           * Select source code repository link from social navigation links
            */
-          codeUrl?: string | null;
+          codeUrl?: (number | null) | NavigationLink;
           /**
            * Select technologies used in this project from your tags list
            */
@@ -533,9 +556,9 @@ export interface Portfolio {
         }[]
       | null;
     /**
-     * URL to view all your projects (typically your GitHub profile)
+     * Select link to view all projects from social navigation links
      */
-    viewAllLink?: string | null;
+    viewAllLink?: (number | null) | NavigationLink;
   };
   /**
    * Configure the about section of your portfolio - tell your story and showcase your skills
@@ -619,17 +642,17 @@ export interface Portfolio {
      */
     contactDescription: string;
     /**
-     * Your contact email address
+     * Select your email contact from social navigation links
      */
-    email: string;
+    email?: (number | null) | NavigationLink;
     /**
      * Subtitle text displayed on the email contact card
      */
     emailSubtitle: string;
     /**
-     * Your GitHub username or full URL
+     * Select your GitHub profile from social navigation links
      */
-    github: string;
+    github?: (number | null) | NavigationLink;
     /**
      * Subtitle text displayed on the GitHub contact card
      */
@@ -674,6 +697,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tags';
         value: number | Tag;
+      } | null)
+    | ({
+        relationTo: 'navigationLinks';
+        value: number | NavigationLink;
       } | null)
     | ({
         relationTo: 'portfolio';
@@ -777,6 +804,21 @@ export interface TagsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigationLinks_select".
+ */
+export interface NavigationLinksSelect<T extends boolean = true> {
+  label?: T;
+  href?: T;
+  category?: T;
+  icon?: T;
+  order?: T;
+  external?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "portfolio_select".
  */
 export interface PortfolioSelect<T extends boolean = true> {
@@ -787,14 +829,7 @@ export interface PortfolioSelect<T extends boolean = true> {
         logo?: T;
         logoSplitAt?: T;
         subtitle?: T;
-        links?:
-          | T
-          | {
-              href?: T;
-              label?: T;
-              icon?: T;
-              id?: T;
-            };
+        navigationLinks?: T;
       };
   hero?:
     | T
