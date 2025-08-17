@@ -2,13 +2,16 @@ import { postgresAdapter } from "@payloadcms/db-postgres";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { uploadthingStorage } from "@payloadcms/storage-uploadthing";
 import path from "path";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 import { fileURLToPath } from "url";
 
 import { Media } from "./collections/Media";
+import { NavigationLinks } from "./collections/NavigationLinks";
 import { Portfolio } from "./collections/Portfolio";
+import { Tags } from "./collections/Tags";
 import { Users } from "./collections/Users";
 
 const filename = fileURLToPath(import.meta.url);
@@ -20,12 +23,22 @@ export default buildConfig({
         importMap: {
             baseDir: path.resolve(dirname),
         },
-        // Live preview breakpoints for different devices
+        // PayloadCMS 3.0 Live Preview Configuration
         livePreview: {
+            // Dynamic URL generation for live preview
+            url: ({ locale }) => {
+                const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
+                
+                // All collections use the root path with draft parameter
+                return `${baseUrl}/?draft=true${locale ? `&locale=${locale}` : ''}`;
+            },
+            // Specify which collections should have live preview
+            collections: ['portfolio'],
+            // Device breakpoints for responsive preview
             breakpoints: [
                 {
                     label: "Mobile",
-                    name: "mobile",
+                    name: "mobile", 
                     width: 375,
                     height: 667,
                 },
@@ -44,9 +57,11 @@ export default buildConfig({
             ],
         },
     },
-    collections: [Users, Media, Portfolio],
+    collections: [Users, Media, Tags, NavigationLinks, Portfolio],
     editor: lexicalEditor(),
-    secret: process.env.PAYLOAD_SECRET || "",
+    secret: process.env.PAYLOAD_SECRET || (() => {
+        throw new Error("PAYLOAD_SECRET environment variable is required for security");
+    })(),
     typescript: {
         outputFile: path.resolve(dirname, "payload-types.ts"),
     },
@@ -69,5 +84,17 @@ export default buildConfig({
             },
         },
     }),
-    plugins: [payloadCloudPlugin()],
+    plugins: [
+        payloadCloudPlugin(),
+        uploadthingStorage({
+            collections: {
+                media: true,
+            },
+            options: {
+                token: process.env.UPLOADTHING_TOKEN,
+                acl: "public-read",
+            },
+            clientUploads: true,
+        }),
+    ],
 });

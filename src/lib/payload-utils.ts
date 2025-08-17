@@ -4,12 +4,17 @@ import type { PortfolioData } from "@/types/portfolio";
 import {
     safelyExtractImageUrl,
     safelyExtractNames,
-    safelyExtractParagraphs,
-    safelyExtractProjectDescriptions,
+    safelyExtractUrl,
     safelyProcessNavLinks,
     safelyProcessTechnologies,
     safeString
 } from "./payload-safe-helpers";
+
+// PayloadCMS Local API imports removed due to typing issues
+// Keeping fetch-based approach but with improved PayloadCMS 3.0 draft handling
+
+// Session-based logging cache to prevent spam
+const logCache = new Set<string>();
 
 /**
  * Default data used when PayloadCMS is unavailable
@@ -29,7 +34,7 @@ const fallbackData = {
     hero: {
         greeting: "Hello There! I'm",
         title: "UnseenSnick",
-        description: "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs.",
+        description: null,
         githubUrl: "https://github.com",
         image: "/placeholder-image.svg",
         imagePosition: "center" as const,
@@ -41,7 +46,7 @@ const fallbackData = {
     },
     about: {
         title: "About",
-        paragraphs: ["Welcome to my portfolio! I'm a passionate developer who loves creating modern web applications.", "I specialize in JavaScript and React, always eager to learn new technologies and tackle interesting challenges.", "When I'm not coding, you'll find me exploring new tools, contributing to open source, or brainstorming the next big project."],
+        content: null,
         technologies: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS", "PostgreSQL"],
         interests: ["Open Source", "Web Development", "UI/UX Design", "Problem Solving", "Continuous Learning"],
         image: "/placeholder-image.svg",
@@ -53,32 +58,10 @@ const fallbackData = {
     projects: {
         title: "My Projects",
         description: "Here are some of my recent projects showcasing my skills and creativity",
-        featured: {
-            title: "Featured Project",
-            description: [
-                { text: "This is a showcase of my best work, demonstrating modern web development practices and clean, responsive design." },
-                { text: "Built with the latest technologies to deliver an exceptional user experience." }
-            ],
-            projectUrl: undefined,
-            codeUrl: undefined,
-            media: {
-                image: {
-                    url: "/placeholder-image.svg",
-                    alt: "Featured project placeholder"
-                },
-                imagePosition: "center" as const,
-                aspectRatio: "landscape" as const
-            },
-            technologies: [
-                { name: "React" },
-                { name: "TypeScript" },
-                { name: "Next.js" }
-            ],
-        },
         items: [
             {
                 title: "Example Project 1",
-                description: [{ text: "A sample project showcasing modern development practices and responsive design." }],
+                content: null,
                 projectUrl: undefined,
                 codeUrl: undefined, 
                 media: {
@@ -95,8 +78,8 @@ const fallbackData = {
                 ],
             },
             {
-                title: "Example Project 2",
-                description: [{ text: "Another sample project demonstrating full-stack development capabilities." }],
+                title: "Example Project 2", 
+                content: null,
                 projectUrl: undefined,
                 codeUrl: undefined,
                 media: {
@@ -200,13 +183,17 @@ export function adaptPortfolioData(data: any) {
 
     const portfolioLogger = logger.createFeatureLogger("Portfolio");
     
-    // Only log when there are actual projects or issues, not for every request
+    // Only log once per session to avoid spam during development
     const hasRealProjects = data.projects?.items?.some((item: any) => 
         item.media && Array.isArray(item.media) && item.media.length > 0
     );
     
     if (!hasRealProjects && process.env.NODE_ENV === "development") {
-        portfolioLogger.log("Using placeholder data (no media found)");
+        const placeholderKey = "portfolio-placeholder";
+        if (!logCache.has(placeholderKey)) {
+            portfolioLogger.log("Using placeholder data (no media found)");
+            logCache.add(placeholderKey);
+        }
     }
 
     return {
@@ -214,69 +201,42 @@ export function adaptPortfolioData(data: any) {
             logo: safeString(data.nav.logo, "Portfolio"),
             subtitle: safeString(data.nav.subtitle, "Developer"),
             logoSplitAt: typeof data.nav.logoSplitAt === "number" ? data.nav.logoSplitAt : undefined,
-            links: safelyProcessNavLinks(data.nav.links),
+            links: safelyProcessNavLinks(data.nav.navigationLinks),
         },
         hero: {
             greeting: safeString(data.hero.greeting, "Hello There! I'm"),
-            title: safeString(data.hero.title, "UnseenSnick"),
-            description: safeString(data.hero.description, "I build modern web apps with clean, responsive design. Working mostly with JavaScript and Next.js, I adapt quickly to what each project needs."),
-            githubUrl: safeString(data.hero.githubUrl, "https://github.com"),
-            image: safelyExtractImageUrl(data.hero.image) || "/placeholder-image.svg",
-            imagePosition: (data.hero.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(data.hero.aspectRatio, "landscape"),
-            imageZoom: typeof data.hero.imageZoom === "number" ? data.hero.imageZoom : undefined,
-            imageFinePosition: (data.hero.imageFinePosition?.x !== undefined || data.hero.imageFinePosition?.y !== undefined) 
-                ? { x: data.hero.imageFinePosition?.x, y: data.hero.imageFinePosition?.y } 
+            title: safeString(data.hero.heroTitle, "UnseenSnick"),
+            description: data.hero.heroDescription || null,
+            githubUrl: safelyExtractUrl(data.hero.githubUrl, "https://github.com"),
+            image: safelyExtractImageUrl(data.hero.heroImage) || "/placeholder-image.svg",
+            imagePosition: (data.hero.heroImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.hero.heroAspectRatio, "landscape"),
+            imageZoom: typeof data.hero.heroImageZoom === "number" ? data.hero.heroImageZoom : undefined,
+            imageFinePosition: (data.hero.x !== undefined || data.hero.y !== undefined) 
+                ? { x: data.hero.x, y: data.hero.y } 
                 : undefined,
             ctaText: "View GitHub",
-            ctaLink: safeString(data.hero.githubUrl, "https://github.com"),
+            ctaLink: safelyExtractUrl(data.hero.githubUrl, "https://github.com"),
             secondaryCtaText: "View Projects",
             secondaryCtaLink: "#projects",
         },
         about: {
-            title: safeString(data.about.title, "About"),
-            paragraphs: safelyExtractParagraphs(data.about.paragraphs) || ["Tell us about yourself..."],
+            title: safeString(data.about.aboutTitle, "About"),
+            content: data.about.content || null,
             technologies: safelyExtractNames(data.about.technologies) || [],
             interests: safelyExtractNames(data.about.interests) || [],
-            image: safelyExtractImageUrl(data.about.image) || "/placeholder-image.svg",
-            imagePosition: (data.about.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(data.about.aspectRatio, "portrait"),
-            imageZoom: typeof data.about.imageZoom === "number" ? data.about.imageZoom : undefined,
-            imageFinePosition: (data.about.imageFinePosition?.x !== undefined || data.about.imageFinePosition?.y !== undefined) 
-                ? { x: data.about.imageFinePosition?.x, y: data.about.imageFinePosition?.y } 
+            image: safelyExtractImageUrl(data.about.aboutImage) || "/placeholder-image.svg",
+            imagePosition: (data.about.aboutImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.about.aboutAspectRatio, "portrait"),
+            imageZoom: typeof data.about.aboutImageZoom === "number" ? data.about.aboutImageZoom : undefined,
+            imageFinePosition: (data.about.x !== undefined || data.about.y !== undefined) 
+                ? { x: data.about.x, y: data.about.y } 
                 : undefined,
             technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
             interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),
         },
         projects: {
-            title: safeString(data.projects.title, "My Projects"),
-            featured: (() => {
-                const featured = data.projects.featured;
-                if (!featured) {
-                    return fallbackData.projects.featured;
-                }
-
-                let processedMedia;
-                
-                if (Array.isArray(featured.media)) {
-                    if (featured.media.length === 0) {
-                        processedMedia = processMediaItem(null, featured.title);
-                    } else {
-                        processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.title));
-                    }
-                } else {
-                    processedMedia = processMediaItem(featured.media, featured.title);
-                }
-
-                return {
-                    title: safeString(featured.title, "Featured Project"),
-                    description: safelyExtractProjectDescriptions(featured.description) || [{ text: "A showcase of my best work" }],
-                    projectUrl: safeString(featured.projectUrl),
-                    codeUrl: safeString(featured.codeUrl),
-                    media: processedMedia,
-                    technologies: safelyProcessTechnologies(featured.technologies),
-                };
-            })(),
+            title: safeString(data.projects.projectsTitle, "My Projects"),
             items: (() => {
                 const items = data.projects.items || [];
                 if (items.length === 0) {
@@ -288,19 +248,19 @@ export function adaptPortfolioData(data: any) {
                     
                     if (Array.isArray(project.media)) {
                         if (project.media.length === 0) {
-                            processedMedia = processMediaItem(null, project.title);
+                            processedMedia = processMediaItem(null, project.itemTitle);
                         } else {
-                            processedMedia = project.media.map((item: any) => processMediaItem(item, project.title));
+                            processedMedia = project.media.map((item: any) => processMediaItem(item, project.itemTitle));
                         }
                     } else {
-                        processedMedia = processMediaItem(project.media, project.title);
+                        processedMedia = processMediaItem(project.media, project.itemTitle);
                     }
                     
                     return {
-                        title: safeString(project.title, "Project"),
-                        description: safelyExtractProjectDescriptions(project.description) || [{ text: "Project description" }],
-                        projectUrl: safeString(project.projectUrl),
-                        codeUrl: safeString(project.codeUrl),
+                        title: safeString(project.itemTitle, "Project"),
+                        content: project.content || null,
+                        projectUrl: safelyExtractUrl(project.projectUrl),
+                        codeUrl: safelyExtractUrl(project.codeUrl),
                         media: processedMedia,
                         technologies: safelyProcessTechnologies(project.technologies),
                     };
@@ -308,15 +268,15 @@ export function adaptPortfolioData(data: any) {
                 
                 return processedItems;
             })(),
-            description: safeString(data.projects.description, "Here are some of my recent projects"),
+            description: safeString(data.projects.projectsDescription, "Here are some of my recent projects"),
             viewMoreText: safeString(data.projects.viewMoreText, "Want to see more of my work?"),
-            viewAllLink: safeString(data.projects.viewAllLink, ""),
+            viewAllLink: safelyExtractUrl(data.projects.viewAllLink, ""),
         },
         contact: {
-            title: safeString(data.contact.title, "Get In Touch"),
-            description: safeString(data.contact.description, "Feel free to reach out for collaborations or just a friendly hello"),
-            email: safeString(data.contact.email, "example@example.com"),
-            github: safeString(data.contact.github, "https://github.com"),
+            title: safeString(data.contact.contactTitle, "Get In Touch"),
+            description: safeString(data.contact.contactDescription, "Feel free to reach out for collaborations or just a friendly hello"),
+            email: safelyExtractUrl(data.contact.email, "example@example.com"),
+            github: safelyExtractUrl(data.contact.github, "https://github.com"),
             emailSubtitle: safeString(data.contact.emailSubtitle, "Email"),
             githubSubtitle: safeString(data.contact.githubSubtitle, "GitHub"),
             ctaTitle: safeString(data.contact.ctaTitle, "Let's work together"),
@@ -342,8 +302,7 @@ export async function getPortfolioData(
     const apiLogger = logger.createApiLogger("Portfolio", requestId);
     
     try {
-        const baseUrl =
-            process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
+        const baseUrl = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3000";
 
         const params = new URLSearchParams({
             limit: "1",
@@ -356,72 +315,63 @@ export async function getPortfolioData(
 
         const apiUrl = `${baseUrl}/api/portfolio?${params.toString()}`;
 
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            // Simplified caching - no manual cache management needed with PayloadCMS handling drafts
+            cache: draft ? "no-store" : "force-cache",
+            next: draft ? { revalidate: 0 } : { revalidate: 60 },
+        });
 
-
-        const headers: HeadersInit = {
-            "Content-Type": "application/json",
-        };
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-        try {
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers,
-                signal: controller.signal,
-                cache: draft ? "no-store" : "force-cache",
-                next: draft ? { revalidate: 0 } : { revalidate: 60 },
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                apiLogger.error(`HTTP Error: ${response.status} ${response.statusText}`);
-
-                try {
-                    const errorText = await response.text();
-                    apiLogger.error("Error body:", errorText);
-                } catch {
-                    apiLogger.error("Could not read error body");
-                }
-
-                if (draft) {
-                    return getPortfolioData(false);
-                }
-
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        if (!response.ok) {
+            apiLogger.error(`HTTP Error: ${response.status} ${response.statusText}`);
+            
+            if (draft) {
+                return getPortfolioData(false);
             }
 
-            const result = await response.json();
-            const portfolioDoc = result.docs?.[0];
-
-            if (!portfolioDoc) {
-                apiLogger.error(`No portfolio documents found. Total docs: ${result.totalDocs}`);
-
-                if (!draft && result.totalDocs === 0) {
-                    return getPortfolioData(true);
-                }
-
-                throw new Error("No portfolio documents found");
-            }
-
-            return adaptPortfolioData(portfolioDoc);
-
-        } catch (fetchError) {
-            clearTimeout(timeoutId);
-            throw fetchError;
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+
+        const result = await response.json();
+        const portfolioDoc = result.docs?.[0];
+
+        if (!portfolioDoc) {
+            // Only log once per session to avoid spam during development
+            const sessionKey = "portfolio-empty";
+            if (!logCache.has(sessionKey)) {
+                apiLogger.warn(`No portfolio documents found. Total docs: ${result.totalDocs}`);
+                logCache.add(sessionKey);
+            }
+
+            // If no documents found at all, return fallback data with helpful message
+            if (result.totalDocs === 0) {
+                const fallbackKey = "portfolio-empty-fallback";
+                if (!logCache.has(fallbackKey)) {
+                    apiLogger.warn("No portfolio documents exist in database - using fallback data. Create a portfolio document in the admin panel.");
+                    logCache.add(fallbackKey);
+                }
+                return fallbackData;
+            }
+
+            // If documents exist but none returned, might be access control issue
+            if (result.totalDocs > 0) {
+                apiLogger.warn(`${result.totalDocs} documents exist but none accessible - check access control or document status`);
+            }
+
+            apiLogger.warn("No documents found, using fallback data");
+            return fallbackData;
+        }
+
+        return adaptPortfolioData(portfolioDoc);
 
     } catch (error) {
         apiLogger.error("Error fetching portfolio data:", error);
 
-        if (draft && (error instanceof Error && (
-            error.name === 'AbortError' || 
-            error.message.includes('fetch') ||
-            error.message.includes('network') ||
-            error.message.includes('timeout')
-        ))) {
+        if (draft && error instanceof Error) {
+            apiLogger.warn("Draft fetch failed, falling back to published content");
             return getPortfolioData(false);
         }
 

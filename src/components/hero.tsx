@@ -3,6 +3,7 @@
 import { ButtonGroup } from "@/components/shared/button-group";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMedia } from "@/components/shared/simple-media";
+import { RichText } from '@payloadcms/richtext-lexical/react';
 import {
     useIsMobile,
     useIsMobileOrTablet,
@@ -20,7 +21,7 @@ import { ExternalLink, Github } from "lucide-react";
 interface HeroProps {
     greeting?: string;
     title?: string;
-    description?: string;
+    description?: any;
     githubUrl?: string;
     image?: string;
     imagePosition?:
@@ -47,7 +48,7 @@ interface HeroProps {
 export function Hero({
     greeting = "Welcome",
     title = "Full Stack Developer",
-    description = "Building modern web applications",
+    description = null,
     githubUrl = "https://github.com",
     image,
     imagePosition = "center",
@@ -119,9 +120,15 @@ export function Hero({
                         >
                             {title}
                         </h1>
-                        <p className="text-base text-muted-foreground leading-relaxed px-4">
-                            {description}
-                        </p>
+                        {description ? (
+                            <div className="text-base text-muted-foreground leading-relaxed px-4 [&>p]:mb-0">
+                                <RichText data={description} />
+                            </div>
+                        ) : (
+                            <p className="text-base text-muted-foreground leading-relaxed px-4">
+                                Building modern web applications
+                            </p>
+                        )}
                     </div>
 
                     <div data-tour="hero-cta">
@@ -152,9 +159,15 @@ export function Hero({
                     >
                         {title}
                     </h1>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
-                        {description}
-                    </p>
+                    {description ? (
+                        <div className="text-lg text-muted-foreground leading-relaxed [&>p]:mb-0">
+                            <RichText data={description} />
+                        </div>
+                    ) : (
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                            Building modern web applications
+                        </p>
+                    )}
                 </div>
 
                 <div data-tour="hero-cta">

@@ -1,0 +1,170 @@
+# Payload CMS Email Functionality - Complete Documentation
+
+## Introduction
+
+Payload has a few email adapters that can be imported to enable email functionality. The `@payloadcms/email-nodemailer` package will be the package most will want to install. This package provides an easy way to use Nodemailer for email and won't get in your way for those already familiar.
+
+The email adapter should be passed into the email property of the Payload Config. This will allow Payload to send auth-related emails for things like password resets, new user verification, and any other email sending needs you may have.
+
+## Configuration
+
+### Default Configuration
+
+When email is not needed or desired, Payload will log a warning on startup notifying that email is not configured. A warning message will also be logged on any attempt to send an email.
+
+### Email Adapter Requirements
+
+An email adapter will require at least the following fields:
+
+| Option | Description |
+|--------|-------------|
+| `defaultFromName` * | The name part of the From field that will be seen on the delivered email |
+| `defaultFromAddress` * | The email address part of the From field that will be used when delivering email |
+
+*Required fields
+
+## Official Email Adapters
+
+| Name | Package | Description |
+|------|---------|-------------|
+| Nodemailer | `@payloadcms/email-nodemailer` | Use any Nodemailer transport, including SMTP, Resend, SendGrid, and more. This was provided by default in Payload 2.x. This is the easiest migration path. |
+| Resend | `@payloadcms/email-resend` | Resend email via their REST API. This is preferred for serverless platforms such as Vercel because it is much more lightweight than the nodemailer adapter. |
+
+## Nodemailer Configuration
+
+### Configuration Options
+
+| Option | Description |
+|--------|-------------|
+| `transport` | The Nodemailer transport object for when you want to do it yourself, not needed when transportOptions is set |
+| `transportOptions` | An object that configures the transporter that Payload will create. For all the available options see the Nodemailer documentation or see the examples below |
+
+### Using SMTP
+
+Simple Mail Transfer Protocol (SMTP) options can be passed in using the `transportOptions` object on the email options. See the Nodemailer SMTP documentation for more information, including details on when `secure` should and should not be set to `true`.
+
+#### Example: SMTP with transportOptions
+
+```javascript
+import { buildConfig } from 'payload'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+
+export default buildConfig({
+  email: nodemailerAdapter({
+    defaultFromAddress: 'info@payloadcms.com',
+    defaultFromName: 'Payload',
+    // Nodemailer transportOptions
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: 587,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    },
+  }),
+})
+```
+
+#### Example: Using nodemailer.createTransport
+
+```javascript
+import { buildConfig } from 'payload'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import nodemailer from 'nodemailer'
+
+export default buildConfig({
+  email: nodemailerAdapter({
+    defaultFromAddress: 'info@payloadcms.com',
+    defaultFromName: 'Payload',
+    // Any Nodemailer transport can be used
+    transport: nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: 587,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    }),
+  }),
+})
+```
+
+### Custom Transport
+
+You also have the ability to bring your own nodemailer transport. This is an example of using the SendGrid nodemailer transport.
+
+```javascript
+import { buildConfig } from 'payload'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import nodemailerSendgrid from 'nodemailer-sendgrid'
+
+export default buildConfig({
+  email: nodemailerAdapter({
+    defaultFromAddress: 'info@payloadcms.com',
+    defaultFromName: 'Payload',
+    transportOptions: nodemailerSendgrid({
+      apiKey: process.env.SENDGRID_API_KEY,
+    }),
+  }),
+})
+```
+
+### Development Configuration
+
+During development, if you pass nothing to `nodemailerAdapter`, it will use the ethereal.email service.
+
+This will log the ethereal.email details to console on startup.
+
+```javascript
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+
+export default buildConfig({
+  email: nodemailerAdapter(),
+})
+```
+
+## Resend Configuration
+
+The Resend adapter requires an API key to be passed in the options. This can be found in the Resend dashboard. This is the preferred package if you are deploying on Vercel because this is much more lightweight than the Nodemailer adapter.
+
+### Configuration Options
+
+| Option | Description |
+|--------|-------------|
+| `apiKey` | The API key for the Resend service. |
+
+### Example: Resend Configuration
+
+```javascript
+import { buildConfig } from 'payload'
+import { resendAdapter } from '@payloadcms/email-resend'
+
+export default buildConfig({
+  email: resendAdapter({
+    defaultFromAddress: 'dev@payloadcms.com',
+    defaultFromName: 'Payload CMS',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
+})
+```
+
+## Sending Mail
+
+With a working transport you can call it anywhere you have access to Payload by calling `payload.sendEmail(message)`. The message will contain the `to`, `subject` and `html` or `text` for the email being sent. Other options are also available and can be seen in the sendEmail args. Support for these will depend on the adapter being used.
+
+### Example: Sending an Email
+
+```javascript
+// Example of sending an email
+const email = await payload.sendEmail({
+  to: 'test@example.com',
+  subject: 'This is a test email',
+  text: 'This is my message body',
+})
+```
+
+## Using Multiple Mail Providers
+
+Payload supports the use of a single transporter of email, but there is nothing stopping you from having more. Consider a use case where sending bulk email is handled differently than transactional email and could be done using a hook.
+

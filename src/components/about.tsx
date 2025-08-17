@@ -3,6 +3,7 @@
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMedia } from "@/components/shared/simple-media";
 import { TechBadgeGroup } from "@/components/tech-badge";
+import { RichText } from '@payloadcms/richtext-lexical/react';
 import {
     useIsMobile,
     useIsMobileOrTablet,
@@ -28,7 +29,7 @@ function InterestItem({ text }: { text: string }) {
 
 interface AboutProps {
     title?: string;
-    paragraphs?: string[];
+    content?: any;
     technologies?: string[];
     interests?: string[];
     image?: string;
@@ -54,9 +55,7 @@ interface AboutProps {
 
 export function About({
     title = "About Me",
-    paragraphs = [
-        "I'm a passionate developer with experience in web development.",
-    ],
+    content = null,
     technologies = ["React", "TypeScript", "Next.js"],
     interests = ["Web Development", "UI/UX Design", "Open Source"],
     image,
@@ -72,7 +71,7 @@ export function About({
     const isMobileOrTablet = useIsMobileOrTablet();
 
     // Use mobile layout for both mobile and tablet, desktop layout only for desktop
-    const { container, content, spacing } =
+    const { container, content: contentWrapper, spacing } =
         createContentWrapper(isMobileOrTablet);
 
     // Create MediaItem structure for ResponsiveMedia - always create it to show placeholder if no image
@@ -117,20 +116,22 @@ export function About({
     };
 
     const renderContent = () => (
-        <div className={cn(content, spacing)}>
-            <div className="space-y-4" data-tour="about-paragraphs">
-                {paragraphs.map((paragraph, index) => (
-                    <p
-                        key={index}
-                        className={cn(
-                            "text-muted-foreground leading-relaxed",
-                            createResponsiveText("body", isMobile)
-                        )}
-                    >
-                        {paragraph}
-                    </p>
-                ))}
-            </div>
+        <div className={cn(contentWrapper, spacing)}>
+            {content ? (
+                <div className={cn(
+                    "text-muted-foreground leading-relaxed [&>p]:mb-4 [&>p:last-child]:mb-0",
+                    createResponsiveText("body", isMobile)
+                )}>
+                    <RichText data={content} />
+                </div>
+            ) : (
+                <p className={cn(
+                    "text-muted-foreground leading-relaxed",
+                    createResponsiveText("body", isMobile)
+                )}>
+                    I&apos;m a passionate developer with experience in web development.
+                </p>
+            )}
 
             <div className="space-y-4" data-tour="technologies">
                 <h3

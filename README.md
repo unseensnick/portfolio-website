@@ -29,20 +29,26 @@ Sleek, responsive portfolio website built with Next.js and PayloadCMS for develo
 Create a `.env` file:
 
 ```bash
-PAYLOAD_SECRET=your-secret-key-change-me
-DATABASE_URI=postgres://postgres:postgres@localhost/portfolio
+# PayloadCMS Configuration
+PAYLOAD_SECRET=your-32-character-secret-key-here
+DATABASE_URI=postgresql://username:password@localhost:5432/portfolio
+
+# Site URLs
 NEXT_PUBLIC_PAYLOAD_URL=http://localhost:3000
 
 # Demo Mode (optional)
 NEXT_PUBLIC_DEMO_MODE=false
 
-# Email Configuration
-EMAIL_FROM=noreply@yourportfolio.com
+# Email Configuration (Optional - for password resets)
+EMAIL_FROM=noreply@yourdomain.com
 EMAIL_FROM_NAME=Portfolio Website
-SMTP_HOST=smtp.example.com
+SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=your_smtp_username
-SMTP_PASS=your_smtp_password
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# UploadThing Configuration
+UPLOADTHING_TOKEN=your-uploadthing-token-here
 ```
 
 See documentation for detailed setup:

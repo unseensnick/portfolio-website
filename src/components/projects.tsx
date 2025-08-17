@@ -5,6 +5,7 @@ import { ResponsiveCard } from "@/components/shared/responsive-card";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { SimpleMediaCarousel } from "@/components/shared/simple-media-carousel";
 import { TechBadgeGroup } from "@/components/tech-badge";
+import { RichText } from '@payloadcms/richtext-lexical/react';
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatExternalUrl } from "@/lib/url-utils";
 import { cn, createResponsiveSpacing, createResponsiveText } from "@/lib/utils";
@@ -13,7 +14,7 @@ import { ExternalLink, Github } from "lucide-react";
 
 interface ProjectItemProps {
     title: string;
-    description: Array<{ text: string }>;
+    content: any;
     projectUrl?: string;
     codeUrl?: string;
     technologies?: Technology[];
@@ -24,7 +25,7 @@ interface ProjectItemProps {
 
 function ProjectItem({
     title,
-    description,
+    content,
     projectUrl,
     codeUrl,
     technologies,
@@ -78,19 +79,21 @@ function ProjectItem({
                 >
                     {title}
                 </h3>
-                <div className="space-y-4">
-                    {description.map((paragraph, index) => (
-                        <p
-                            key={index}
-                            className={cn(
-                                "text-muted-foreground leading-relaxed",
-                                createResponsiveText("body", isMobile)
-                            )}
-                        >
-                            {paragraph.text}
-                        </p>
-                    ))}
-                </div>
+                {content ? (
+                    <div className={cn(
+                        "text-muted-foreground leading-relaxed [&>p]:mb-4 [&>p:last-child]:mb-0",
+                        createResponsiveText("body", isMobile)
+                    )}>
+                        <RichText data={content} />
+                    </div>
+                ) : (
+                    <p className={cn(
+                        "text-muted-foreground leading-relaxed",
+                        createResponsiveText("body", isMobile)
+                    )}>
+                        Project description
+                    </p>
+                )}
 
                 {technologies && technologies.length > 0 && (
                     <TechBadgeGroup
@@ -148,7 +151,6 @@ function ProjectItem({
 
 interface ProjectsProps {
     title?: string;
-    featured?: ProjectItemProps;
     items?: ProjectItemProps[];
     viewAllLink?: string;
     description?: string;
@@ -157,12 +159,6 @@ interface ProjectsProps {
 
 export function Projects({
     title = "Projects",
-    featured = {
-        title: "Featured Project",
-        description: [{ text: "A showcase of my best work" }],
-        projectUrl: "#",
-        codeUrl: "#",
-    },
     items = [],
     viewAllLink,
     description = "Check out some of my recent projects",
@@ -170,7 +166,9 @@ export function Projects({
 }: ProjectsProps) {
     const isMobile = useIsMobile();
 
-    const allProjects = featured ? [featured, ...items] : [...items];
+    // First item is the featured project, remaining items are regular projects
+    const featuredProject = items[0] || null;
+    const remainingProjects = items.slice(1);
 
     const formattedViewAllLink = viewAllLink
         ? formatExternalUrl(viewAllLink)
@@ -206,8 +204,8 @@ export function Projects({
     return (
         <SectionWrapper id="projects" title={title} description={description}>
             <div data-tour="featured-project" className="mb-12 lg:mb-24">
-                {!isMobile && featured && (
-                    <ProjectItem {...featured} isMobile={isMobile} />
+                {!isMobile && featuredProject && (
+                    <ProjectItem {...featuredProject} isMobile={isMobile} />
                 )}
             </div>
             <div data-tour="project-grid">
@@ -216,14 +214,14 @@ export function Projects({
                 >
                     {/* Project list */}
                     {isMobile
-                        ? allProjects.map((project, index) => (
+                        ? items.map((project, index) => (
                               <ProjectItem
                                   key={index}
                                   {...project}
                                   isMobile={isMobile}
                               />
                           ))
-                        : items.map((project, index) => (
+                        : remainingProjects.map((project, index) => (
                               <ProjectItem
                                   key={index}
                                   {...project}

@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.claude
 
 # debug
 npm-debug.log*
@@ -43,7 +44,9 @@ next-env.d.ts
 
 # Misc
 /legacy code
+temp/errors.txt
 src/app/debug-portfolio
+
 # next-video
 media/*
 !media/*.json

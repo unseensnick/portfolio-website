@@ -53,17 +53,6 @@ export function safelyExtractNames(items?: any[]): string[] {
     });
 }
 
-/**
- * Extract text from PayloadCMS paragraph objects: { text: string }
- */
-export function safelyExtractParagraphs(paragraphs?: any[]): string[] {
-    return safeArrayMap(paragraphs, (paragraph) => {
-        if (paragraph && typeof paragraph === "object" && paragraph.text) {
-            return validateAndTrimString(paragraph.text);
-        }
-        return null;
-    });
-}
 
 /**
  * Process technologies for TechBadgeGroup component
@@ -119,6 +108,26 @@ export function safelyExtractImageUrl(image?: any, fallback?: string): string | 
 }
 
 /**
+ * Extract URL from NavigationLinks relationship object
+ * Handles both direct string URLs and NavigationLinks relationship objects
+ */
+export function safelyExtractUrl(urlData?: any, fallback: string = ""): string {
+    if (!urlData) return fallback;
+    
+    // Direct string URL
+    const directUrl = validateAndTrimString(urlData);
+    if (directUrl) return directUrl;
+    
+    // NavigationLinks relationship object
+    if (typeof urlData === "object" && urlData.href) {
+        const relationshipUrl = validateAndTrimString(urlData.href);
+        if (relationshipUrl) return relationshipUrl;
+    }
+    
+    return fallback;
+}
+
+/**
  * Safe string extraction with fallback
  */
 export function safeString(value?: any, fallback: string = ""): string {
@@ -126,16 +135,3 @@ export function safeString(value?: any, fallback: string = ""): string {
     return validString || fallback;
 }
 
-/**
- * Extract project descriptions as paragraph objects: { text: string }[]
- * Used for project descriptions that need to support multiple paragraphs
- */
-export function safelyExtractProjectDescriptions(descriptions?: any[]): Array<{ text: string }> {
-    return safeArrayMap(descriptions, (desc) => {
-        if (desc && typeof desc === "object" && desc.text) {
-            const text = validateAndTrimString(desc.text);
-            return text ? { text } : null;
-        }
-        return null;
-    });
-}
