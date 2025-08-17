@@ -417,9 +417,6 @@ export interface Portfolio {
                    */
                   y?: number | null;
                 };
-                /**
-                 * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
-                 */
                 video?: {
                   /**
                    * YouTube URL for embedding video demos of your projects.

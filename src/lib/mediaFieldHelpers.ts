@@ -410,46 +410,53 @@ export const createSingleMediaGroup = (options: {
  * Creates the video field group for project media arrays
  */
 export const createVideoFields = (): Field => ({
-    name: "video",
-    type: "group",
-    label: "Project Video (Optional)",
+    type: "collapsible",
+    label: "Project Video",
     admin: {
+        initCollapsed: true,
         description: "Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos",
     },
     fields: [
         {
-            name: "src",
-            type: "text",
-            label: "Video URL",
-            admin: {
-                description: "YouTube URL for embedding video demos of your projects.",
-                placeholder: "https://youtube.com/watch?v=...",
-            },
-        },
-        {
-            name: "file",
-            type: "upload",
-            relationTo: "media",
-            label: "Upload Video File",
-            admin: {
-                description: "Alternative: Upload a video file directly (will override URL if both provided)",
-            },
-        },
-        {
-            name: "title",
-            type: "text",
-            label: "Video Title",
-            admin: {
-                description: "Optional: Title displayed above the video player",
-            },
-        },
-        {
-            name: "description",
-            type: "text",
-            label: "Video Description",
-            admin: {
-                description: "Optional: Description displayed below the video title",
-            },
+            name: "video",
+            type: "group",
+            label: "Video Settings",
+            fields: [
+                {
+                    name: "src",
+                    type: "text",
+                    label: "Video URL",
+                    admin: {
+                        description: "YouTube URL for embedding video demos of your projects.",
+                        placeholder: "https://youtube.com/watch?v=...",
+                    },
+                },
+                {
+                    name: "file",
+                    type: "upload",
+                    relationTo: "media",
+                    label: "Upload Video File",
+                    admin: {
+                        description: "Alternative: Upload a video file directly (will override URL if both provided)",
+                    },
+                },
+                {
+                    name: "title",
+                    type: "text",
+                    label: "Video Title",
+                    admin: {
+                        description: "Optional: Title displayed above the video player",
+                    },
+                },
+                {
+                    name: "description",
+                    type: "text",
+                    label: "Video Description",
+                    admin: {
+                        description: "Optional: Description displayed below the video title",
+                    },
+                },
+            ],
         },
     ],
 });

@@ -282,7 +282,15 @@ export const Portfolio: CollectionConfig = {
                                 description: "Add multiple images and/or videos for this project. If you add multiple items, they will be displayed in a carousel.",
                             },
                             fields: [
-                                ...createArrayMediaFields(),
+                                {
+                                    type: "collapsible",
+                                    label: "Project Image",
+                                    admin: {
+                                        initCollapsed: true,
+                                        description: "Configure the image settings for this project media item",
+                                    },
+                                    fields: createArrayMediaFields(),
+                                },
                                 createVideoFields(),
                             ],
                         },
@@ -530,35 +538,24 @@ export const Portfolio: CollectionConfig = {
                     ],
                 },
                 
-                // Call-to-action section
                 {
-                    type: "collapsible",
-                    label: "Call-to-Action Card",
+                    name: "ctaTitle",
+                    type: "text",
+                    required: true,
+                    defaultValue: "Ready to start a project?",
+                    label: "CTA Title",
                     admin: {
-                        initCollapsed: false,
-                        description: "Configure the main call-to-action card displayed in the contact section"
+                        description: "Title for the call-to-action card",
                     },
-                    fields: [
-                        {
-                            name: "ctaTitle",
-                            type: "text",
-                            required: true,
-                            defaultValue: "Ready to start a project?",
-                            label: "CTA Title",
-                            admin: {
-                                description: "Title for the call-to-action card",
-                            },
-                        },
-                        {
-                            name: "ctaDescription",
-                            type: "text",
-                            required: true,
-                            label: "CTA Description",
-                            admin: {
-                                description: "Description text for the call-to-action card",
-                            },
-                        },
-                    ],
+                },
+                {
+                    name: "ctaDescription",
+                    type: "text",
+                    required: true,
+                    label: "CTA Description",
+                    admin: {
+                        description: "Description text for the call-to-action card",
+                    },
                 },
             ],
         },
