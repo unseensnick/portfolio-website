@@ -291,32 +291,34 @@ export interface Portfolio {
      * Select your GitHub link from social navigation links
      */
     githubUrl?: (number | null) | NavigationLink;
-    /**
-     * Featured image for the hero section
-     */
-    heroImage?: (number | null) | Media;
-    /**
-     * Controls how the hero image is positioned within its container when cropped
-     */
-    heroImagePosition?:
-      | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
-      | null;
-    /**
-     * Controls the aspect ratio (width to height ratio) of the hero image. This applies to both mobile and desktop views.
-     */
-    heroAspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
-    /**
-     * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
-     */
-    heroImageZoom?: number | null;
-    /**
-     * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
-     */
-    x?: number | null;
-    /**
-     * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
-     */
-    y?: number | null;
+    heroMedia?: {
+      /**
+       * Upload the image for this section
+       */
+      image?: (number | null) | Media;
+      /**
+       * Controls how the image is positioned within its container when cropped
+       */
+      imagePosition?:
+        | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
+        | null;
+      /**
+       * Controls the aspect ratio of the image
+       */
+      aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
+      /**
+       * Scale the image (50-200%). Leave empty for default size.
+       */
+      imageZoom?: number | null;
+      /**
+       * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
+       */
+      x?: number | null;
+      /**
+       * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+       */
+      y?: number | null;
+    };
   };
   /**
    * Configure your portfolio projects section - showcase your best work
@@ -400,7 +402,7 @@ export interface Portfolio {
             /**
              * Controls the aspect ratio of this media item. Applies to both images and videos.
              */
-            aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+            aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
             /**
              * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
              */
@@ -510,7 +512,7 @@ export interface Portfolio {
                 /**
                  * Controls the aspect ratio of this media item. Applies to both images and videos.
                  */
-                aspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
+                aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
                 /**
                  * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
                  */
@@ -602,32 +604,34 @@ export interface Portfolio {
      * Select your interests and hobbies from your tags list
      */
     interests?: (number | Tag)[] | null;
-    /**
-     * Image to display in the about section (e.g., your photo)
-     */
-    aboutImage?: (number | null) | Media;
-    /**
-     * Controls how the about image is positioned within its container when cropped
-     */
-    aboutImagePosition?:
-      | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
-      | null;
-    /**
-     * Controls the aspect ratio (width to height ratio) of the about image. This applies to both mobile and desktop views.
-     */
-    aboutAspectRatio?: ('square' | 'landscape' | 'portrait' | '21/9' | '4/3' | '1.618/1') | null;
-    /**
-     * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
-     */
-    aboutImageZoom?: number | null;
-    /**
-     * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
-     */
-    x?: number | null;
-    /**
-     * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
-     */
-    y?: number | null;
+    aboutMedia?: {
+      /**
+       * Upload the image for this section
+       */
+      image?: (number | null) | Media;
+      /**
+       * Controls how the image is positioned within its container when cropped
+       */
+      imagePosition?:
+        | ('center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')
+        | null;
+      /**
+       * Controls the aspect ratio of the image
+       */
+      aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
+      /**
+       * Scale the image (50-200%). Leave empty for default size.
+       */
+      imageZoom?: number | null;
+      /**
+       * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
+       */
+      x?: number | null;
+      /**
+       * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
+       */
+      y?: number | null;
+    };
   };
   /**
    * Configure the contact section of your portfolio - make it easy for people to reach you
@@ -838,12 +842,16 @@ export interface PortfolioSelect<T extends boolean = true> {
         heroTitle?: T;
         heroDescription?: T;
         githubUrl?: T;
-        heroImage?: T;
-        heroImagePosition?: T;
-        heroAspectRatio?: T;
-        heroImageZoom?: T;
-        x?: T;
-        y?: T;
+        heroMedia?:
+          | T
+          | {
+              image?: T;
+              imagePosition?: T;
+              aspectRatio?: T;
+              imageZoom?: T;
+              x?: T;
+              y?: T;
+            };
       };
   projects?:
     | T
@@ -927,12 +935,16 @@ export interface PortfolioSelect<T extends boolean = true> {
         content?: T;
         technologies?: T;
         interests?: T;
-        aboutImage?: T;
-        aboutImagePosition?: T;
-        aboutAspectRatio?: T;
-        aboutImageZoom?: T;
-        x?: T;
-        y?: T;
+        aboutMedia?:
+          | T
+          | {
+              image?: T;
+              imagePosition?: T;
+              aspectRatio?: T;
+              imageZoom?: T;
+              x?: T;
+              y?: T;
+            };
       };
   contact?:
     | T
