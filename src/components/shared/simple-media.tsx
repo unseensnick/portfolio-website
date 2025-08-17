@@ -9,7 +9,7 @@ import { useState } from "react";
 interface SimpleMediaProps {
     media?: MediaItem;
     alt: string;
-    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    aspectRatio?: "square" | "landscape" | "portrait" | "5/4" | "3/2" | "4/3" | string;
     className?: string;
     priority?: boolean;
     imageZoom?: number;
@@ -23,7 +23,10 @@ interface SimpleMediaProps {
 const ASPECT_RATIOS: Record<string, number> = {
     square: 1,
     landscape: 16 / 9,
-    portrait: 3 / 4,
+    portrait: 4 / 5,
+    "5/4": 5 / 4,
+    "3/2": 3 / 2,
+    "4/3": 4 / 3,
 } as const;
 
 function getAspectRatioValue(aspectRatio: string): number {

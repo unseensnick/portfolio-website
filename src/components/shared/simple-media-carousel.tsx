@@ -16,7 +16,7 @@ import { SimpleMedia } from "./simple-media";
 interface SimpleMediaCarouselProps {
     media?: MediaItem | MediaItem[];
     title: string;
-    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    aspectRatio?: "square" | "landscape" | "portrait" | "5/4" | "3/2" | "4/3" | string;
     className?: string;
     priority?: boolean;
 }

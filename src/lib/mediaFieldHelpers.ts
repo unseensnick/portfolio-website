@@ -34,9 +34,9 @@ export const ASPECT_RATIO_OPTIONS = [
     { label: "Landscape (16:9)", value: "landscape" },
     { label: "Portrait (4:5)", value: "portrait" },
     { label: "Square (1:1)", value: "square" },
-    { label: "Cinematic (21:9)", value: "21/9" },
+    { label: "Wide (5:4)", value: "5/4" },
+    { label: "Photo (3:2)", value: "3/2" },
     { label: "Classic (4:3)", value: "4/3" },
-    { label: "Golden Ratio (1.618:1)", value: "1.618/1" },
 ];
 
 // ===== MEDIA FIELD FACTORY FUNCTIONS =====
@@ -404,6 +404,117 @@ export const createSingleMediaGroup = (options: {
             },
         ],
     };
+};
+
+/**
+ * Creates a flattened media group without nested collapsibles
+ * Perfect for when you want all media controls in one collapsible level
+ */
+export const createFlatMediaGroup = (options: {
+    fieldNamePrefix: string;
+    label: string;
+    description: string;
+    defaultPosition?: string;
+    defaultAspectRatio?: string;
+}): Field[] => {
+    const {
+        fieldNamePrefix,
+        label,
+        description,
+        defaultPosition = "center",
+        defaultAspectRatio = "landscape"
+    } = options;
+
+    return [
+        {
+            name: `${fieldNamePrefix}Media`,
+            type: "group",
+            label: "Media Settings",
+            fields: [
+                {
+                    name: "image",
+                    type: "upload",
+                    relationTo: "media",
+                    label: label,
+                    admin: {
+                        description: description,
+                    },
+                },
+                {
+                    name: "imagePosition",
+                    type: "select",
+                    label: "Image Position",
+                    defaultValue: defaultPosition,
+                    dbName: "img_pos",
+                    options: IMAGE_POSITION_OPTIONS,
+                    admin: {
+                        description: "Controls how the image is positioned within its container when cropped",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                },
+                {
+                    name: "aspectRatio",
+                    type: "select",
+                    label: "Image Aspect Ratio",
+                    defaultValue: defaultAspectRatio,
+                    dbName: "aspect_ratio",
+                    options: ASPECT_RATIO_OPTIONS,
+                    admin: {
+                        description: "Controls the aspect ratio of the image",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                },
+                {
+                    name: "imageZoom",
+                    type: "number",
+                    label: "Image Zoom (%)",
+                    min: 50,
+                    max: 200,
+                    admin: {
+                        description: "Scale the image (50-200%). Leave empty for default size.",
+                        placeholder: "Leave empty for default (100%)",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                    validate: createZoomValidator(),
+                },
+                {
+                    type: "collapsible",
+                    label: "Fine Position Control (Advanced)",
+                    admin: {
+                        initCollapsed: true,
+                        description: "Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.",
+                        condition: (data, siblingData) => !!siblingData?.image,
+                    },
+                    fields: [
+                        {
+                            name: "x",
+                            type: "number",
+                            label: "Horizontal Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: createPositionValidator("Horizontal position"),
+                        },
+                        {
+                            name: "y",
+                            type: "number",
+                            label: "Vertical Position (%)",
+                            min: 0,
+                            max: 100,
+                            admin: {
+                                description: "Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge",
+                                placeholder: "Leave empty for preset position",
+                            },
+                            validate: createPositionValidator("Vertical position"),
+                        },
+                    ],
+                },
+            ],
+        },
+    ];
 };
 
 /**

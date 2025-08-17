@@ -43,7 +43,7 @@ interface AboutProps {
         | "top-right"
         | "bottom-left"
         | "bottom-right";
-    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    aspectRatio?: "square" | "landscape" | "portrait" | "5/4" | "3/2" | "4/3" | string;
     imageZoom?: number;
     imageFinePosition?: {
         x?: number;

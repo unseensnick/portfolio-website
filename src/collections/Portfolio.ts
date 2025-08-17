@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { createArrayMediaFields, createSingleMediaGroup, createVideoFields } from "../lib/mediaFieldHelpers";
+import { createArrayMediaFields, createFlatMediaGroup, createVideoFields } from "../lib/mediaFieldHelpers";
 
 
 export const Portfolio: CollectionConfig = {
@@ -164,15 +164,13 @@ export const Portfolio: CollectionConfig = {
                         initCollapsed: true,
                         description: "Configure the main hero image and its display settings"
                     },
-                    fields: [
-                        createSingleMediaGroup({
-                            fieldNamePrefix: "hero",
-                            label: "Hero Image",
-                            description: "Configure the main hero image and its display settings",
-                            defaultPosition: "center",
-                            defaultAspectRatio: "landscape",
-                        }),
-                    ],
+                    fields: createFlatMediaGroup({
+                        fieldNamePrefix: "hero",
+                        label: "Hero Image",
+                        description: "Upload the hero image for this section",
+                        defaultPosition: "center",
+                        defaultAspectRatio: "landscape",
+                    }),
                 },
             ],
         },
@@ -432,15 +430,13 @@ export const Portfolio: CollectionConfig = {
                         initCollapsed: true,
                         description: "Configure the image displayed in your about section"
                     },
-                    fields: [
-                        createSingleMediaGroup({
-                            fieldNamePrefix: "about",
-                            label: "About Image",
-                            description: "Configure your profile image and its display settings",
-                            defaultPosition: "center",
-                            defaultAspectRatio: "portrait",
-                        }),
-                    ],
+                    fields: createFlatMediaGroup({
+                        fieldNamePrefix: "about",
+                        label: "About Image",
+                        description: "Upload your profile image for this section",
+                        defaultPosition: "center",
+                        defaultAspectRatio: "portrait",
+                    }),
                 },
             ],
         },
