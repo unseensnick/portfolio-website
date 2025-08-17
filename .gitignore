@@ -46,7 +46,6 @@ next-env.d.ts
 /legacy code
 temp/errors.txt
 src/app/debug-portfolio
-ClAUDE.md
 
 # next-video
 media/*
