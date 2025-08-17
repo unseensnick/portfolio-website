@@ -208,12 +208,12 @@ export function adaptPortfolioData(data: any) {
             title: safeString(data.hero.heroTitle, "UnseenSnick"),
             description: data.hero.heroDescription || null,
             githubUrl: safelyExtractUrl(data.hero.githubUrl, "https://github.com"),
-            image: safelyExtractImageUrl(data.hero.heroImage) || "/placeholder-image.svg",
-            imagePosition: (data.hero.heroImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(data.hero.heroAspectRatio, "landscape"),
-            imageZoom: typeof data.hero.heroImageZoom === "number" ? data.hero.heroImageZoom : undefined,
-            imageFinePosition: (data.hero.x !== undefined || data.hero.y !== undefined) 
-                ? { x: data.hero.x, y: data.hero.y } 
+            image: safelyExtractImageUrl(data.hero.heroMedia?.image) || "/placeholder-image.svg",
+            imagePosition: (data.hero.heroMedia?.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.hero.heroMedia?.aspectRatio, "landscape"),
+            imageZoom: typeof data.hero.heroMedia?.imageZoom === "number" ? data.hero.heroMedia.imageZoom : undefined,
+            imageFinePosition: (data.hero.heroMedia?.x !== undefined || data.hero.heroMedia?.y !== undefined) 
+                ? { x: data.hero.heroMedia.x, y: data.hero.heroMedia.y } 
                 : undefined,
             ctaText: "View GitHub",
             ctaLink: safelyExtractUrl(data.hero.githubUrl, "https://github.com"),
@@ -225,12 +225,12 @@ export function adaptPortfolioData(data: any) {
             content: data.about.content || null,
             technologies: safelyExtractNames(data.about.technologies) || [],
             interests: safelyExtractNames(data.about.interests) || [],
-            image: safelyExtractImageUrl(data.about.aboutImage) || "/placeholder-image.svg",
-            imagePosition: (data.about.aboutImagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
-            aspectRatio: safeString(data.about.aboutAspectRatio, "portrait"),
-            imageZoom: typeof data.about.aboutImageZoom === "number" ? data.about.aboutImageZoom : undefined,
-            imageFinePosition: (data.about.x !== undefined || data.about.y !== undefined) 
-                ? { x: data.about.x, y: data.about.y } 
+            image: safelyExtractImageUrl(data.about.aboutMedia?.image) || "/placeholder-image.svg",
+            imagePosition: (data.about.aboutMedia?.imagePosition || "center") as "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right",
+            aspectRatio: safeString(data.about.aboutMedia?.aspectRatio, "portrait"),
+            imageZoom: typeof data.about.aboutMedia?.imageZoom === "number" ? data.about.aboutMedia.imageZoom : undefined,
+            imageFinePosition: (data.about.aboutMedia?.x !== undefined || data.about.aboutMedia?.y !== undefined) 
+                ? { x: data.about.aboutMedia.x, y: data.about.aboutMedia.y } 
                 : undefined,
             technologiesHeading: safeString(data.about.technologiesHeading, "Technologies & Tools"),
             interestsHeading: safeString(data.about.interestsHeading, "When I'm Not Coding"),

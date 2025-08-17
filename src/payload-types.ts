@@ -293,7 +293,7 @@ export interface Portfolio {
     githubUrl?: (number | null) | NavigationLink;
     heroMedia?: {
       /**
-       * Upload the image for this section
+       * Upload the hero image for this section
        */
       image?: (number | null) | Media;
       /**
@@ -305,7 +305,7 @@ export interface Portfolio {
       /**
        * Controls the aspect ratio of the image
        */
-      aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
+      aspectRatio?: ('landscape' | 'portrait' | 'square' | '5/4' | '3/2' | '4/3') | null;
       /**
        * Scale the image (50-200%). Leave empty for default size.
        */
@@ -399,7 +399,7 @@ export interface Portfolio {
                 /**
                  * Controls the aspect ratio of this media item. Applies to both images and videos.
                  */
-                aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
+                aspectRatio?: ('landscape' | 'portrait' | 'square' | '5/4' | '3/2' | '4/3') | null;
                 /**
                  * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
                  */
@@ -494,7 +494,7 @@ export interface Portfolio {
     interests?: (number | Tag)[] | null;
     aboutMedia?: {
       /**
-       * Upload the image for this section
+       * Upload your profile image for this section
        */
       image?: (number | null) | Media;
       /**
@@ -506,7 +506,7 @@ export interface Portfolio {
       /**
        * Controls the aspect ratio of the image
        */
-      aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
+      aspectRatio?: ('landscape' | 'portrait' | 'square' | '5/4' | '3/2' | '4/3') | null;
       /**
        * Scale the image (50-200%). Leave empty for default size.
        */

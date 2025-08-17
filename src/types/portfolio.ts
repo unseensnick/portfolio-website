@@ -18,7 +18,7 @@ export interface Hero {
     githubUrl: string;
     image: string;
     imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    aspectRatio?: "square" | "landscape" | "portrait" | "5/4" | "3/2" | "4/3" | string;
     imageZoom?: number;
     imageFinePosition?: {
         x?: number;
@@ -37,7 +37,7 @@ export interface About {
     interests: string[];
     image: string;
     imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    aspectRatio?: "square" | "landscape" | "portrait" | "5/4" | "3/2" | "4/3" | string;
     imageZoom?: number;
     imageFinePosition?: {
         x?: number;
@@ -58,7 +58,7 @@ export interface MediaItem {
         alt?: string;
     } | any;
     imagePosition?: "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    aspectRatio?: "square" | "landscape" | "portrait" | string;
+    aspectRatio?: "square" | "landscape" | "portrait" | "5/4" | "3/2" | "4/3" | string;
     imageZoom?: number;
     imageFinePosition?: {
         x?: number;
