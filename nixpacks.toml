@@ -1,21 +1,11 @@
 [variables]
-NODE_ENV = "production"
-NPM_CONFIG_PRODUCTION = "false"
-
-[phases.setup]
-nixPkgs = ["nodejs_22", "npm-10_x", "openssl"]
-nixLibs = ["gcc-unwrapped"]
-aptPkgs = ["curl", "wget"]
+NIXPACKS_NODE_VERSION = "22"
 
 [phases.install]
-dependsOn = ["setup"]
 cmds = ["npm ci"]
-cacheDirectories = ["/root/.npm"]
 
 [phases.build]
-dependsOn = ["install"]
 cmds = ["npm run build"]
-cacheDirectories = [".next/cache", "node_modules/.cache"]
 
 [start]
 cmd = "npm run start"
