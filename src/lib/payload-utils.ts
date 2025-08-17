@@ -58,25 +58,6 @@ const fallbackData = {
     projects: {
         title: "My Projects",
         description: "Here are some of my recent projects showcasing my skills and creativity",
-        featured: {
-            title: "Featured Project",
-            content: null,
-            projectUrl: undefined,
-            codeUrl: undefined,
-            media: {
-                image: {
-                    url: "/placeholder-image.svg",
-                    alt: "Featured project placeholder"
-                },
-                imagePosition: "center" as const,
-                aspectRatio: "landscape" as const
-            },
-            technologies: [
-                { name: "React" },
-                { name: "TypeScript" },
-                { name: "Next.js" }
-            ],
-        },
         items: [
             {
                 title: "Example Project 1",
@@ -256,33 +237,6 @@ export function adaptPortfolioData(data: any) {
         },
         projects: {
             title: safeString(data.projects.projectsTitle, "My Projects"),
-            featured: (() => {
-                const featured = data.projects.featured;
-                if (!featured) {
-                    return fallbackData.projects.featured;
-                }
-
-                let processedMedia;
-                
-                if (Array.isArray(featured.media)) {
-                    if (featured.media.length === 0) {
-                        processedMedia = processMediaItem(null, featured.featuredTitle);
-                    } else {
-                        processedMedia = featured.media.map((item: any) => processMediaItem(item, featured.featuredTitle));
-                    }
-                } else {
-                    processedMedia = processMediaItem(featured.media, featured.featuredTitle);
-                }
-
-                return {
-                    title: safeString(featured.featuredTitle, "Featured Project"),
-                    content: featured.content || null,
-                    projectUrl: safelyExtractUrl(featured.projectUrl),
-                    codeUrl: safelyExtractUrl(featured.codeUrl),
-                    media: processedMedia,
-                    technologies: safelyProcessTechnologies(featured.technologies),
-                };
-            })(),
             items: (() => {
                 const items = data.projects.items || [];
                 if (items.length === 0) {

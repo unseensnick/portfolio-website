@@ -151,7 +151,6 @@ function ProjectItem({
 
 interface ProjectsProps {
     title?: string;
-    featured?: ProjectItemProps;
     items?: ProjectItemProps[];
     viewAllLink?: string;
     description?: string;
@@ -160,12 +159,6 @@ interface ProjectsProps {
 
 export function Projects({
     title = "Projects",
-    featured = {
-        title: "Featured Project",
-        content: null,
-        projectUrl: "#",
-        codeUrl: "#",
-    },
     items = [],
     viewAllLink,
     description = "Check out some of my recent projects",
@@ -173,7 +166,9 @@ export function Projects({
 }: ProjectsProps) {
     const isMobile = useIsMobile();
 
-    const allProjects = featured ? [featured, ...items] : [...items];
+    // First item is the featured project, remaining items are regular projects
+    const featuredProject = items[0] || null;
+    const remainingProjects = items.slice(1);
 
     const formattedViewAllLink = viewAllLink
         ? formatExternalUrl(viewAllLink)
@@ -209,8 +204,8 @@ export function Projects({
     return (
         <SectionWrapper id="projects" title={title} description={description}>
             <div data-tour="featured-project" className="mb-12 lg:mb-24">
-                {!isMobile && featured && (
-                    <ProjectItem {...featured} isMobile={isMobile} />
+                {!isMobile && featuredProject && (
+                    <ProjectItem {...featuredProject} isMobile={isMobile} />
                 )}
             </div>
             <div data-tour="project-grid">
@@ -219,14 +214,14 @@ export function Projects({
                 >
                     {/* Project list */}
                     {isMobile
-                        ? allProjects.map((project, index) => (
+                        ? items.map((project, index) => (
                               <ProjectItem
                                   key={index}
                                   {...project}
                                   isMobile={isMobile}
                               />
                           ))
-                        : items.map((project, index) => (
+                        : remainingProjects.map((project, index) => (
                               <ProjectItem
                                   key={index}
                                   {...project}

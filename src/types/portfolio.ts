@@ -88,7 +88,6 @@ export interface ProjectItem {
 
 export interface Projects {
     title: string;
-    featured: ProjectItem;
     items: ProjectItem[];
     description: string;
     viewMoreText: string;

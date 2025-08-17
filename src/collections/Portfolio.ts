@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { createImageFields, createArrayMediaFields, createVideoFields, createSingleMediaGroup } from "../lib/mediaFieldHelpers";
+import { createArrayMediaFields, createSingleMediaGroup, createVideoFields } from "../lib/mediaFieldHelpers";
 
 
 export const Portfolio: CollectionConfig = {
@@ -155,13 +155,25 @@ export const Portfolio: CollectionConfig = {
                         allowCreate: true,
                     },
                 },
-                createSingleMediaGroup({
-                    fieldNamePrefix: "hero",
-                    label: "Hero Image",
-                    description: "Configure the main hero image and its display settings",
-                    defaultPosition: "center",
-                    defaultAspectRatio: "landscape",
-                }),
+                
+                // Hero image section
+                {
+                    type: "collapsible",
+                    label: "Hero Image Settings",
+                    admin: {
+                        initCollapsed: true,
+                        description: "Configure the main hero image and its display settings"
+                    },
+                    fields: [
+                        createSingleMediaGroup({
+                            fieldNamePrefix: "hero",
+                            label: "Hero Image",
+                            description: "Configure the main hero image and its display settings",
+                            defaultPosition: "center",
+                            defaultAspectRatio: "landscape",
+                        }),
+                    ],
+                },
             ],
         },
         {
@@ -192,28 +204,20 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "viewMoreText",
-                    type: "text",
-                    label: "View More Text",
+                    name: "items",
+                    type: "array",
+                    label: "Project Items",
                     admin: {
-                        description: "Text displayed above the 'View All on GitHub' button",
-                    },
-                },
-                {
-                    name: "featured",
-                    type: "group",
-                    label: "Featured Project",
-                    admin: {
-                        description: "Configure your main featured project (displayed prominently)",
+                        description: "Your portfolio projects. The first project in this list will be displayed as the featured project.",
                     },
                     fields: [
                         {
-                            name: "featuredTitle",
+                            name: "itemTitle",
                             type: "text",
                             required: true,
                             label: "Project Title",
                             admin: {
-                                description: "Title of your featured project",
+                                description: "Title of this project",
                             },
                         },
                         {
@@ -221,7 +225,7 @@ export const Portfolio: CollectionConfig = {
                             type: "richText",
                             label: "Project Description",
                             admin: {
-                                description: "Detailed description of your featured project",
+                                description: "Detailed description of this project",
                             },
                         },
                         {
@@ -275,7 +279,7 @@ export const Portfolio: CollectionConfig = {
                             type: "array",
                             label: "Project Media",
                             admin: {
-                                description: "Add multiple images and/or videos for your featured project. If you add multiple items, they will be displayed in a carousel.",
+                                description: "Add multiple images and/or videos for this project. If you add multiple items, they will be displayed in a carousel.",
                             },
                             fields: [
                                 ...createArrayMediaFields(),
@@ -285,82 +289,12 @@ export const Portfolio: CollectionConfig = {
                     ],
                 },
                 {
-                    name: "items",
-                    type: "array",
-                    label: "Project Items",
+                    name: "viewMoreText",
+                    type: "text",
+                    label: "View More Text",
                     admin: {
-                        description: "Additional projects to display in your portfolio",
+                        description: "Text displayed above the 'View All on GitHub' button",
                     },
-                    fields: [
-                        {
-                            name: "itemTitle",
-                            type: "text",
-                            required: true,
-                            label: "Project Title",
-                            admin: {
-                                description: "Title of this project",
-                            },
-                        },
-                        {
-                            name: "content",
-                            type: "richText",
-                            label: "Project Description",
-                            admin: {
-                                description: "Detailed description of this project",
-                            },
-                        },
-                        {
-                            name: "projectUrl",
-                            type: "text",
-                            label: "Live Demo URL",
-                            admin: {
-                                description: "URL to the live demo of this project (with or without https://)",
-                            },
-                        },
-                        {
-                            name: "codeUrl",
-                            type: "relationship",
-                            relationTo: "navigationLinks",
-                            label: "Source Code URL",
-                            filterOptions: {
-                                category: {
-                                    equals: "social",
-                                },
-                            },
-                            admin: {
-                                description: "Select source code repository link from social navigation links",
-                                allowCreate: true,
-                            },
-                        },
-                        {
-                            name: "technologies",
-                            type: "relationship",
-                            relationTo: "tags" as any,
-                            hasMany: true,
-                            label: "Technologies Used",
-                            filterOptions: {
-                                category: {
-                                    equals: "technology & tools",
-                                },
-                            },
-                            admin: {
-                                description: "Select technologies used in this project from your tags list",
-                                allowCreate: true,
-                            },
-                        },
-                        {
-                            name: "media",
-                            type: "array",
-                            label: "Project Media",
-                            admin: {
-                                description: "Add multiple images and/or videos for this project. If you add multiple items, they will be displayed in a carousel.",
-                            },
-                            fields: [
-                                ...createArrayMediaFields(),
-                                createVideoFields(),
-                            ],
-                        },
-                    ],
                 },
                 {
                     name: "viewAllLink",
@@ -398,26 +332,6 @@ export const Portfolio: CollectionConfig = {
                     },
                 },
                 {
-                    name: "technologiesHeading",
-                    type: "text",
-                    required: true,
-                    defaultValue: "Technologies & Tools",
-                    label: "Technologies Heading",
-                    admin: {
-                        description: "Heading for the technologies/skills subsection",
-                    },
-                },
-                {
-                    name: "interestsHeading",
-                    type: "text",
-                    required: true,
-                    defaultValue: "When I'm Not Coding",
-                    label: "Interests Heading",
-                    admin: {
-                        description: "Heading for the interests/hobbies subsection",
-                    },
-                },
-                {
                     name: "content",
                     type: "richText",
                     label: "About Content",
@@ -425,45 +339,101 @@ export const Portfolio: CollectionConfig = {
                         description: "Text content describing yourself and your background",
                     },
                 },
+                
+                // Skills and technologies section  
                 {
-                    name: "technologies",
-                    type: "relationship",
-                    relationTo: "tags" as any,
-                    hasMany: true,
-                    label: "Technologies & Skills",
-                    filterOptions: {
-                        category: {
-                            equals: "technology & tools",
-                        },
-                    },
+                    type: "collapsible",
+                    label: "Skills & Technologies",
                     admin: {
-                        description: "Select technologies and skills you're proficient with from your tags list",
-                        allowCreate: true,
+                        initCollapsed: false,
+                        description: "Configure the technologies and skills you want to showcase"
                     },
+                    fields: [
+                        {
+                            name: "technologiesHeading",
+                            type: "text",
+                            required: true,
+                            defaultValue: "Technologies & Tools",
+                            label: "Technologies Heading",
+                            admin: {
+                                description: "Heading for the technologies/skills subsection",
+                            },
+                        },
+                        {
+                            name: "technologies",
+                            type: "relationship",
+                            relationTo: "tags" as any,
+                            hasMany: true,
+                            label: "Technologies & Skills",
+                            filterOptions: {
+                                category: {
+                                    equals: "technology & tools",
+                                },
+                            },
+                            admin: {
+                                description: "Select technologies and skills you're proficient with from your tags list",
+                                allowCreate: true,
+                            },
+                        },
+                    ],
                 },
+                
+                // Interests and hobbies section
                 {
-                    name: "interests",
-                    type: "relationship",
-                    relationTo: "tags" as any,
-                    hasMany: true,
+                    type: "collapsible", 
                     label: "Interests & Hobbies",
-                    filterOptions: {
-                        category: {
-                            equals: "hobbies",
-                        },
-                    },
                     admin: {
-                        description: "Select your interests and hobbies from your tags list",
-                        allowCreate: true,
+                        initCollapsed: false,
+                        description: "Configure your personal interests and hobbies"
                     },
+                    fields: [
+                        {
+                            name: "interestsHeading",
+                            type: "text",
+                            required: true,
+                            defaultValue: "When I'm Not Coding",
+                            label: "Interests Heading",
+                            admin: {
+                                description: "Heading for the interests/hobbies subsection",
+                            },
+                        },
+                        {
+                            name: "interests",
+                            type: "relationship",
+                            relationTo: "tags" as any,
+                            hasMany: true,
+                            label: "Interests & Hobbies",
+                            filterOptions: {
+                                category: {
+                                    equals: "hobbies",
+                                },
+                            },
+                            admin: {
+                                description: "Select your interests and hobbies from your tags list",
+                                allowCreate: true,
+                            },
+                        },
+                    ],
                 },
-                createSingleMediaGroup({
-                    fieldNamePrefix: "about",
-                    label: "About Image",
-                    description: "Configure your profile image and its display settings",
-                    defaultPosition: "center",
-                    defaultAspectRatio: "portrait",
-                }),
+                
+                // About image section
+                {
+                    type: "collapsible",
+                    label: "About Image Settings", 
+                    admin: {
+                        initCollapsed: true,
+                        description: "Configure the image displayed in your about section"
+                    },
+                    fields: [
+                        createSingleMediaGroup({
+                            fieldNamePrefix: "about",
+                            label: "About Image",
+                            description: "Configure your profile image and its display settings",
+                            defaultPosition: "center",
+                            defaultAspectRatio: "portrait",
+                        }),
+                    ],
+                },
             ],
         },
         {
@@ -493,74 +463,102 @@ export const Portfolio: CollectionConfig = {
                         description: "Brief introduction to your contact section",
                     },
                 },
+                
+                // Contact methods grouped
                 {
-                    name: "email",
-                    type: "relationship",
-                    relationTo: "navigationLinks",
-                    label: "Email Address",
-                    filterOptions: {
-                        category: {
-                            equals: "social",
+                    type: "row",
+                    fields: [
+                        {
+                            name: "emailSubtitle",
+                            type: "text",
+                            required: true,
+                            defaultValue: "Drop me a line",
+                            label: "Email Card Subtitle",
+                            admin: {
+                                width: "50%",
+                                description: "Subtitle text displayed on the email contact card",
+                            },
                         },
-                    },
-                    admin: {
-                        description: "Select your email contact from social navigation links",
-                        allowCreate: true,
-                    },
+                        {
+                            name: "email",
+                            type: "relationship",
+                            relationTo: "navigationLinks",
+                            label: "Email Address",
+                            filterOptions: {
+                                category: {
+                                    equals: "social",
+                                },
+                            },
+                            admin: {
+                                width: "50%",
+                                description: "Select your email contact from social navigation links",
+                                allowCreate: true,
+                            },
+                        },                        
+                    ],
                 },
                 {
-                    name: "emailSubtitle",
-                    type: "text",
-                    required: true,
-                    defaultValue: "Drop me a line",
-                    label: "Email Card Subtitle",
-                    admin: {
-                        description: "Subtitle text displayed on the email contact card",
-                    },
-                },
-                {
-                    name: "github",
-                    type: "relationship",
-                    relationTo: "navigationLinks",
-                    label: "GitHub Username",
-                    filterOptions: {
-                        category: {
-                            equals: "social",
+                    type: "row",
+                    fields: [
+                        {
+                            name: "githubSubtitle",
+                            type: "text",
+                            required: true,
+                            defaultValue: "Check out my code",
+                            label: "GitHub Card Subtitle",
+                            admin: {
+                                width: "50%",
+                                description: "Subtitle text displayed on the GitHub contact card",
+                            },
                         },
-                    },
-                    admin: {
-                        description: "Select your GitHub profile from social navigation links",
-                        allowCreate: true,
-                    },
+                        {
+                            name: "github",
+                            type: "relationship",
+                            relationTo: "navigationLinks",
+                            label: "GitHub Username",
+                            filterOptions: {
+                                category: {
+                                    equals: "social",
+                                },
+                            },
+                            admin: {
+                                width: "50%",
+                                description: "Select your GitHub profile from social navigation links",
+                                allowCreate: true,
+                            },
+                        },                        
+                    ],
                 },
+                
+                // Call-to-action section
                 {
-                    name: "githubSubtitle",
-                    type: "text",
-                    required: true,
-                    defaultValue: "Check out my code",
-                    label: "GitHub Card Subtitle",
+                    type: "collapsible",
+                    label: "Call-to-Action Card",
                     admin: {
-                        description: "Subtitle text displayed on the GitHub contact card",
+                        initCollapsed: false,
+                        description: "Configure the main call-to-action card displayed in the contact section"
                     },
-                },
-                {
-                    name: "ctaTitle",
-                    type: "text",
-                    required: true,
-                    defaultValue: "Ready to start a project?",
-                    label: "CTA Title",
-                    admin: {
-                        description: "Title for the call-to-action card",
-                    },
-                },
-                {
-                    name: "ctaDescription",
-                    type: "text",
-                    required: true,
-                    label: "CTA Description",
-                    admin: {
-                        description: "Description text for the call-to-action card",
-                    },
+                    fields: [
+                        {
+                            name: "ctaTitle",
+                            type: "text",
+                            required: true,
+                            defaultValue: "Ready to start a project?",
+                            label: "CTA Title",
+                            admin: {
+                                description: "Title for the call-to-action card",
+                            },
+                        },
+                        {
+                            name: "ctaDescription",
+                            type: "text",
+                            required: true,
+                            label: "CTA Description",
+                            admin: {
+                                description: "Description text for the call-to-action card",
+                            },
+                        },
+                    ],
                 },
             ],
         },

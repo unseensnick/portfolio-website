@@ -333,120 +333,7 @@ export interface Portfolio {
      */
     projectsDescription: string;
     /**
-     * Text displayed above the 'View All on GitHub' button
-     */
-    viewMoreText?: string | null;
-    /**
-     * Configure your main featured project (displayed prominently)
-     */
-    featured: {
-      /**
-       * Title of your featured project
-       */
-      featuredTitle: string;
-      /**
-       * Detailed description of your featured project
-       */
-      content?: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      } | null;
-      /**
-       * Select live demo link from social navigation links
-       */
-      projectUrl?: (number | null) | NavigationLink;
-      /**
-       * Select source code repository link from social navigation links
-       */
-      codeUrl?: (number | null) | NavigationLink;
-      /**
-       * Select technologies used in this project from your tags list
-       */
-      technologies?: (number | Tag)[] | null;
-      /**
-       * Add multiple images and/or videos for your featured project. If you add multiple items, they will be displayed in a carousel.
-       */
-      media?:
-        | {
-            /**
-             * Screenshot or thumbnail of your project (used as fallback or video poster)
-             */
-            image?: (number | null) | Media;
-            /**
-             * Controls how the image is positioned within its container when cropped
-             */
-            imagePosition?:
-              | (
-                  | 'center'
-                  | 'top'
-                  | 'bottom'
-                  | 'left'
-                  | 'right'
-                  | 'top-left'
-                  | 'top-right'
-                  | 'bottom-left'
-                  | 'bottom-right'
-                )
-              | null;
-            /**
-             * Controls the aspect ratio of this media item. Applies to both images and videos.
-             */
-            aspectRatio?: ('landscape' | 'portrait' | 'square' | '21/9' | '4/3' | '1.618/1') | null;
-            /**
-             * Scale the image (50-200%). Leave empty for default size. Useful for fitting images better within the aspect ratio.
-             */
-            imageZoom?: number | null;
-            /**
-             * Precise positioning control (overrides preset position when values are set). Leave empty to use preset position above.
-             */
-            imageFinePosition?: {
-              /**
-               * Horizontal position (0-100%). Leave empty to use preset position. 0 = left edge, 50 = center, 100 = right edge
-               */
-              x?: number | null;
-              /**
-               * Vertical position (0-100%). Leave empty to use preset position. 0 = top edge, 50 = center, 100 = bottom edge
-               */
-              y?: number | null;
-            };
-            /**
-             * Video demo of your project - supports YouTube URLs, direct video files, and uploaded videos
-             */
-            video?: {
-              /**
-               * YouTube URL for embedding video demos of your projects.
-               */
-              src?: string | null;
-              /**
-               * Alternative: Upload a video file directly (will override URL if both provided)
-               */
-              file?: (number | null) | Media;
-              /**
-               * Optional: Title displayed above the video player
-               */
-              title?: string | null;
-              /**
-               * Optional: Description displayed below the video title
-               */
-              description?: string | null;
-            };
-            id?: string | null;
-          }[]
-        | null;
-    };
-    /**
-     * Additional projects to display in your portfolio
+     * Your portfolio projects. The first project in this list will be displayed as the featured project.
      */
     items?:
       | {
@@ -473,9 +360,9 @@ export interface Portfolio {
             [k: string]: unknown;
           } | null;
           /**
-           * URL to the live demo of this project (with or without https://)
+           * Select live demo link from social navigation links
            */
-          projectUrl?: string | null;
+          projectUrl?: (number | null) | NavigationLink;
           /**
            * Select source code repository link from social navigation links
            */
@@ -558,6 +445,10 @@ export interface Portfolio {
         }[]
       | null;
     /**
+     * Text displayed above the 'View All on GitHub' button
+     */
+    viewMoreText?: string | null;
+    /**
      * Select link to view all projects from social navigation links
      */
     viewAllLink?: (number | null) | NavigationLink;
@@ -570,14 +461,6 @@ export interface Portfolio {
      * Title for the about section
      */
     aboutTitle: string;
-    /**
-     * Heading for the technologies/skills subsection
-     */
-    technologiesHeading: string;
-    /**
-     * Heading for the interests/hobbies subsection
-     */
-    interestsHeading: string;
     /**
      * Text content describing yourself and your background
      */
@@ -597,9 +480,17 @@ export interface Portfolio {
       [k: string]: unknown;
     } | null;
     /**
+     * Heading for the technologies/skills subsection
+     */
+    technologiesHeading: string;
+    /**
      * Select technologies and skills you're proficient with from your tags list
      */
     technologies?: (number | Tag)[] | null;
+    /**
+     * Heading for the interests/hobbies subsection
+     */
+    interestsHeading: string;
     /**
      * Select your interests and hobbies from your tags list
      */
@@ -646,21 +537,21 @@ export interface Portfolio {
      */
     contactDescription: string;
     /**
-     * Select your email contact from social navigation links
-     */
-    email?: (number | null) | NavigationLink;
-    /**
      * Subtitle text displayed on the email contact card
      */
     emailSubtitle: string;
     /**
-     * Select your GitHub profile from social navigation links
+     * Select your email contact from social navigation links
      */
-    github?: (number | null) | NavigationLink;
+    email?: (number | null) | NavigationLink;
     /**
      * Subtitle text displayed on the GitHub contact card
      */
     githubSubtitle: string;
+    /**
+     * Select your GitHub profile from social navigation links
+     */
+    github?: (number | null) | NavigationLink;
     /**
      * Title for the call-to-action card
      */
@@ -858,39 +749,6 @@ export interface PortfolioSelect<T extends boolean = true> {
     | {
         projectsTitle?: T;
         projectsDescription?: T;
-        viewMoreText?: T;
-        featured?:
-          | T
-          | {
-              featuredTitle?: T;
-              content?: T;
-              projectUrl?: T;
-              codeUrl?: T;
-              technologies?: T;
-              media?:
-                | T
-                | {
-                    image?: T;
-                    imagePosition?: T;
-                    aspectRatio?: T;
-                    imageZoom?: T;
-                    imageFinePosition?:
-                      | T
-                      | {
-                          x?: T;
-                          y?: T;
-                        };
-                    video?:
-                      | T
-                      | {
-                          src?: T;
-                          file?: T;
-                          title?: T;
-                          description?: T;
-                        };
-                    id?: T;
-                  };
-            };
         items?:
           | T
           | {
@@ -924,16 +782,17 @@ export interface PortfolioSelect<T extends boolean = true> {
                   };
               id?: T;
             };
+        viewMoreText?: T;
         viewAllLink?: T;
       };
   about?:
     | T
     | {
         aboutTitle?: T;
-        technologiesHeading?: T;
-        interestsHeading?: T;
         content?: T;
+        technologiesHeading?: T;
         technologies?: T;
+        interestsHeading?: T;
         interests?: T;
         aboutMedia?:
           | T
@@ -951,10 +810,10 @@ export interface PortfolioSelect<T extends boolean = true> {
     | {
         contactTitle?: T;
         contactDescription?: T;
-        email?: T;
         emailSubtitle?: T;
-        github?: T;
+        email?: T;
         githubSubtitle?: T;
+        github?: T;
         ctaTitle?: T;
         ctaDescription?: T;
       };
